@@ -17,3 +17,9 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(login=login.data).first()
         if user:
             raise ValidationError('That username is taken. Please choose a different one.')
+
+
+class LoginForm(FlaskForm):
+    login = StringField('Login', validators=[DataRequired()])
+    password = PasswordField('Hasło', validators=[DataRequired()])
+    submit = SubmitField('Zaloguj')

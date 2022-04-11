@@ -6,5 +6,12 @@
 </head>
 <body>
     <a>Hello world</a>
+    {% if current_user.is_authenticated %}
+        <div class="article-metadata">
+            <div>
+                <p class="article-content">Imię użytkownika: {{ u.login }}</p>
+            </div>
+        </div>
+    {% endif %}
 </body>
 </html>

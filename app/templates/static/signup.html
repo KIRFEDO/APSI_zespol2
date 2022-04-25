@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Sign up - APSI - Task managment system</title>
+  <meta name="description" content="REvolutionary task managment system.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../static/css/style.min.css">
+  <meta name="theme-color" content="#fff">
+</head>
+<body>
+    <div class="page signup-page">
+        <div class="container">
+            <div class="logo">
+                <p class="icon">A</p>
+                <p class="name">APSI</p>
+                <p class="description">Task managment system</p>
+            </div>
+
+            <div class="signup-form-wrapper">
+                <form>
+                    <h1>Sign up</h1>
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Account type</label>
+                        <select class="form-select" aria-label="Account type">
+                          <option selected>Choose</option>
+                          <option value="ADMIN">Administrator</option>
+                          <option value="EMPLOYEE">Employee</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name and surname</label>
+                        <input type="text" class="form-control" id="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" id="password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="repeat-password" class="form-label">Repeat password</label>
+                        <input type="password" name="repeat-password" class="form-control" id="repeat-password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Sign up</button>
+                    <p class="helper">Have already an account? <a href="login.html" title="Log in">Log in</a></p>
+                </form>
+            </div>
+
+            <div class="system-pros">
+                <div class="row">
+                    <div class="col">
+                        <div class="pros-one">
+                            <i class="fa-solid fa-list-check"></i>
+                            <p class="title">Task managment</p>
+                            <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et magna at nulla faucibus consectetur euismod a nulla. Donec euismod vestibulum gravida.</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="pros-one">
+                            <i class="fa-solid fa-person-chalkboard"></i>
+                            <p class="title">Kanban board</p>
+                            <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Nam vulputate ultricies tortor, ac pellentesque ante consequat commodo.</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="pros-one">
+                            <i class="fa-solid fa-people-group"></i>
+                            <p class="title">employee management</p>
+                            <p class="description">Etiam nec congue nulla. Praesent a ante nec arcu imperdiet lacinia at ac diam. Nunc a neque feugiat ex varius consectetur. Duis vehicula, elit tincidunt bibendum ultricies.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

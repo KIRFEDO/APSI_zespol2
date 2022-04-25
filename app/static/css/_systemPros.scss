@@ -1,0 +1,37 @@
+.system-pros{
+    margin: 60px 0;
+    padding-top: 45px;
+    border-top: 1px solid #eee;
+
+    .row{
+        margin: 0 -45px;
+    }
+
+    .pros-one{
+        padding: 0 30px;
+        i{
+            background-color: #3867d6;
+            color: #fff;
+            border-radius: 5px;
+            height: 48px;
+            width: 48px;
+            text-align: center;
+            line-height: 48px;
+            font-size: 20px;
+            box-shadow: 0 0 0 3px #3867d661;
+            margin: 0 0 15px 0;
+        }
+
+        .title{
+            text-transform: uppercase;
+            font-weight: 600;
+            margin: 0 0 5px 0;
+        }
+
+        .description{
+            color: #778ca3;
+            font-size: 14px;
+            text-align: justify;
+        }
+    }
+}

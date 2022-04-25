@@ -1,0 +1,42 @@
+
+.login-page, .signup-page{
+    .logo{
+        margin-top: 60px;
+        margin-bottom: 60px;
+    }
+
+    .login-form-wrapper, .signup-form-wrapper{
+        width: 600px;
+        max-width: 100%;
+        background-color: #fff;
+        margin: 0 auto;
+        padding: 45px;
+        border-radius: 5px;
+        box-shadow: 0 1px 25px -10px #ddd;
+
+        form{
+            h1{
+                font-weight: 900;
+                font-size: 32px;
+                margin: 0 0 15px 0;
+                padding: 0 0 15px 0;
+                border-bottom: 1px solid #eee;
+            }
+
+            .helper{
+                color: #778ca3;
+                margin: 15px 0 0 0;
+
+                a{
+                    color: #778ca3;
+                    text-decoration: none;
+                    border-bottom: 1px dotted;
+
+                    &:hover{
+                        color: #000;
+                    }
+                }
+            }
+        }
+    }
+}

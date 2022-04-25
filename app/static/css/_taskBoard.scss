@@ -1,0 +1,74 @@
+.task-board{
+    .col-wrapper{
+        border-radius: 5px;
+        padding: 15px;
+
+        &.todo{
+            background-color: #DFE1E6;
+
+            .col-title{
+                color: #42526E;
+            }
+        }
+
+        &.inprogress, &.pending{
+            background-color: #DEEBFF;
+
+            .col-title{
+                color: #0747A6;
+            }
+        }
+
+        &.done{
+            background-color: #E3FCEF;
+
+            .col-title{
+                color: #006644;
+            }
+        }
+
+        .col-title{
+            text-transform: uppercase;
+            font-weight: 600;
+            line-height: 29px;
+            font-size: 16px;
+            margin: 0 0 15px 0;
+        }
+
+        .task-boxes{
+            max-height: 500px;
+            position: relative;
+
+            .task-box{
+                background-color: #fff;
+                border-radius: 5px;
+                padding: 15px;
+                position: relative;
+                margin: 0 0 10px 0;
+                box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.15);
+
+                .view-details{
+                    position: absolute;
+                    font-size: 0;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 3;
+                }
+
+                .task-title{
+                    font-size: 16px;
+                    font-weight: 600;
+                    margin: 0 0 5px 0;
+                }
+
+                .project-title{
+                    font-size: 14px;
+                    margin: 0;
+                    font-weight: 300;
+                }
+            }
+        }
+    }
+}

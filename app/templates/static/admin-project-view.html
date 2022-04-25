@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>First test project - APSI</title>
+  <meta name="description" content="REvolutionary task managment system.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../static/css/style.min.css">
+  <meta name="theme-color" content="#fff">
+</head>
+<body>
+    <div class="page admin-project-view-page">
+        <div class="top-navbar">
+            <div class="row">
+                <div class="col">
+                    <div class="logo-icon">
+                        <p class="icon">A</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <ul class="menu">
+                        <li><a class="active" href="admin-project-list.html">Projects</a></li>
+                        <li><a href="admin-employee-list.html">Employees</a></li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <div class="dropdown dropdown-user-info">
+                      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="userInfoMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="icon">S</span> Sebastian Miecielica
+                      </a>
+
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userInfoMenu">
+                        <li><a class="dropdown-item" href="#">Log out</a></li>
+                      </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="container">
+                <h1>First test project</h1>
+
+                <p class="project-descirption">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac malesuada magna, et scelerisque odio. Suspendisse dolor sapien, convallis id lorem sit amet, laoreet efficitur magna. Quisque vitae luctus elit. Suspendisse molestie rutrum libero vitae malesuada. Mauris sit amet consequat purus. Maecenas eget lobortis odio. Proin hendrerit dui enim, id tincidunt eros gravida ac.
+                </p>
+
+                <div class="row">
+                    <div class="col-9">
+                        <p class="content-title">Project epics <a class="btn btn-warning" title="New project" href="admin-epic-add.html"><i class="fa-solid fa-plus"></i> New epic</a></p>
+
+                        <div class="accordion" id="epic-list">
+                          <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-001">
+                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-001" aria-expanded="true" aria-controls="collapse-001">
+                                <span class="key">#0001</span> Project first epic
+                              </button>
+                            </h2>
+                            <div id="collapse-001" class="accordion-collapse collapse" aria-labelledby="heading-001">
+                              <div class="accordion-body">
+                                <div class="task-list">
+                                    <div class="task-one">
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <p class="name"><span class="key">#0001</span> Task number asdsa 001231231</p>
+                                            </div>
+                                            <div class="col">
+
+                                                <p class="status"><span class="todo">To do</span></p>
+                                            </div>
+                                            <div class="col">
+                                                <p class="external"><a href="#" target="_blank" title="Przejdź do problemu #123456"><i class="fa-solid fa-arrow-up-right-from-square"></i> #123456</a></p>
+                                            </div>
+                                            <div class="col">
+                                                <div class="btn-group options">
+                                                  <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                  </button>
+                                                  <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-001"><i class="fa-solid fa-eye"></i> View description</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item dropdown-status todo" href="#">To do</a></li>
+                                                    <li><a class="dropdown-item dropdown-status inprogress" href="#">In progress</a></li>
+                                                    <li><a class="dropdown-item dropdown-status pending" href="#">Pending</a></li>
+                                                    <li><a class="dropdown-item dropdown-status done" href="#">Done</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item delete-task" href="#"><i class="fa-solid fa-trash-can"></i> Delete task</a></li>
+                                                  </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ul class="member-list">
+                                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sebastian Miecielica">SM</li>
+                                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Łukasz Kabat">ŁK</li>
+                                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jan Paweł">JP</li>
+                                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jan Kowlaski">JP</li>
+                                        </ul>
+
+                                        <div class="modal fade" id="modal-001" tabindex="-1" aria-labelledby="modal-001-label" aria-hidden="true">
+                                          <div class="modal-dialog">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h5 class="modal-title" id="modal-001-label">Task number asdsa 001231231</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac malesuada magna, et scelerisque odio. Suspendisse dolor sapien, convallis id lorem sit amet, laoreet efficitur magna. Quisque vitae luctus elit. Suspendisse molestie rutrum libero vitae malesuada. Mauris sit amet consequat purus. Maecenas eget lobortis odio. Proin hendrerit dui enim, id tincidunt eros gravida ac. Fusce tincidunt, felis non feugiat dictum, justo risus dictum leo, et semper nisl eros et mi. Integer eros nibh, vulputate vitae consequat id, lacinia vel est. Nam ligula nunc, maximus non ante in, congue pellentesque lectus. Sed dignissim dui ligula, at dapibus felis blandit a. Pellentesque varius, diam eu commodo tincidunt, lectus dui venenatis ante, sed hendrerit ipsum nisi ac ligula.</p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <div class="task-one">
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <p class="name"><span class="key">#0002</span> Task number asdsa 002231231</p>
+                                            </div>
+                                            <div class="col">
+
+                                                <p class="status"><span class="inprogress">In progress</span></p>
+                                            </div>
+                                            <div class="col">
+                                                <p class="external"><a href="#" target="_blank" title="Przejdź do problemu #123456"><i class="fa-solid fa-arrow-up-right-from-square"></i> #123456</a></p>
+                                            </div>
+                                            <div class="col">
+                                                <div class="btn-group options">
+                                                  <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                  </button>
+                                                  <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-002"><i class="fa-solid fa-eye"></i> View description</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item dropdown-status todo" href="#">To do</a></li>
+                                                    <li><a class="dropdown-item dropdown-status inprogress" href="#">In progress</a></li>
+                                                    <li><a class="dropdown-item dropdown-status pending" href="#">Pending</a></li>
+                                                    <li><a class="dropdown-item dropdown-status done" href="#">Done</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item delete-task" href="#"><i class="fa-solid fa-trash-can"></i> Delete task</a></li>
+                                                  </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ul class="member-list">
+                                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sebastian Miecielica">SM</li>
+                                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Łukasz Kabat">ŁK</li>
+                                        </ul>
+
+                                        <div class="modal fade" id="modal-002" tabindex="-1" aria-labelledby="modal-002-label" aria-hidden="true">
+                                          <div class="modal-dialog">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h5 class="modal-title" id="modal-002-label">Task number asdsa 002231231</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac malesuada magna, et scelerisque odio. Suspendisse dolor sapien, convallis id lorem sit amet, laoreet efficitur magna. Quisque vitae luctus elit. Suspendisse molestie rutrum libero vitae malesuada. Mauris sit amet consequat purus. Maecenas eget lobortis odio. Proin hendrerit dui enim, id tincidunt eros gravida ac. Fusce tincidunt, felis non feugiat dictum, justo risus dictum leo, et semper nisl eros et mi. Integer eros nibh, vulputate vitae consequat id, lacinia vel est. Nam ligula nunc, maximus non ante in, congue pellentesque lectus. Sed dignissim dui ligula, at dapibus felis blandit a. Pellentesque varius, diam eu commodo tincidunt, lectus dui venenatis ante, sed hendrerit ipsum nisi ac ligula.</p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a href="task-add.html" title="Add task" class="add-task"><i class="fa-solid fa-plus"></i> New task</a>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-002">
+                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-002" aria-expanded="true" aria-controls="collapse-002">
+                                <span class="key">#0002</span> Project first epic
+                              </button>
+                            </h2>
+                            <div id="collapse-002" class="accordion-collapse collapse" aria-labelledby="heading-002">
+                              <div class="accordion-body">
+                                <div class="task-list">
+                                    <div class="task-one">
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <p class="name"><span class="key">#0003</span> Task number asdsa 003231231</p>
+                                            </div>
+                                            <div class="col">
+
+                                                <p class="status"><span class="done">Done</span></p>
+                                            </div>
+                                            <div class="col">
+                                                <p class="external"><a href="#" target="_blank" title="Przejdź do problemu #123456"><i class="fa-solid fa-arrow-up-right-from-square"></i> #123456</a></p>
+                                            </div>
+                                            <div class="col">
+                                                <div class="btn-group options">
+                                                  <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                  </button>
+                                                  <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-003"><i class="fa-solid fa-eye"></i> View description</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item dropdown-status todo" href="#">To do</a></li>
+                                                    <li><a class="dropdown-item dropdown-status inprogress" href="#">In progress</a></li>
+                                                    <li><a class="dropdown-item dropdown-status pending" href="#">Pending</a></li>
+                                                    <li><a class="dropdown-item dropdown-status done" href="#">Done</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item delete-task" href="#"><i class="fa-solid fa-trash-can"></i> Delete task</a></li>
+                                                  </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ul class="member-list">
+                                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sebastian Miecielica">SM</li>
+                                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Łukasz Kabat">ŁK</li>
+                                        </ul>
+
+                                        <div class="modal fade" id="modal-003" tabindex="-1" aria-labelledby="modal-003-label" aria-hidden="true">
+                                          <div class="modal-dialog">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h5 class="modal-title" id="modal-003-label">Task number asdsa 003231231</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac malesuada magna, et scelerisque odio. Suspendisse dolor sapien, convallis id lorem sit amet, laoreet efficitur magna. Quisque vitae luctus elit. Suspendisse molestie rutrum libero vitae malesuada. Mauris sit amet consequat purus. Maecenas eget lobortis odio. Proin hendrerit dui enim, id tincidunt eros gravida ac. Fusce tincidunt, felis non feugiat dictum, justo risus dictum leo, et semper nisl eros et mi. Integer eros nibh, vulputate vitae consequat id, lacinia vel est. Nam ligula nunc, maximus non ante in, congue pellentesque lectus. Sed dignissim dui ligula, at dapibus felis blandit a. Pellentesque varius, diam eu commodo tincidunt, lectus dui venenatis ante, sed hendrerit ipsum nisi ac ligula.</p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a href="task-add.html" title="Add task" class="add-task"><i class="fa-solid fa-plus"></i> New task</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <p class="content-title">
+                            Assigned employees
+                        </p>
+
+                        <ul class="member-list">
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sebastian Miecielica">SM</li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Łukasz Kabat">ŁK</li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jan Paweł">JP</li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jan Kowlaski">JP</li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sebastian Miecielica">SM</li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Łukasz Kabat">ŁK</li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jan Paweł">JP</li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jan Kowlaski">JP</li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sebastian Miecielica">SM</li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Łukasz Kabat">ŁK</li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jan Paweł">JP</li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jan Kowlaski">JP</li>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="../../static/js/lib/bootstrap.bundle.min.js"></script>
+    <script src="../../static/js/scripts.js"></script>
+</body>
+</html>

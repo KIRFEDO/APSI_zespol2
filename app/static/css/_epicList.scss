@@ -1,0 +1,201 @@
+#epic-list{
+    border-radius: 5px;
+    box-shadow: 0 1px 25px -10px #ddd;
+
+    .accordion-item{
+
+        .accordion-button{
+            box-shadow: none;
+            color: #333;
+            font-weight: 600;
+            background-color: #f6f8ff;
+
+            &.collapsed{
+                background-color: transparent;
+            }
+
+            .key{
+                color: #fff;
+                margin: 1px 15px 0 0;
+                background-color: #fed330;
+                padding: 3px 12px;
+                border-radius: 5px;
+                font-size: 12px;
+                float: left;
+            }
+        }
+
+        .accordion-collapse{
+            background-color: #f6f8ff;
+
+            .accordion-body{
+                padding: 20px;
+
+                .task-list{
+                    background-color: #fff;
+                    border-radius: 0;
+                    border: 1px solid #eee;
+
+                    .task-one{
+                        border-bottom: 1px solid #f8f9ff;
+
+                        &:last-child{
+                            border-bottom: 0;
+                        }
+
+                        .name{
+                            padding: 15px;
+                            font-weight: 600;
+                            margin: 0;
+
+                            .key{
+                                color: #fff;
+                                margin: 1px 5px 0 0;
+                                background-color: #a55eea;
+                                padding: 3px 12px;
+                                border-radius: 5px;
+                                font-size: 12px;
+                            }
+                        }
+
+                        .status{
+                            padding: 15px;
+                            margin: 0;
+
+                            span{
+                                padding: 3px 12px;
+                                border-radius: 5px;
+                                font-weight: 900;
+                                text-transform: uppercase;
+                                font-size: 12px;
+
+                                &.todo{
+                                    color: #42526E;
+                                    background-color: #DFE1E6;
+                                }
+
+                                &.inprogress, &.pending{
+                                    color: #0747A6;
+                                    background-color: #DEEBFF;
+                                }
+
+                                &.done{
+                                    color: #006644;
+                                    background-color: #E3FCEF;
+                                }
+                            }
+                        }
+
+                        .external{
+                            padding: 15px;
+                            margin: 0;
+
+                            a{
+                                color: #333;
+                                text-decoration: none;
+                                border-bottom: 1px dotted;
+                                font-weight: 600;
+                                font-size: 14px;
+
+                                &:hover{
+                                    color: #000;
+                                }
+                            }
+                        }
+
+                        .options{
+                            margin: 0;
+                            padding: 15px;
+                            float: right;
+
+                            button{
+                                display: inline-block;
+                                background: transparent;
+                                border: 0;
+                            }
+
+                            .dropdown-menu{
+                                li{
+                                    padding: 2px 5px;
+
+                                    hr{
+                                        margin: 0 !important;
+                                    }
+
+                                    .dropdown-item{
+                                        font-size: 12px;
+                                        font-size: 12px;
+                                        padding: 4px 8px;
+                                        font-weight: 600;
+                                        text-transform: uppercase;
+                                        border-radius: 3px;
+
+                                        i{
+                                            margin: 0 3px 0 0;
+                                        }
+
+                                        &.dropdown-status{
+                                            font-weight: 900;
+
+                                            &.todo{
+                                                color: #42526E;
+                                                background-color: #DFE1E6;
+                                            }
+
+                                            &.inprogress, &.pending{
+                                                color: #0747A6;
+                                                background-color: #DEEBFF;
+                                            }
+
+                                            &.done{
+                                                color: #006644;
+                                                background-color: #E3FCEF;
+                                            }
+                                        }
+
+                                        &.delete-task{
+                                            background-color: #f5e6e3;
+                                            color: #e17055;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .member-list{
+                    border-top: 1px solid #eee;
+                    padding: 15px 0 0 0;
+                    margin: 0 15px 15px;
+
+                    li{
+                        margin-bottom: 0;
+                    }
+                }
+
+                .add-task{
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                    font-weight: 800;
+                    padding: 6px 5px;
+                    text-decoration: none;
+                    background-color: #dce7ff;
+                    color: #4b7bec;
+                    text-transform: uppercase;
+                    font-size: 12px;
+
+                    &:hover{
+                        background-color: #4b7bec;
+                        color: #fff;
+                    }
+
+                    i{
+                        margin: 0 3px 0 0;
+                    }
+                }
+            }
+        }
+    }
+}

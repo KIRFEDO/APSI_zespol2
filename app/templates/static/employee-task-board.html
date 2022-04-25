@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Projects - APSI</title>
+  <meta name="description" content="Revolutionary task managment system.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../static/css/style.min.css">
+  <meta name="theme-color" content="#fff">
+</head>
+<body>
+    <div class="page admin-employees-task-board">
+        <div class="top-navbar">
+            <div class="row">
+                <div class="col">
+                    <div class="logo-icon">
+                        <p class="icon">A</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <ul class="menu">
+                        <li><a href="employee-project-list.html">Projects</a></li>
+                        <li><a class="active" href="employee-task-board.html">Tasks board</a></li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <div class="dropdown dropdown-user-info">
+                      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="userInfoMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="icon">S</span> Sebastian Miecielica
+                      </a>
+
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userInfoMenu">
+                        <li><a class="dropdown-item" href="#">Log out</a></li>
+                      </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="container">
+                <h1>Task board</h1>
+
+                <div class="task-board">
+                    <div class="row">
+                        <div class="col">
+                            <div class="col-wrapper todo">
+                                <h4 class="col-title">To do</h4>
+                                <div class="task-boxes" id="todo-boxes">
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details" data-bs-toggle="modal" data-bs-target="#modal-001">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+
+                                        <div class="modal fade" id="modal-001" tabindex="-1" aria-labelledby="modal-001-label" aria-hidden="true">
+                                          <div class="modal-dialog">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h5 class="modal-title" id="modal-001-label">Task number asdsa 001231231</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac malesuada magna, et scelerisque odio. Suspendisse dolor sapien, convallis id lorem sit amet, laoreet efficitur magna. Quisque vitae luctus elit. Suspendisse molestie rutrum libero vitae malesuada. Mauris sit amet consequat purus. Maecenas eget lobortis odio. Proin hendrerit dui enim, id tincidunt eros gravida ac. Fusce tincidunt, felis non feugiat dictum, justo risus dictum leo, et semper nisl eros et mi. Integer eros nibh, vulputate vitae consequat id, lacinia vel est. Nam ligula nunc, maximus non ante in, congue pellentesque lectus. Sed dignissim dui ligula, at dapibus felis blandit a. Pellentesque varius, diam eu commodo tincidunt, lectus dui venenatis ante, sed hendrerit ipsum nisi ac ligula.</p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="col-wrapper inprogress">
+                                <h4 class="col-title">In progress</h4>
+                                <div class="task-boxes" id="inprogress-boxes">
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+                                    </div>
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+                                    </div>
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="col-wrapper pending">
+                                <h4 class="col-title">Pending</h4>
+                                <div class="task-boxes" id="pending-boxes">
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="col-wrapper done">
+                                <h4 class="col-title">Done</h4>
+                                <div class="task-boxes" id="done-boxes">
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+                                    </div>
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+                                    </div>
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+                                    </div>
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+                                    </div>
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+                                    </div>
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+                                    </div>
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+                                    </div>
+                                    <div class="task-box">
+                                        <a href="#" title="Task details" class="view-details">Task details</a>
+                                        <p class="task-title">Short task title</p>
+                                        <p class="project-title">First project</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../static/js/lib/bootstrap.bundle.min.js"></script>
+    <script src="../../static/js/lib/perfect-scrollbar.min.js"></script>
+    <script>
+        // Scroolbars
+        const todoScrollbar = new PerfectScrollbar('#todo-boxes');
+        const inprogressScrollbar = new PerfectScrollbar('#inprogress-boxes');
+        const pendingScrollbar = new PerfectScrollbar('#pending-boxes');
+        const doneScrollbar = new PerfectScrollbar('#done-boxes');
+    </script>
+</body>
+</html>

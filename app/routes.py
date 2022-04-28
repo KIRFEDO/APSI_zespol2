@@ -43,6 +43,14 @@ def project():
     u = User.query.get(user)
     return render_template('static/employee-project-view.html', u=u)
 
+# Add new task
+@app.route('/e/projects/p/addtask')
+def addtask():
+    user = -1
+    if current_user.is_authenticated:
+        user = current_user.get_id()
+    u = User.query.get(user)
+    return render_template('static/task-add.html', u=u)
 
 
 # Login/registration -----------------------------------------------------------
@@ -79,4 +87,4 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('login'))

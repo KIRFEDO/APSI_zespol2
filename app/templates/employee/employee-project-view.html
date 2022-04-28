@@ -11,32 +11,7 @@
 </head>
 <body>
     <div class="page admin-project-view-page">
-        <div class="top-navbar">
-            <div class="row">
-                <div class="col">
-                    <div class="logo-icon">
-                        <p class="icon">A</p>
-                    </div>
-                </div>
-                <div class="col">
-                    <ul class="menu">
-                        <li><a class="active" href="/e/projects">Projects</a></li>
-                        <li><a href="/e/taskboard">Tasks board</a></li>
-                    </ul>
-                </div>
-                <div class="col">
-                    <div class="dropdown dropdown-user-info">
-                      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="userInfoMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="icon">S</span> Sebastian Miecielica
-                      </a>
-
-                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userInfoMenu">
-                        <li><a class="dropdown-item" href="/logout">Log out</a></li>
-                      </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% include 'common/navbar.html' %}
 
         <div class="content-wrapper">
             <div class="container">
@@ -160,7 +135,7 @@
                                     </div>
                                 </div>
 
-                                <a href="/e/projects/p/addtask" title="Add task" class="add-task"><i class="fa-solid fa-plus"></i> New task</a>
+                                <a href="/task/add" title="Add task" class="add-task"><i class="fa-solid fa-plus"></i> New task</a>
                               </div>
                             </div>
                           </div>
@@ -222,7 +197,7 @@
                                     </div>
                                 </div>
 
-                                <a href="/e/projects/p/addtask" title="Add task" class="add-task"><i class="fa-solid fa-plus"></i> New task</a>
+                                <a href="/task/add" title="Add task" class="add-task"><i class="fa-solid fa-plus"></i> New task</a>
                               </div>
                             </div>
                           </div>
@@ -233,7 +208,6 @@
         </div>
     </div>
 
-    <script src="../../static/js/lib/bootstrap.bundle.min.js"></script>
-    <script src="../../static/js/scripts.js"></script>
+    {% include 'common/footer.html' %}
 </body>
 </html>

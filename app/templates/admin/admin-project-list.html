@@ -3,48 +3,23 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Projects - APSI</title>
-  <meta name="description" content="REvolutionary task managment system.">
+  <title>Projects list - APSI</title>
+  <meta name="description" content="Revolutionary task managment system.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../../static/css/style.min.css">
   <meta name="theme-color" content="#fff">
 </head>
 <body>
-    <div class="page admin-project-list-page">
-        <div class="top-navbar">
-            <div class="row">
-                <div class="col">
-                    <div class="logo-icon">
-                        <p class="icon">A</p>
-                    </div>
-                </div>
-                <div class="col">
-                    <ul class="menu">
-                        <li><a class="active" href="admin-project-list.html">Projects</a></li>
-                        <li><a href="admin-employee-list.html">Employees</a></li>
-                    </ul>
-                </div>
-                <div class="col">
-                    <div class="dropdown dropdown-user-info">
-                      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="userInfoMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="icon">S</span> Sebastian Miecielica
-                      </a>
-
-                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userInfoMenu">
-                        <li><a class="dropdown-item" href="#">Log out</a></li>
-                      </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="page {{u.role}}-{{current_view}}-page">
+        {% include 'common/navbar.html' %}
 
         <div class="content-wrapper">
             <div class="container">
-                <h1>Projects <a class="btn btn-primary" title="New project" href="admin-project-add.html"><i class="fa-solid fa-plus"></i> New project</a></h1>
+                <h1>Projects <a class="btn btn-primary" title="New project" href="/projects/add"><i class="fa-solid fa-plus"></i> New project</a></h1>
 
                 <div class="project-list">
                     <div class="project-one">
-                        <a class="view-project" href="admin-project-view.html" title="Project details">Project details</a>
+                        <a class="view-project" href="/projects/p" title="Project details">Project details</a>
                         <div class="row">
                             <div class="col">
                                 <p class="key">#1234</p>
@@ -67,7 +42,7 @@
                         </div>
                     </div>
                     <div class="project-one">
-                        <a class="view-project" href="admin-project-view.html" title="Project details">Project details</a>
+                        <a class="view-project" href="/projects/p" title="Project details">Project details</a>
                         <div class="row">
                             <div class="col">
                                 <p class="key">#1234</p>
@@ -90,7 +65,7 @@
                         </div>
                     </div>
                     <div class="project-one">
-                        <a class="view-project" href="admin-project-view.html" title="Project details">Project details</a>
+                        <a class="view-project" href="/projects/p" title="Project details">Project details</a>
                         <div class="row">
                             <div class="col">
                                 <p class="key">#1234</p>
@@ -113,7 +88,7 @@
                         </div>
                     </div>
                     <div class="project-one">
-                        <a class="view-project" href="admin-project-view.html" title="Project details">Project details</a>
+                        <a class="view-project" href="/projects/p" title="Project details">Project details</a>
                         <div class="row">
                             <div class="col">
                                 <p class="key">#1234</p>
@@ -136,7 +111,7 @@
                         </div>
                     </div>
                     <div class="project-one">
-                        <a class="view-project" href="admin-project-view.html" title="Project details">Project details</a>
+                        <a class="view-project" href="/projects/p" title="Project details">Project details</a>
                         <div class="row">
                             <div class="col">
                                 <p class="key">#1234</p>
@@ -163,6 +138,6 @@
         </div>
     </div>
 
-    <script src="../../static/js/lib/bootstrap.bundle.min.js"></script>
+    {% include 'common/footer.html' %}
 </body>
 </html>

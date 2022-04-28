@@ -4,39 +4,14 @@
 <head>
   <meta charset="utf-8">
   <title>First test project - APSI</title>
-  <meta name="description" content="REvolutionary task managment system.">
+  <meta name="description" content="Revolutionary task managment system.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../../static/css/style.min.css">
   <meta name="theme-color" content="#fff">
 </head>
 <body>
-    <div class="page admin-project-view-page">
-        <div class="top-navbar">
-            <div class="row">
-                <div class="col">
-                    <div class="logo-icon">
-                        <p class="icon">A</p>
-                    </div>
-                </div>
-                <div class="col">
-                    <ul class="menu">
-                        <li><a class="active" href="admin-project-list.html">Projects</a></li>
-                        <li><a href="admin-employee-list.html">Employees</a></li>
-                    </ul>
-                </div>
-                <div class="col">
-                    <div class="dropdown dropdown-user-info">
-                      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="userInfoMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="icon">S</span> Sebastian Miecielica
-                      </a>
-
-                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userInfoMenu">
-                        <li><a class="dropdown-item" href="#">Log out</a></li>
-                      </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="page {{u.role}}-{{current_view}}-page">
+        {% include 'common/navbar.html' %}
 
         <div class="content-wrapper">
             <div class="container">
@@ -48,7 +23,7 @@
 
                 <div class="row">
                     <div class="col-9">
-                        <p class="content-title">Project epics <a class="btn btn-warning" title="New project" href="admin-epic-add.html"><i class="fa-solid fa-plus"></i> New epic</a></p>
+                        <p class="content-title">Project epics <a class="btn btn-warning" title="New project" href="/epic/add"><i class="fa-solid fa-plus"></i> New epic</a></p>
 
                         <div class="accordion" id="epic-list">
                           <div class="accordion-item">
@@ -162,7 +137,7 @@
                                     </div>
                                 </div>
 
-                                <a href="task-add.html" title="Add task" class="add-task"><i class="fa-solid fa-plus"></i> New task</a>
+                                <a href="/task/add" title="Add task" class="add-task"><i class="fa-solid fa-plus"></i> New task</a>
                               </div>
                             </div>
                           </div>
@@ -181,7 +156,6 @@
                                                 <p class="name"><span class="key">#0003</span> Task number asdsa 003231231</p>
                                             </div>
                                             <div class="col">
-
                                                 <p class="status"><span class="done">Done</span></p>
                                             </div>
                                             <div class="col">
@@ -226,7 +200,7 @@
                                     </div>
                                 </div>
 
-                                <a href="task-add.html" title="Add task" class="add-task"><i class="fa-solid fa-plus"></i> New task</a>
+                                <a href="/task/add" title="Add task" class="add-task"><i class="fa-solid fa-plus"></i> New task</a>
                               </div>
                             </div>
                           </div>
@@ -258,7 +232,6 @@
         </div>
     </div>
 
-    <script src="../../static/js/lib/bootstrap.bundle.min.js"></script>
-    <script src="../../static/js/scripts.js"></script>
+    {% include 'common/footer.html' %}
 </body>
 </html>

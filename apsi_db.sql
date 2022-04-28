@@ -44,9 +44,7 @@ SET row_security = off;
 
 CREATE TYPE public.role AS ENUM (
     'administrator',
-    'kierownik',
-    'pracownik',
-    'klient'
+    'employee'
 );
 
 
@@ -424,4 +422,3 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
-

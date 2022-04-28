@@ -1,46 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="utf-8">
+  <title>Log in - APSI - Task managment system</title>
+  <meta name="description" content="Revolutionary task managment system.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../static/css/style.min.css">
+  <meta name="theme-color" content="#fff">
 </head>
 <body>
-    <div class="content-section">
-        <form method="POST" action="">
-            {{ form.hidden_tag() }}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Logowanie</legend>
-                <div class="form-group">
-                    {{ form.login.label(class="form-control-label") }}
-                    {% if form.login.errors %}
-                        {{ form.login(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.login.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.login(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.password.label(class="form-control-label") }}
-                    {% if form.password.errors %}
-                        {{ form.password(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.password.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.password(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-            </fieldset>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-info") }}
+    <div class="page login-page">
+        <div class="container">
+            <div class="logo">
+                <p class="icon">A</p>
+                <p class="name">APSI</p>
+                <p class="description">Task managment system</p>
             </div>
-        </form>
+
+            <div class="login-form-wrapper">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    <h1>Log in</h1>
+                    {% if error_message != '' %}
+                    <div class="alert alert-danger" role="alert">
+                        {{error_message}}
+                    </div>
+                    {% endif %}
+                    <div class="mb-3">
+                        {{ form.login.label(class="form-label") }}
+                        {{ form.login(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-control") }}
+                    </div>
+
+                    {{ form.submit(class="btn btn-primary") }}
+                    <p class="helper">Don't have an account? <a href="/register" title="Sign up">Sign up</a></p>
+                </form>
+            </div>
+
+            <div class="system-pros">
+                <div class="row">
+                    <div class="col">
+                        <div class="pros-one">
+                            <i class="fa-solid fa-list-check"></i>
+                            <p class="title">Task managment</p>
+                            <p class="description">Simplify task workflow in your projects</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="pros-one">
+                            <i class="fa-solid fa-person-chalkboard"></i>
+                            <p class="title">Kanban board</p>
+                            <p class="description">Allow employees to access all of their tasks in an easy, time-saving method</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="pros-one">
+                            <i class="fa-solid fa-people-group"></i>
+                            <p class="title">Employee management</p>
+                            <p class="description">View and manage employees, monitor their progress</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

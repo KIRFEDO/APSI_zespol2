@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(20), nullable=False)
     surname = db.Column(db.String(30), nullable=False)
-    role = db.Column(db.Enum('administrator', 'kierownik', 'pracownik', 'klient', name='role'), nullable=False)
+    role = db.Column(db.Enum('administrator', 'employee', name='role'), nullable=False)
     supervisor = db.Column(db.Integer, db.ForeignKey('users.id'))
     active = db.Column(db.Boolean, nullable=False)
     subordinates = db.relationship('User', remote_side=[id], backref='worker_supervisor', lazy=True, foreign_keys='User.supervisor')

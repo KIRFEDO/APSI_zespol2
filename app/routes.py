@@ -4,16 +4,39 @@ from flask_login import current_user, login_user, logout_user
 from app.forms import LoginForm, RegistrationForm
 from app.models import User
 
+# Home
+#@app.route('/')
+#def home():
+#    user = -1
+#    if current_user.is_authenticated:
+#        user = current_user.get_id()
+#    u = User.query.get(user)
+#    return render_template('home.html', u=u)
 
+
+# Employee views ---------------------------------------------------------------
+# Projects list
 @app.route('/')
-def home():
+@app.route('/e/projects')
+def projects():
     user = -1
     if current_user.is_authenticated:
         user = current_user.get_id()
     u = User.query.get(user)
-    return render_template('home.html', u=u)
+    return render_template('static/employee-project-list.html', u=u)
+
+# Single project
+@app.route('/e/projects/p')
+def project():
+    user = -1
+    if current_user.is_authenticated:
+        user = current_user.get_id()
+    u = User.query.get(user)
+    return render_template('static/employee-project-view.html', u=u)
 
 
+
+# Login/registration -----------------------------------------------------------
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()

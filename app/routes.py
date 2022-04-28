@@ -25,6 +25,7 @@ def projects():
     u = User.query.get(user)
     return render_template('static/employee-project-list.html', u=u)
 
+# Taskboard list
 @app.route('/e/taskboard')
 def taskboard():
     user = -1

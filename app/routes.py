@@ -25,6 +25,14 @@ def projects():
     u = User.query.get(user)
     return render_template('static/employee-project-list.html', u=u)
 
+@app.route('/e/taskboard')
+def taskboard():
+    user = -1
+    if current_user.is_authenticated:
+        user = current_user.get_id()
+    u = User.query.get(user)
+    return render_template('static/employee-task-board.html', u=u)
+
 # Single project
 @app.route('/e/projects/p')
 def project():

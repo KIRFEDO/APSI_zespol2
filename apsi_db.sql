@@ -43,47 +43,49 @@ SET row_security = off;
 --
 
 CREATE TYPE public.role AS ENUM (
-    'administrator',
-    'employee'
+    'kierownik',
+    'pracownik',
+    'klient'
 );
 
 
 ALTER TYPE public.role OWNER TO apsi;
-
---
--- Name: status; Type: TYPE; Schema: public; Owner: apsi
---
-
-CREATE TYPE public.status AS ENUM (
-    'aktywny',
-    'zakończony',
-    'zawieszony'
-);
-
-
-ALTER TYPE public.status OWNER TO apsi;
 
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- Name: epics; Type: TABLE; Schema: public; Owner: apsi
+-- Name: activities; Type: TABLE; Schema: public; Owner: apsi
 --
 
-CREATE TABLE public.epics (
+CREATE TABLE public.activities (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    task_id integer NOT NULL,
+    date date NOT NULL,
+    "time" interval NOT NULL,
+    description character varying,
+    supervisor_approved boolean,
+    client_approved boolean
+);
+
+
+ALTER TABLE public.activities OWNER TO apsi;
+
+--
+-- Name: tasks; Type: TABLE; Schema: public; Owner: apsi
+--
+
+CREATE TABLE public.tasks (
     id integer NOT NULL,
     name character varying(50) NOT NULL,
     description character varying(500),
-    creator integer,
-    deadline date NOT NULL,
-    supervisor_approved boolean NOT NULL,
-    client_approved boolean NOT NULL,
     project integer NOT NULL
 );
 
 
-ALTER TABLE public.epics OWNER TO apsi;
+ALTER TABLE public.tasks OWNER TO apsi;
 
 --
 -- Name: epics_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
@@ -104,8 +106,21 @@ ALTER TABLE public.epics_id_seq OWNER TO apsi;
 -- Name: epics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: apsi
 --
 
-ALTER SEQUENCE public.epics_id_seq OWNED BY public.epics.id;
+ALTER SEQUENCE public.epics_id_seq OWNED BY public.tasks.id;
 
+
+--
+-- Name: project_assignment; Type: TABLE; Schema: public; Owner: apsi
+--
+
+CREATE TABLE public.project_assignment (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    project_id integer
+);
+
+
+ALTER TABLE public.project_assignment OWNER TO apsi;
 
 --
 -- Name: projects; Type: TABLE; Schema: public; Owner: apsi
@@ -115,11 +130,8 @@ CREATE TABLE public.projects (
     id integer NOT NULL,
     name character varying(50) NOT NULL,
     description character varying(500),
-    status public.status NOT NULL,
-    supervisor integer,
-    client integer,
-    start date NOT NULL,
-    deadline date NOT NULL
+    supervisor integer NOT NULL,
+    client integer
 );
 
 
@@ -148,29 +160,10 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 
 
 --
--- Name: tasks; Type: TABLE; Schema: public; Owner: apsi
+-- Name: table_name_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
 --
 
-CREATE TABLE public.tasks (
-    id integer NOT NULL,
-    name character varying(50),
-    description character varying(500),
-    creator integer NOT NULL,
-    expected_time double precision,
-    assigned_to integer,
-    finished boolean NOT NULL,
-    supervisor_approved boolean NOT NULL,
-    epic integer NOT NULL
-);
-
-
-ALTER TABLE public.tasks OWNER TO apsi;
-
---
--- Name: tasks_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
---
-
-CREATE SEQUENCE public.tasks_id_seq
+CREATE SEQUENCE public.table_name_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -179,13 +172,35 @@ CREATE SEQUENCE public.tasks_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.tasks_id_seq OWNER TO apsi;
+ALTER TABLE public.table_name_id_seq OWNER TO apsi;
 
 --
--- Name: tasks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: apsi
+-- Name: table_name_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: apsi
 --
 
-ALTER SEQUENCE public.tasks_id_seq OWNED BY public.tasks.id;
+ALTER SEQUENCE public.table_name_id_seq OWNED BY public.activities.id;
+
+
+--
+-- Name: table_name_id_seq1; Type: SEQUENCE; Schema: public; Owner: apsi
+--
+
+CREATE SEQUENCE public.table_name_id_seq1
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.table_name_id_seq1 OWNER TO apsi;
+
+--
+-- Name: table_name_id_seq1; Type: SEQUENCE OWNED BY; Schema: public; Owner: apsi
+--
+
+ALTER SEQUENCE public.table_name_id_seq1 OWNED BY public.project_assignment.id;
 
 
 --
@@ -199,8 +214,7 @@ CREATE TABLE public.users (
     name character varying(20) NOT NULL,
     surname character varying(30) NOT NULL,
     role public.role NOT NULL,
-    supervisor integer,
-    active boolean NOT NULL
+    supervisor integer
 );
 
 
@@ -229,10 +243,17 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: epics id; Type: DEFAULT; Schema: public; Owner: apsi
+-- Name: activities id; Type: DEFAULT; Schema: public; Owner: apsi
 --
 
-ALTER TABLE ONLY public.epics ALTER COLUMN id SET DEFAULT nextval('public.epics_id_seq'::regclass);
+ALTER TABLE ONLY public.activities ALTER COLUMN id SET DEFAULT nextval('public.table_name_id_seq'::regclass);
+
+
+--
+-- Name: project_assignment id; Type: DEFAULT; Schema: public; Owner: apsi
+--
+
+ALTER TABLE ONLY public.project_assignment ALTER COLUMN id SET DEFAULT nextval('public.table_name_id_seq1'::regclass);
 
 
 --
@@ -246,7 +267,7 @@ ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.pro
 -- Name: tasks id; Type: DEFAULT; Schema: public; Owner: apsi
 --
 
-ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.tasks_id_seq'::regclass);
+ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.epics_id_seq'::regclass);
 
 
 --
@@ -257,7 +278,13 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Data for Name: epics; Type: TABLE DATA; Schema: public; Owner: apsi
+-- Data for Name: activities; Type: TABLE DATA; Schema: public; Owner: apsi
+--
+
+
+
+--
+-- Data for Name: project_assignment; Type: TABLE DATA; Schema: public; Owner: apsi
 --
 
 
@@ -278,43 +305,69 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: apsi
 --
 
-INSERT INTO public.users (id, login, password, name, surname, role, supervisor, active) VALUES (2, 'test', '$2b$12$4oqRenQIPtSV6RQoWkPoROxbKujx3gMu/j2nXacrRET2we6CPYWnq', 'test', 'test', 'administrator', NULL, true);
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (2, 'test', '$2b$12$4oqRenQIPtSV6RQoWkPoROxbKujx3gMu/j2nXacrRET2we6CPYWnq', 'test', 'test', 'kierownik', NULL);
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (3, 'test22', '$2b$12$uxupU0jF6yUNkFXzDj2j9uGhVyiD5y46MF3iBXVSZtRl3BngO7Dqa', 'test2', 'test2', 'kierownik', NULL);
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (4, '123456', '$2b$12$f0WToV4/E9mVtGAFYprLD.o4KOhqLo5ZxG6x5uAkkswewmrY0j28O', '123456', '123456', 'pracownik', NULL);
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (5, 'qwerty', '$2b$12$56qegmRAHAdeYS3EV/8qWuP69Wt.kOCxvNRxFKjDY0Bww7bhgOTQ.', 'qwerty', 'qwerty', 'klient', NULL);
 
 
 --
 -- Name: epics_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-SELECT pg_catalog.setval('public.epics_id_seq', 1, false);
+SELECT pg_catalog.setval('public.epics_id_seq', 1, true);
 
 
 --
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 1, false);
+SELECT pg_catalog.setval('public.projects_id_seq', 1, true);
 
 
 --
--- Name: tasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
+-- Name: table_name_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-SELECT pg_catalog.setval('public.tasks_id_seq', 1, false);
+SELECT pg_catalog.setval('public.table_name_id_seq', 1, true);
+
+
+--
+-- Name: table_name_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: apsi
+--
+
+SELECT pg_catalog.setval('public.table_name_id_seq1', 1, true);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 2, true);
+SELECT pg_catalog.setval('public.users_id_seq', 5, true);
 
 
 --
--- Name: epics epics_pk; Type: CONSTRAINT; Schema: public; Owner: apsi
+-- Name: activities activities_pk; Type: CONSTRAINT; Schema: public; Owner: apsi
 --
 
-ALTER TABLE ONLY public.epics
+ALTER TABLE ONLY public.activities
+    ADD CONSTRAINT activities_pk PRIMARY KEY (id);
+
+
+--
+-- Name: tasks epics_pk; Type: CONSTRAINT; Schema: public; Owner: apsi
+--
+
+ALTER TABLE ONLY public.tasks
     ADD CONSTRAINT epics_pk PRIMARY KEY (id);
+
+
+--
+-- Name: project_assignment project_assignment_pk; Type: CONSTRAINT; Schema: public; Owner: apsi
+--
+
+ALTER TABLE ONLY public.project_assignment
+    ADD CONSTRAINT project_assignment_pk PRIMARY KEY (id);
 
 
 --
@@ -323,14 +376,6 @@ ALTER TABLE ONLY public.epics
 
 ALTER TABLE ONLY public.projects
     ADD CONSTRAINT projects_pk PRIMARY KEY (id);
-
-
---
--- Name: tasks tasks_pk; Type: CONSTRAINT; Schema: public; Owner: apsi
---
-
-ALTER TABLE ONLY public.tasks
-    ADD CONSTRAINT tasks_pk PRIMARY KEY (id);
 
 
 --
@@ -356,19 +401,35 @@ CREATE UNIQUE INDEX users_login_uindex ON public.users USING btree (login);
 
 
 --
--- Name: epics epics_projects_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: apsi
+-- Name: activities activities_tasks_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: apsi
 --
 
-ALTER TABLE ONLY public.epics
-    ADD CONSTRAINT epics_projects_id_fk FOREIGN KEY (project) REFERENCES public.projects(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.activities
+    ADD CONSTRAINT activities_tasks_id_fk FOREIGN KEY (task_id) REFERENCES public.tasks(id) ON DELETE CASCADE;
 
 
 --
--- Name: epics epics_users_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: apsi
+-- Name: activities activities_users_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: apsi
 --
 
-ALTER TABLE ONLY public.epics
-    ADD CONSTRAINT epics_users_id_fk FOREIGN KEY (creator) REFERENCES public.users(id);
+ALTER TABLE ONLY public.activities
+    ADD CONSTRAINT activities_users_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: project_assignment project_assignment_projects_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: apsi
+--
+
+ALTER TABLE ONLY public.project_assignment
+    ADD CONSTRAINT project_assignment_projects_id_fk FOREIGN KEY (project_id) REFERENCES public.projects(id) ON DELETE CASCADE;
+
+
+--
+-- Name: project_assignment project_assignment_users_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: apsi
+--
+
+ALTER TABLE ONLY public.project_assignment
+    ADD CONSTRAINT project_assignment_users_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
@@ -388,27 +449,11 @@ ALTER TABLE ONLY public.projects
 
 
 --
--- Name: tasks tasks_epics_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: apsi
+-- Name: tasks tasks_projects_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: apsi
 --
 
 ALTER TABLE ONLY public.tasks
-    ADD CONSTRAINT tasks_epics_id_fk FOREIGN KEY (epic) REFERENCES public.epics(id) ON DELETE CASCADE;
-
-
---
--- Name: tasks tasks_users_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: apsi
---
-
-ALTER TABLE ONLY public.tasks
-    ADD CONSTRAINT tasks_users_id_fk FOREIGN KEY (assigned_to) REFERENCES public.users(id);
-
-
---
--- Name: tasks tasks_users_id_fk_2; Type: FK CONSTRAINT; Schema: public; Owner: apsi
---
-
-ALTER TABLE ONLY public.tasks
-    ADD CONSTRAINT tasks_users_id_fk_2 FOREIGN KEY (creator) REFERENCES public.users(id);
+    ADD CONSTRAINT tasks_projects_id_fk FOREIGN KEY (project) REFERENCES public.projects(id) ON DELETE CASCADE;
 
 
 --
@@ -422,3 +467,4 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
+

@@ -4,9 +4,10 @@ from flask_login import current_user, login_user, logout_user
 from app.forms import LoginForm, RegistrationForm
 from app.models import User
 
+
 # Home
-#@app.route('/')
-#def home():
+# @app.route('/')
+# def home():
 #    user = -1
 #    if current_user.is_authenticated:
 #        user = current_user.get_id()
@@ -27,8 +28,8 @@ def taskboard():
 
     return render_template('common/taskboard.html', u=u, current_view=current_view)
 
+
 # Projects list
-@app.route('/')
 @app.route('/projects')
 def projects():
     current_view = 'projects'
@@ -37,11 +38,12 @@ def projects():
         user = current_user.get_id()
     u = User.query.get(user)
 
-    if(u.role =='administrator'):
+    if (u.role == 'kierownik'):
         return render_template('admin/admin-project-list.html', u=u, current_view=current_view)
 
-    if(u.role == 'employee'):
+    else:
         return render_template('employee/employee-project-list.html', u=u, current_view=current_view)
+
 
 # Projects add
 @app.route('/projects/add')
@@ -52,12 +54,13 @@ def projectAdd():
         user = current_user.get_id()
     u = User.query.get(user)
 
-    if(u.role =='administrator'):
+    if (u.role == 'kierownik'):
         return render_template('admin/admin-project-add.html', u=u, current_view=current_view)
 
-    if(u.role == 'employee'):
-        #TODO unauthantized
+    else:
+        # TODO unauthantized
         return 0
+
 
 # Single project
 @app.route('/projects/p')
@@ -68,11 +71,12 @@ def projectsView():
         user = current_user.get_id()
     u = User.query.get(user)
 
-    if(u.role =='administrator'):
+    if (u.role == 'kierownik'):
         return render_template('admin/admin-project-view.html', u=u, current_view=current_view)
 
-    if(u.role == 'employee'):
+    else:
         return render_template('employee/employee-project-view.html', u=u, current_view=current_view)
+
 
 # Add new task
 @app.route('/task/add')
@@ -84,6 +88,7 @@ def addtask():
     u = User.query.get(user)
     return render_template('common/task-add.html', u=u)
 
+
 # Add new epic
 @app.route('/epic/add')
 def addEpic():
@@ -93,12 +98,13 @@ def addEpic():
         user = current_user.get_id()
     u = User.query.get(user)
 
-    if(u.role =='administrator'):
+    if (u.role == 'kierownik'):
         return render_template('admin/admin-epic-add.html', u=u, current_view=current_view)
 
-    if(u.role == 'employee'):
-        #TODO unauthantized
+    else:
+        # TODO unauthantized
         return 0
+
 
 # Single project
 @app.route('/employees')
@@ -109,12 +115,13 @@ def employees():
         user = current_user.get_id()
     u = User.query.get(user)
 
-    if(u.role =='administrator'):
+    if (u.role == 'kierownik'):
         return render_template('admin/admin-employee-list.html', u=u, current_view=current_view)
 
-    if(u.role == 'employee'):
-        #TODO unauthantized
+    else:
+        # TODO unauthantized
         return 0
+
 
 # Login/registration -----------------------------------------------------------
 @app.route("/register", methods=['GET', 'POST'])
@@ -123,7 +130,7 @@ def register():
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(login=form.login.data, password=hashed_password, name=form.name.data, surname=form.surname.data,
-                    role=form.role.data, active=True)
+                    role=form.role.data)
         db.session.add(user)
         db.session.commit()
         flash('Użytkownik utworzony', 'success')
@@ -131,6 +138,7 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -145,7 +153,7 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for('projects'))
         else:
             error_message = 'Incorrect username or password.'
-    return render_template('login.html', title='Login', form = form, error_message = error_message)
+    return render_template('login.html', title='Login', form=form, error_message=error_message)
 
 
 @app.route('/logout')

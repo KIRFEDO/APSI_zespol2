@@ -1,8 +1,8 @@
 from app import app, db, bcrypt
-from flask import render_template, redirect, flash, url_for, request
-from flask_login import current_user, login_user, logout_user
-from app.forms import LoginForm, RegistrationForm
-from app.models import User
+from flask import render_template, redirect, flash, url_for, request, abort
+from flask_login import current_user, login_user, logout_user, login_required
+from app.forms import LoginForm, RegistrationForm, ProjectForm
+from app.models import User, Project
 
 
 # Home
@@ -46,20 +46,27 @@ def projects():
 
 
 # Projects add
-@app.route('/projects/add')
+@app.route('/projects/add', methods=['GET', 'POST'])
+@login_required
 def projectAdd():
+    form = ProjectForm()
     current_view = 'projects-add'
-    user = -1
-    if current_user.is_authenticated:
-        user = current_user.get_id()
+    user = current_user.get_id()
     u = User.query.get(user)
-
-    if (u.role == 'kierownik'):
-        return render_template('admin/admin-project-add.html', u=u, current_view=current_view)
-
+    if u.role == 'kierownik':
+        if form.validate_on_submit():
+            c = form.client.data
+            if c == "":
+                c = None
+            project = Project(name=form.name.data, description=form.description.data, supervisor=user,
+                              client=c)
+            db.session.add(project)
+            db.session.commit()
+            flash('Projekt utworzony', 'success')
+            return redirect(url_for('projects'))
+        return render_template('admin/admin-project-add.html', u=u, current_view=current_view, form=form)
     else:
-        # TODO unauthantized
-        return 0
+        abort(403)
 
 
 # Single project

@@ -2,36 +2,63 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>Add project - APSI</title>
-  <meta name="description" content="Revolutionary task managment system.">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="../../static/css/style.min.css">
-  <meta name="theme-color" content="#fff">
+    <meta charset="utf-8">
+    <title>Add project - APSI</title>
+    <meta name="description" content="Revolutionary task managment system.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../static/css/style.min.css">
+    <meta name="theme-color" content="#fff">
 </head>
 <body>
-    <div class="page {{u.role}}-{{current_view}}-page">
-        {% include 'common/navbar.html' %}
+<div class="page {{u.role}}-{{current_view}}-page">
+    {% include 'common/navbar.html' %}
 
-        <div class="content-wrapper">
-            <div class="container">
-                <h1>Add project</h1>
+    <div class="content-wrapper">
+        {% if form.errors %}
+        <div class="invalid-feedback">
+            {% for error in form.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="container">
+            <h1>Utwórz projekt</h1>
 
-                <form>
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea name="description" class="form-control" id="description"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Create project</button>
-                </form>
-            </div>
+
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.name.label(class="form-label") }}
+                    {% if form.name.errors %}
+                            {{ form.name(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.name.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.name(class="form-control") }}
+                        {% endif %}
+                    <!--                        <label for="name" class="form-label">Name</label>-->
+                    <!--                        <input type="text" class="form-control" id="name">-->
+                </div>
+                <div class="mb-3">
+                    {{ form.description.label(class="form-label") }}
+                    {{ form.description(class="form-control") }}
+                    <!--                        <label for="description" class="form-label">Description</label>-->
+                    <!--                        <textarea name="description" class="form-control" id="description"></textarea>-->
+                </div>
+                <div class="mb-3">
+                    {{ form.client.label(class="form-label") }}
+                    {{ form.client(class="form-control") }}
+                </div>
+                <!--                    <button type="submit" class="btn btn-primary">Create project</button>-->
+                {{ form.submit(class="btn btn-primary") }}
+            </form>
         </div>
     </div>
+</div>
 
-    {% include 'common/footer.html' %}
+{% include 'common/footer.html' %}
 </body>
 </html>

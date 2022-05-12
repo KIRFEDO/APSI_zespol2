@@ -1,8 +1,8 @@
 from app import app, db, bcrypt
 from flask import render_template, redirect, flash, url_for, request, abort
 from flask_login import current_user, login_user, logout_user, login_required
-from app.forms import LoginForm, RegistrationForm, ProjectForm
-from app.models import User, Project
+from app.forms import LoginForm, RegistrationForm, ProjectForm, TaskForm
+from app.models import User, Project, Task
 
 
 # Home
@@ -31,15 +31,15 @@ def taskboard():
 
 # Projects list
 @app.route('/projects')
+@login_required
 def projects():
     current_view = 'projects'
-    user = -1
-    if current_user.is_authenticated:
-        user = current_user.get_id()
+    user = current_user.get_id()
     u = User.query.get(user)
 
-    if (u.role == 'kierownik'):
-        return render_template('admin/admin-project-list.html', u=u, current_view=current_view)
+    if u.role == 'kierownik':
+        projectlist = Project.query.filter(Project.supervisor == u.id)
+        return render_template('admin/admin-project-list.html', projects=projectlist, u=u, current_view=current_view)
 
     else:
         return render_template('employee/employee-project-list.html', u=u, current_view=current_view)
@@ -48,11 +48,12 @@ def projects():
 # Projects add
 @app.route('/projects/add', methods=['GET', 'POST'])
 @login_required
-def projectAdd():
+def project_add():
     form = ProjectForm()
     current_view = 'projects-add'
     user = current_user.get_id()
     u = User.query.get(user)
+
     if u.role == 'kierownik':
         if form.validate_on_submit():
             c = form.client.data
@@ -70,47 +71,54 @@ def projectAdd():
 
 
 # Single project
-@app.route('/projects/p')
-def projectsView():
+@app.route('/projects/<int:project_id>')
+@login_required
+def projects_view(project_id):
+    project = Project.query.get_or_404(project_id)
     current_view = 'projects-view'
-    user = -1
-    if current_user.is_authenticated:
-        user = current_user.get_id()
+    user = current_user.get_id()
     u = User.query.get(user)
 
-    if (u.role == 'kierownik'):
-        return render_template('admin/admin-project-view.html', u=u, current_view=current_view)
+    if u.role == 'kierownik':
+        return render_template('admin/admin-project-view.html', u=u, project=project, current_view=current_view)
 
     else:
-        return render_template('employee/employee-project-view.html', u=u, current_view=current_view)
+        return render_template('employee/employee-project-view.html', u=u, project=project, current_view=current_view)
+
+
+# Add new task          - stary task, zmiana na activity
+# @app.route('/task/add')
+# def addtask():
+#     current_view = 'task-add'
+#     user = -1
+#     if current_user.is_authenticated:
+#         user = current_user.get_id()
+#     u = User.query.get(user)
+#     return render_template('common/task-add.html', u=u)
 
 
 # Add new task
-@app.route('/task/add')
-def addtask():
+@app.route('/projects/<int:project_id>/task/add', methods=['GET', 'POST'])
+@login_required
+def task_add(project_id):
+    form = TaskForm()
     current_view = 'task-add'
-    user = -1
-    if current_user.is_authenticated:
-        user = current_user.get_id()
+    user = current_user.get_id()
     u = User.query.get(user)
-    return render_template('common/task-add.html', u=u)
+    project = Project.query.get_or_404(project_id)
+    form.project_id = project.id
 
-
-# Add new epic
-@app.route('/epic/add')
-def addEpic():
-    current_view = 'epic-add'
-    user = -1
-    if current_user.is_authenticated:
-        user = current_user.get_id()
-    u = User.query.get(user)
-
-    if (u.role == 'kierownik'):
-        return render_template('admin/admin-epic-add.html', u=u, current_view=current_view)
-
+    if u.role == 'kierownik':
+        if form.validate_on_submit():
+            task = Task(name=form.name.data, description=form.description.data, project=project_id)
+            db.session.add(task)
+            db.session.commit()
+            flash('Zadanie utworzone', 'success')
+            return redirect(url_for('projects_view', project_id=project_id))
+        return render_template('admin/admin-task-add.html', u=u, current_view=current_view, project=project_id,
+                               form=form)
     else:
-        # TODO unauthantized
-        return 0
+        abort(403)
 
 
 # Single project

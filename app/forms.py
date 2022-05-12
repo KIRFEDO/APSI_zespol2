@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, Length, ValidationError, EqualTo
-from app.models import User, Project
+from app.models import User, Project, Task
 
 
 class RegistrationForm(FlaskForm):
@@ -40,3 +40,14 @@ class ProjectForm(FlaskForm):
         p = Project.query.filter_by(name=name.data).first()
         if p:
             raise ValidationError('Istnieje już projekt o takiej nazwie.')
+
+
+class TaskForm(FlaskForm):
+    name = StringField('Nazwa', validators=[DataRequired(), Length(max=50)])
+    description = TextAreaField('Opis', validators=[Length(max=500)])
+    submit = SubmitField('Stwórz projekt')
+
+    def validate_name(self, name):
+        t = Task.query.filter_by(name=name.data, project=self.project_id).first()
+        if t:
+            raise ValidationError('Istnieje już zadanie o takiej nazwie dla tego projektu.')

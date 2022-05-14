@@ -63,7 +63,7 @@ class Activity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     task_id = db.Column(db.Integer, db.ForeignKey('tasks.id'), nullable=False)
-    data = db.Column(db.Date, nullable=False)
+    date = db.Column(db.Date, nullable=False)
     time = db.Column(db.Interval, nullable=False)
     description = db.Column(db.String(500))
     supervisor_approved = db.Column(db.Boolean)     # null before review, after edit

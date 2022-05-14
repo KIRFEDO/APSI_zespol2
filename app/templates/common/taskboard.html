@@ -15,7 +15,23 @@
 
         <div class="content-wrapper">
             <div class="container">
-                <h1>Task board</h1>
+                <h1>Czynności</h1>
+
+
+                    Do obróbki na froncie
+                    {% for activity in activities %}
+                    Czynność:
+                    {{activity.description}}
+                    {{activity.time}}
+                    {{activity.supervisor_approved}}
+                    {{activity.client_approved}}
+                    TODO: wyciągnąć z tego usera jeszcze
+                    {% endfor %}
+
+
+
+
+
 
                 <div class="task-board">
                     <div class="row">

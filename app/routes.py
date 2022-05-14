@@ -2,7 +2,7 @@ from app import app, db, bcrypt
 from flask import render_template, redirect, flash, url_for, request, abort
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import LoginForm, RegistrationForm, ProjectForm, TaskForm
-from app.models import User, Project, Task
+from app.models import User, Project, Task, Activity
 
 
 # Temp variable for skipping login process
@@ -23,7 +23,10 @@ def taskboard():
     current_view = 'taskboard'
     u = check_user()
 
-    return render_template('common/taskboard.html', u=u, current_view=current_view)
+    activityList = Activity.query.filter(Activity.user_id == u.id)
+    if(login_override):
+        activityList = Activity.query.all()
+    return render_template('common/taskboard.html', activities=activityList, u=u, current_view=current_view)
 
 
 # Projects list

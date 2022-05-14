@@ -7,9 +7,9 @@
 		</div>
 		<div class="col">
 			<ul class="menu">
-				<li><a {% if 'projects' in current_view %}class="active"{% endif %} href="/projects">Projects</a></li>
-				<li><a {% if 'taskboard' in current_view %}class="active"{% endif %} href="/taskboard">Taskboard</a></li>
-				{% if u.role == 'administrator' %}<li><a {% if 'employees' in current_view %}class="active"{% endif %} href="/employees">Employees</a></li>{% endif %}
+				<li><a {% if 'projects' in current_view %}class="active"{% endif %} href="/projects">Projekty</a></li>
+				<li><a {% if 'taskboard' in current_view %}class="active"{% endif %} href="/taskboard">Czynności</a></li>
+				{% if u.role == 'kierownik' %}<li><a {% if 'employees' in current_view %}class="active"{% endif %} href="/employees">Pracownicy</a></li>{% endif %}
 			</ul>
 		</div>
 		<div class="col">
@@ -19,7 +19,7 @@
 			  </a>
 
 			  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userInfoMenu">
-				<li><a class="dropdown-item" href="/logout">Log out</a></li>
+				<li><a class="dropdown-item" href="/logout">Wyloguj</a></li>
 			  </ul>
 			</div>
 		</div>

@@ -131,7 +131,8 @@ def employees():
     u = User.query.get(user)
 
     if (u.role == 'kierownik'):
-        return render_template('admin/admin-employee-list.html', u=u, current_view=current_view)
+        employeeList = User.query.all()
+        return render_template('admin/admin-employee-list.html', employees=employeeList, u=u, current_view=current_view)
 
     else:
         # TODO unauthantized

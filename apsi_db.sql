@@ -468,3 +468,9 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
+
+
+insert into projects (id, name, description, supervisor) values (1, 'Projekt sklepu SuperABC', 'Bardzo ciekawy projekt sklepu spożywczego', 2);
+
+insert into tasks (id, name, description , project)
+values (1,'Strona internetowa SuperABC', 'Stworzenie strony internetowej sklepu spożywczego SuperABC', 1);

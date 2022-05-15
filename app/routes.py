@@ -109,7 +109,7 @@ def task_add(project_id):
         abort(403)
 
 
-# Projects list
+# Activities list
 @app.route('/activities')
 #@login_required    # TODO: Uncomment in final
 def activities():

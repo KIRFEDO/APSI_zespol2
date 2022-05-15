@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, TextAreaField, DateField, DecimalField
 from wtforms.validators import DataRequired, Length, ValidationError, EqualTo
 from app.models import User, Project, Task
 
@@ -40,6 +40,18 @@ class ProjectForm(FlaskForm):
         p = Project.query.filter_by(name=name.data).first()
         if p:
             raise ValidationError('Istnieje już projekt o takiej nazwie.')
+
+
+class AddActivityForm(FlaskForm):
+    description = TextAreaField('Opis aktywności:', validators=[DataRequired(), Length(max=500)])
+    task = SelectField('Zadanie:', validators=[DataRequired()])
+    date = DateField('Data wykonania:', validators=[DataRequired()])
+    activityTime = DecimalField('Czas aktywności (w godzinach):', places=2, validators=[DataRequired()])
+    submit = SubmitField('Zapisz aktywność')
+
+    def __init__(self, *args, **kwargs):
+        super(AddActivityForm, self).__init__(*args, **kwargs)
+        self.task.choices = [("", "Wybierz zadanie")] + [(c.id, c.name) for c in Task.query]
 
 
 class TaskForm(FlaskForm):

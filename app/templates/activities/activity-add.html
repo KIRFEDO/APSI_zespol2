@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Add activity - APSI</title>
+    <meta name="description" content="Revolutionary task managment system.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../static/css/style.min.css">
+    <meta name="theme-color" content="#fff">
+</head>
+<body>
+<div class="page {{u.role}}-{{current_view}}-page">
+    {% include 'common/navbar.html' %}
+
+    <div class="content-wrapper">
+        {% if form.errors %}
+        <div class="invalid-feedback">
+            {% for error in form.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="container">
+            <h1>Utwórz aktywność</h1>
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.date.label(class="form-label") }}
+                    {{ form.date(class="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.activityTime.label(class="form-label") }}
+                    {{ form.activityTime(class="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.task.label(class="form-label") }}
+                    {{ form.task(class="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.description.label(class="form-label") }}
+                    {{ form.description(class="form-control") }}
+                </div>
+                {{ form.submit(class="btn btn-primary") }}
+            </form>
+        </div>
+    </div>
+</div>
+
+{% include 'common/footer.html' %}
+</body>
+</html>

@@ -1,8 +1,9 @@
 from app import app, db, bcrypt
 from flask import render_template, redirect, flash, url_for, request, abort
 from flask_login import current_user, login_user, logout_user, login_required
-from app.forms import LoginForm, RegistrationForm, ProjectForm, TaskForm
+from app.forms import LoginForm, RegistrationForm, ProjectForm, TaskForm, AddActivityForm
 from app.models import User, Project, Task, Activity
+import datetime
 
 
 # Temp variable for skipping login process
@@ -104,6 +105,40 @@ def task_add(project_id):
             return redirect(url_for('projects_view', project_id=project_id))
         return render_template('admin/admin-task-add.html', u=u, current_view=current_view, project=project_id,
                                form=form)
+    else:
+        abort(403)
+
+
+# Projects list
+@app.route('/activities')
+#@login_required    # TODO: Uncomment in final
+def activities():
+    current_view = 'activities'
+    u = check_user()
+
+    if login_override or (u.role == 'pracownik'):
+        return render_template('activities/activities-list.html', u=u, current_view=current_view)
+
+
+# Activity add
+@app.route('/activities/add', methods=['GET', 'POST'])
+#@login_required    # TODO: Uncomment in final
+def activity_add():
+    form = AddActivityForm()
+    current_view = 'activities-add'
+    u = check_user()
+
+    if login_override or (u.role == 'pracownik'):
+        if form.validate_on_submit():
+            user = current_user.get_id()
+            activity = Activity(date=form.date.data, description=form.description.data, user_id=user,
+                                task_id=form.task.data, time=datetime.timedelta(hours=float(form.activityTime.data)))
+            db.session.add(activity)
+            print(activity)
+            db.session.commit()
+            flash('Aktywność utworzona', 'success')
+            return redirect(url_for('activities'))
+        return render_template('activities/activity-add.html', u=u, current_view=current_view, form=form)
     else:
         abort(403)
 

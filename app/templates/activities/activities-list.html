@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Lista aktywności - APSI</title>
+    <meta name="description" content="Revolutionary task managment system.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../static/css/style.min.css">
+    <meta name="theme-color" content="#fff">
+</head>
+<body>
+<div class="page {{u.role}}-{{current_view}}-page">
+    {% include 'common/navbar.html' %}
+
+    <div class="content-wrapper">
+        <div class="container">
+            <h1>Czynności <a class="btn btn-primary" title="New activity" href="/activities/add"><i
+                    class="fa-solid fa-plus"></i>Nowa czynność</a></h1>
+
+<!--TODO wyświetlanie czynności-->
+
+        </div>
+    </div>
+</div>
+
+{% include 'common/footer.html' %}
+</body>
+</html>

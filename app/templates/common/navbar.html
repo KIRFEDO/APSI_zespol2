@@ -8,7 +8,8 @@
 		<div class="col">
 			<ul class="menu">
 				<li><a {% if 'projects' in current_view %}class="active"{% endif %} href="/projects">Projekty</a></li>
-				<li><a {% if 'taskboard' in current_view %}class="active"{% endif %} href="/taskboard">Czynności</a></li>
+				<li><a {% if 'taskboard' in current_view %}class="active"{% endif %} href="/taskboard">Zadania</a></li>
+				<li><a {% if 'activities' in current_view %}class="active"{% endif %} href="/activities">Czynności</a></li>
 				{% if u.role == 'kierownik' %}<li><a {% if 'employees' in current_view %}class="active"{% endif %} href="/employees">Pracownicy</a></li>{% endif %}
 			</ul>
 		</div>

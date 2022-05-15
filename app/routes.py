@@ -47,6 +47,8 @@ def projects():
         # TODO lista projektów to jest distict z tasków
         # userActivities = Activity.query.filter(Activity.user_id == u.id).values('id')
 
+
+    projectlist = Project.query.filter(Project.supervisor == u.id)
     if(login_override):
         projectlist = Project.query.all()
     return render_template('common/project-list.html', projects=projectlist, u=u, current_view=current_view)

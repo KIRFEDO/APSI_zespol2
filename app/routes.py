@@ -6,7 +6,7 @@ from app.models import User, Project, Task, Activity
 
 
 # Temp variable for skipping login process
-login_override = True
+login_override = False
 def check_user():
     if login_override:
         return User.query.filter(User.role == 'kierownik').first()
@@ -36,13 +36,20 @@ def projects():
     current_view = 'projects'
     u = check_user()
 
-    if login_override or (u.role == 'kierownik'):
+    if(u.role == 'kierownik'):
         projectlist = Project.query.filter(Project.supervisor == u.id)
-        if(login_override):
-            projectlist = Project.query.all()
-        return render_template('admin/admin-project-list.html', projects=projectlist, u=u, current_view=current_view)
-    else:
-        return render_template('employee/employee-project-list.html', u=u, current_view=current_view)
+
+    if(u.role == 'klient'):
+        projectlist = Project.query.filter(Project.client == u.id)
+
+    #if(u.role == 'pracownik'):
+        # TODO lista projektów to jest distict z tasków
+        # userActivities = Activity.query.filter(Activity.user_id == u.id).values('id')
+
+    if(login_override):
+        projectlist = Project.query.all()
+    return render_template('common/project-list.html', projects=projectlist, u=u, current_view=current_view)
+
 
 
 # Projects add
@@ -78,11 +85,7 @@ def projects_view(project_id):
     current_view = 'projects-view'
     u = check_user()
 
-    if login_override or (u.role == 'kierownik'):
-        return render_template('admin/admin-project-view.html', u=u, project=project, current_view=current_view)
-
-    else:
-        return render_template('employee/employee-project-view.html', u=u, project=project, current_view=current_view)
+    return render_template('common/project-view.html', u=u, project=project, current_view=current_view)
 
 
 # Add new task

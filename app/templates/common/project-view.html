@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>First test project - APSI</title>
+  <meta name="description" content="Revolutionary task managment system.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../static/css/style.min.css">
+  <meta name="theme-color" content="#fff">
+</head>
+<body>
+    <div class="page {{u.role}}-{{current_view}}-page">
+        {% include 'common/navbar.html' %}
+
+        <div class="content-wrapper">
+            <div class="container">
+                <h1>{{project.name}}</h1>
+
+                <p class="project-descirption">{{project.description}}</p>
+
+                <div class="row">
+                    <div class="col-9">
+                      <p class="content-title">Zadania <a class="btn btn-warning" title="Dodaj zadanie" href="/projects/{{project.id}}/task/add"><i class="fa-solid fa-plus"></i> Dodaj zadanie</a></p>
+
+                      <div class="accordion" id="epic-list">
+                        {% for task in project.projects_tasks %}
+                          <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-{{task.id}}">
+                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{task.id}}" aria-expanded="true" aria-controls="collapse-{{task.id}}">
+                                <span class="key">#{{task.id}}</span> {{task.name}}
+                              </button>
+                            </h2>
+
+                            <div id="collapse-{{task.id}}" class="accordion-collapse collapse" aria-labelledby="heading-{{task.id}}">
+                              <div class="accordion-body">
+                                <p>{{task.description}}</p>
+                                <div class="task-list">
+                                  {% if task.associated_activities|length == 0 %}
+                                    <p>Brak czynności</p>
+                                  {% endif %}
+
+                                  {% for activity in task.associated_activities %}
+                                    <div class="task-one">
+                                        <div class="row">
+                                            <div class="col-5">
+                                              <p class="name"><span class="key">#{{activity.id}}</span> {{activity.name}}</p>
+                                            </div>
+                                            <div class="col">
+                                              {% if activity.client_approved == None %}
+                                                <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
+                                                {% elif activity.client_approved == True %}
+                                                  <p class="status"><span class="done">Zaakceptowane (Klient)</span></p>
+                                                {% else %}
+                                                  <p class="status"><span class="pending">Odrzucone (Klient)</span></p>
+                                                {% endif %}
+
+                                              {% if activity.supervisor_approved == None %}
+                                                <p class="status"><span class="todo">Oczekuje na akceptację (Kierownik)</span></p>
+                                              {% elif activity.supervisor_approved == True %}
+                                                <p class="status"><span class="done">Zaakceptowane (Kierownik)</span></p>
+                                              {% else %}
+                                                <p class="status"><span class="pending">Odrzucone (Kierownik)</span></p>
+                                              {% endif %}
+                                            </div>
+                                            <div class="col">
+                                              <p class="external"><a href="#" target="_blank" title="Przejdź do problemu #123456"><i class="fa-solid fa-arrow-up-right-from-square"></i> #123456</a></p>
+                                            </div>
+                                            <div class="col">
+                                                <div class="btn-group options">
+                                                  <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                  </button>
+                                                  <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-{{activity.id}}"><i class="fa-solid fa-eye"></i> Zobacz opis</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    {% if u.role == 'kierownik' or u.role == 'klient' %}
+                                                      <li><a class="dropdown-item dropdown-status pending" href="#">Odrzuć</a></li>
+                                                      <li><a class="dropdown-item dropdown-status done" href="#">Zaakceptuj</a></li>
+                                                      <li><hr class="dropdown-divider"></li>
+                                                    {% endif %}
+                                                    <li><a class="dropdown-item delete-task" href="#"><i class="fa-solid fa-trash-can"></i> Usuń aktywność</a></li>
+                                                  </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ul class="member-list">
+                                          <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{activity.user_id.name}} {{activity.user_id.surname}}">{{activity.user_id.name|first}}</li>
+                                        </ul>
+
+                                        <div class="modal fade" id="modal-{{activity.id}}" tabindex="-1" aria-labelledby="modal-{{activity.id}}-label" aria-hidden="true">
+                                          <div class="modal-dialog">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h5 class="modal-title" id="modal-{{activity.id}}-label">{{activity.name}}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body">
+                                                <p>{{activity.description}}</p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    {% endfor %}
+                                  </div>
+                                  <a href="/tasks/{{task.id}}/activity/add" title="Dodaj czynność" class="add-task"><i class="fa-solid fa-plus"></i> Dodaj czynność</a>
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <p class="content-title">
+                            Przypisani pracownicy
+                        </p>
+
+                        <ul class="member-list">
+                          {% for worker in project.workers %}
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{worker.name}} {{worker.surname}}">{{worker.name|first}}</li>
+                          {% endfor %}
+                        </ul>
+
+                        {% if project.workers|length == 0 %}
+                          <p>Brak pracowników</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {% include 'common/footer.html' %}
+</body>
+</html>

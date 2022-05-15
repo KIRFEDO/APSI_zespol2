@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Sign up - APSI - Task managment system</title>
+  <title>Zarejestruj się - APSI projekt</title>
   <meta name="description" content="Revolutionary task managment system.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../../static/css/style.min.css">
@@ -15,7 +15,7 @@
             <div class="logo">
                 <p class="icon">A</p>
                 <p class="name">APSI</p>
-                <p class="description">Task managment system</p>
+                <p class="description">Projekt</p>
             </div>
 
             <div class="signup-form-wrapper">
@@ -29,7 +29,7 @@
 
                 <form method="POST" action="">
                     {{ form.hidden_tag() }}
-                    <h1>Sign up</h1>
+                    <h1>Zarejestruj się</h1>
                     <div class="mb-3">
                         {{ form.name.label(class="form-label") }}
                         {{ form.name(class="form-control") }}
@@ -83,35 +83,9 @@
                     </div>
 
                     {{ form.submit(class="btn btn-primary") }}
-                    <p class="helper">Have already an account? <a href="/login" title="Log in">Log in</a></p>
+                    <p class="helper">Masz już konto? <a href="/login" title="Zaloguj się">Zaloguj się</a></p>
                 </form>
             </div>
-
-			<div class="system-pros">
-				<div class="row">
-					<div class="col">
-						<div class="pros-one">
-							<i class="fa-solid fa-list-check"></i>
-							<p class="title">Task managment</p>
-							<p class="description">Simplify task workflow in your projects</p>
-						</div>
-					</div>
-					<div class="col">
-						<div class="pros-one">
-							<i class="fa-solid fa-person-chalkboard"></i>
-							<p class="title">Kanban board</p>
-							<p class="description">Allow employees to access all of their tasks in an easy, time-saving method</p>
-						</div>
-					</div>
-					<div class="col">
-						<div class="pros-one">
-							<i class="fa-solid fa-people-group"></i>
-							<p class="title">Employee management</p>
-							<p class="description">View and manage employees, monitor their progress</p>
-						</div>
-					</div>
-				</div>
-			</div>
         </div>
     </div>
 </body>

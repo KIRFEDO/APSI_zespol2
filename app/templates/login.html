@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Log in - APSI - Task managment system</title>
+  <title>Zaloguj się - APSI Projekt</title>
   <meta name="description" content="Revolutionary task managment system.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../../static/css/style.min.css">
@@ -14,13 +14,13 @@
             <div class="logo">
                 <p class="icon">A</p>
                 <p class="name">APSI</p>
-                <p class="description">Task managment system</p>
+                <p class="description">Projekt</p>
             </div>
 
             <div class="login-form-wrapper">
                 <form method="POST" action="">
                     {{ form.hidden_tag() }}
-                    <h1>Log in</h1>
+                    <h1>Zaloguj się</h1>
                     {% if error_message != '' %}
                     <div class="alert alert-danger" role="alert">
                         {{error_message}}
@@ -36,34 +36,8 @@
                     </div>
 
                     {{ form.submit(class="btn btn-primary") }}
-                    <p class="helper">Don't have an account? <a href="/register" title="Sign up">Sign up</a></p>
+                    <p class="helper">Nie masz jeszcze konta? <a href="/register" title="Zarejestruj się">Zarejestruj się</a></p>
                 </form>
-            </div>
-
-            <div class="system-pros">
-                <div class="row">
-                    <div class="col">
-                        <div class="pros-one">
-                            <i class="fa-solid fa-list-check"></i>
-                            <p class="title">Task managment</p>
-                            <p class="description">Simplify task workflow in your projects</p>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="pros-one">
-                            <i class="fa-solid fa-person-chalkboard"></i>
-                            <p class="title">Kanban board</p>
-                            <p class="description">Allow employees to access all of their tasks in an easy, time-saving method</p>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="pros-one">
-                            <i class="fa-solid fa-people-group"></i>
-                            <p class="title">Employee management</p>
-                            <p class="description">View and manage employees, monitor their progress</p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

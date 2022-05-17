@@ -81,7 +81,6 @@ def activities():
         #TODO: Tylko czynności w projektach klienta
     elif (u.role == 'kierownik'):
         activityList = Activity.query.all()
-
     return render_template('common/activity/activities-list.html', activities=activityList, u=u, current_view=current_view)
 
 # Activity add

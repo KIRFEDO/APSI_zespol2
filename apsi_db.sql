@@ -462,15 +462,3 @@ ALTER TABLE ONLY public.tasks
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_users_id_fk FOREIGN KEY (supervisor) REFERENCES public.users(id);
-
-
---
--- PostgreSQL database dump complete
---
-
-
-
-insert into projects (id, name, description, supervisor) values (1, 'Projekt sklepu SuperABC', 'Bardzo ciekawy projekt sklepu spożywczego', 2);
-
-insert into tasks (id, name, description , project)
-values (1,'Strona internetowa SuperABC', 'Stworzenie strony internetowej sklepu spożywczego SuperABC', 1);

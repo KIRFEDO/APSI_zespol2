@@ -18,7 +18,7 @@
             <h1>Czynności <a class="btn btn-primary" title="New activity" href="/activities/add"><i
                     class="fa-solid fa-plus"></i>Nowa czynność</a></h1>
 
-<!--TODO wyświetlanie czynności-->
+        <!--TODO wyświetlanie czynności-->
         Do obróbki na froncie
         {% for activity in activities %}
         Czynność:
@@ -26,7 +26,8 @@
         {{activity.time}}
         {{activity.supervisor_approved}}
         {{activity.client_approved}}
-        TODO: wyciągnąć z tego usera jeszcze
+        {{activity.done_by.name}}
+        {{activity.done_by.surname}}
         {% endfor %}
 
         </div>

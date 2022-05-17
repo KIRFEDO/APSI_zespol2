@@ -6,7 +6,7 @@
   <title>First test project - APSI</title>
   <meta name="description" content="Revolutionary task managment system.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="../../static/css/style.min.css">
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/style.min.css') }}">
   <meta name="theme-color" content="#fff">
 </head>
 <body>
@@ -43,10 +43,8 @@
                                   {% for activity in task.associated_activities %}
                                     <div class="task-one">
                                         <div class="row">
-                                            <div class="col-5">
-                                              <p class="name"><span class="key">#{{activity.id}}</span> {{activity.name}}</p>
-                                            </div>
-                                            <div class="col">
+                                            <div class="col-11">
+                                              <p class="name"><span class="key">{{activity.date}}</span></p>
                                               {% if activity.client_approved == None %}
                                                 <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
                                                 {% elif activity.client_approved == True %}
@@ -62,8 +60,6 @@
                                               {% else %}
                                                 <p class="status"><span class="pending">Odrzucone (Kierownik)</span></p>
                                               {% endif %}
-                                            </div>
-                                            <div class="col">
                                               <p class="external"><a href="#" target="_blank" title="Przejdź do problemu #123456"><i class="fa-solid fa-arrow-up-right-from-square"></i> #123456</a></p>
                                             </div>
                                             <div class="col">
@@ -72,8 +68,10 @@
                                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                                   </button>
                                                   <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-{{activity.id}}"><i class="fa-solid fa-eye"></i> Zobacz opis</a></li>
-                                                    <li><hr class="dropdown-divider"></li>
+                                                    {% if activity.supervisor_approved == False or activity.client_approved == False %}
+                                                      <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-{{activity.id}}"><i class="fa-solid fa-eye"></i> Edytuj aktywność</a></li>
+                                                      <li><hr class="dropdown-divider"></li>
+                                                    {% endif %}
                                                     {% if u.role == 'kierownik' or u.role == 'klient' %}
                                                       <li><a class="dropdown-item dropdown-status pending" href="#">Odrzuć</a></li>
                                                       <li><a class="dropdown-item dropdown-status done" href="#">Zaakceptuj</a></li>
@@ -84,6 +82,13 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <p class="task-description">
+                                          <span><i class="fa-solid fa-comment"></i> Opis</span>
+                                          {{activity.description}}
+                                        </p>
+                                        <p class="task-time">
+                                          <span><i class="fa-solid fa-clock"></i> {{activity.time}}</span>
+                                        </p>
                                         <ul class="member-list">
                                           <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{activity.done_by.name}} {{activity.done_by.surname}}">{{activity.done_by.name|first}}</li>
                                         </ul>
@@ -104,7 +109,7 @@
                                       </div>
                                     {% endfor %}
                                   </div>
-                                  <a href="/tasks/{{task.id}}/activity/add" title="Dodaj czynność" class="add-task"><i class="fa-solid fa-plus"></i> Dodaj czynność</a>
+                                  <a href="/activities/add/{{task.id}}" title="Dodaj czynność" class="add-task"><i class="fa-solid fa-plus"></i> Dodaj czynność</a>
                                 </div>
                               </div>
                             </div>

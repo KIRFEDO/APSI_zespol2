@@ -47,6 +47,7 @@
                             padding: 15px;
                             font-weight: 600;
                             margin: 0;
+                            display: inline-block;
 
                             .key{
                                 color: #fff;
@@ -59,8 +60,9 @@
                         }
 
                         .status{
-                            padding: 15px;
+                            padding: 15px 7.5px;
                             margin: 0;
+                            display: inline-block;
 
                             span{
                                 padding: 3px 12px;
@@ -87,8 +89,9 @@
                         }
 
                         .external{
-                            padding: 15px;
+                            padding: 15px 7.5px;
                             margin: 0;
+                            display: inline-block;
 
                             a{
                                 color: #333;
@@ -107,6 +110,7 @@
                             margin: 0;
                             padding: 15px;
                             float: right;
+                            display: inline-block;
 
                             button{
                                 display: inline-block;
@@ -162,6 +166,30 @@
                             }
                         }
                     }
+                }
+
+                .task-description{
+                  padding: 0 15px 15px 15px;
+                  margin: 0;
+                  font-size: 14px;
+
+                  span{
+                    display: block;
+                    text-transform: uppercase;
+                    font-weight: 600;
+                    font-size: 12px;
+                    margin: 0 0 3px 0;
+                  }
+                }
+
+                .task-time{
+                  padding: 0 15px 5px 15px;
+                  margin: 0;
+
+                  text-transform: uppercase;
+                  font-weight: 600;
+                  font-size: 12px;
+                  margin: 0 0 3px 0;
                 }
 
                 .member-list{

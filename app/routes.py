@@ -85,9 +85,10 @@ def activities():
 
 # Activity add
 @app.route('/activities/add', methods=['GET', 'POST'])
+@app.route('/activities/add/<task_id>/', methods=['GET', 'POST'])
 #@login_required    # TODO: Uncomment in final
-def activity_add():
-    form = AddActivityForm()
+def activity_add(task_id = None):
+    form = AddActivityForm(task=task_id)
     current_view = 'activities-add'
     u = check_user()
 
@@ -101,7 +102,7 @@ def activity_add():
             db.session.commit()
             flash('Aktywność utworzona', 'success')
             return redirect(url_for('activities'))
-        return render_template('common/activity/activity-add.html', u=u, current_view=current_view, form=form)
+        return render_template('common/activity/activity-add.html', u=u, current_view=current_view, form=form, task_id = task_id)
     else:
         # TODO: Co w przypadku klienta i kierownika wchodzących na formularz dodania czynnosci?
         abort(403)

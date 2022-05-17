@@ -6,7 +6,7 @@
     <title>Add activity - APSI</title>
     <meta name="description" content="Revolutionary task managment system.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../../static/css/style.min.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.min.css') }}">
     <meta name="theme-color" content="#fff">
 </head>
 <body>
@@ -35,7 +35,11 @@
                 </div>
                 <div class="mb-3">
                     {{ form.task.label(class="form-label") }}
-                    {{ form.task(class="form-control") }}
+                    {% if task_id %}
+                      {{ form.task(class="form-control", readonly="readonly", disabled="disabled") }}
+                    {% else %}
+                      {{ form.task(class="form-control") }}
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     {{ form.description.label(class="form-label") }}

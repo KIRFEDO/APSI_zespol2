@@ -1,6 +1,21 @@
 # APSI_zespol2
-1. Przygotowanie bazy danych postgresql:
+### Wymagania:
+Postgresql > https://www.postgresql.org/download/
+### Uruchomienie aplikacji:
+Polecenia z (Init) do wykonania tylko przy pierwszym uruchamianiu.
 
--zalogowanie do postgresql ->sudo -su postgres
+1. (Init) Przygotowanie venva:
+`python -m venv venv`
 
--uruchomienie załączonego skryptu(w tym samym folderze powinien się znajdować plik apsi_db.sql)  -> psql -f database.sh
+2. **Uruchomienie venva:**
+`.\venv\Scripts\activate`
+
+3. (Init) Instalacja zależności:
+`pip install -r requirements.txt`
+
+4. (Init) Utworzenie bazy danych:
+`psql -U postgres -f database.sh`
+Zalogowanie się do postgresa hasłem ustalonym przy instalacji.
+
+5. **Uruchomienie apki:**
+`python run.py`

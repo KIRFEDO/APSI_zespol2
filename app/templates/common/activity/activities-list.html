@@ -19,6 +19,15 @@
                     class="fa-solid fa-plus"></i>Nowa czynność</a></h1>
 
 <!--TODO wyświetlanie czynności-->
+        Do obróbki na froncie
+        {% for activity in activities %}
+        Czynność:
+        {{activity.description}}
+        {{activity.time}}
+        {{activity.supervisor_approved}}
+        {{activity.client_approved}}
+        TODO: wyciągnąć z tego usera jeszcze
+        {% endfor %}
 
         </div>
     </div>

@@ -74,7 +74,14 @@ def activities():
     current_view = 'activities'
     u = check_user()
 
-    activityList = Activity.query.filter(Activity.user_id == u.id)
+    if (u.role == 'pracownik'):
+        activityList = Activity.query.filter(Activity.user_id == u.id)
+    elif (u.role == 'klient'):
+        print("TODO")
+        #TODO: Tylko czynności w projektach klienta
+    elif (u.role == 'kierownik'):
+        activityList = Activity.query.all()
+
     return render_template('common/activity/activities-list.html', activities=activityList, u=u, current_view=current_view)
 
 # Activity add
@@ -97,6 +104,7 @@ def activity_add():
             return redirect(url_for('activities'))
         return render_template('common/activity/activity-add.html', u=u, current_view=current_view, form=form)
     else:
+        # TODO: Co w przypadku klienta i kierownika wchodzących na formularz dodania czynnosci?
         abort(403)
 
 

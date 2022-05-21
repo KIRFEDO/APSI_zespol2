@@ -91,7 +91,7 @@
                                           <span><i class="fa-solid fa-clock"></i> {{activity.time}}</span>
                                         </p>
                                         <ul class="member-list">
-                                          <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{activity.done_by.name}} {{activity.done_by.surname}}">{{activity.done_by.name|first}}</li>
+                                          <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{activity.done_by.name}} {{activity.done_by.surname}}">{{activity.done_by.name|first}}{{activity.done_by.surname|first}}</li>
                                         </ul>
 
                                         <div class="modal fade" id="modal-{{activity.id}}" tabindex="-1" aria-labelledby="modal-{{activity.id}}-label" aria-hidden="true">
@@ -144,7 +144,7 @@
                         </ul>
 
                         {% if project.workers|length == 0 %}
-                          <p>Brak pracowników</p>
+                          <p>Brak przypisanych pracowników</p>
                         {% endif %}
                     </div>
                 </div>

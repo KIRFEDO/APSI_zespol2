@@ -107,6 +107,14 @@ def activity_add(task_id = None):
         # TODO: Co w przypadku klienta i kierownika wchodzących na formularz dodania czynnosci?
         abort(403)
 
+# Delete activity
+@app.route('/projects/<int:project_id>/<int:task_id>/<int:activity_id>/delete', methods=['GET', 'POST'])
+#@login_required    # TODO: Uncomment in final
+def activity_delete(project_id = None, task_id = None, activity_id = None):
+    Activity.query.filter(Activity.id == activity_id).delete()
+    db.session.commit()
+    return redirect(url_for('projects'))
+
 
 
 
@@ -138,6 +146,14 @@ def task_add(project_id):
                                form=form)
     else:
         abort(403)
+
+# Delete task
+@app.route('/projects/<int:project_id>/<int:task_id>/delete', methods=['GET', 'POST'])
+#@login_required    # TODO: Uncomment in final
+def task_delete(project_id = None, task_id = None):
+    Task.query.filter(Task.id == task_id).delete()
+    db.session.commit()
+    return redirect(url_for('projects'))
 
 
 
@@ -203,6 +219,13 @@ def project_add():
     else:
         abort(403)
 
+# Delete project
+@app.route('/projects/<int:project_id>/delete', methods=['GET', 'POST'])
+#@login_required    # TODO: Uncomment in final
+def project_delete(project_id = None):
+    Project.query.filter(Project.id == project_id).delete()
+    db.session.commit()
+    return redirect(url_for('projects'))
 
 
 

@@ -21,8 +21,9 @@
 
                 <div class="row">
                     <div class="col-9">
+                      {% if u.role == 'kierownik' or u.role == 'klient' %}
                       <p class="content-title">Zadania <a class="btn btn-warning" title="Dodaj zadanie" href="/projects/{{project.id}}/task/add"><i class="fa-solid fa-plus"></i> Dodaj zadanie</a></p>
-
+                      {% endif %}
                       <div class="accordion" id="epic-list">
                         {% for task in project.projects_tasks %}
                           <div class="accordion-item">
@@ -109,7 +110,9 @@
                                       </div>
                                     {% endfor %}
                                   </div>
+                                  {% if u.role == 'pracownik' %}
                                   <a href="/activities/add/{{task.id}}" title="Dodaj czynność" class="add-task"><i class="fa-solid fa-plus"></i> Dodaj czynność</a>
+                                  {% endif %}
                                 </div>
                               </div>
                             </div>

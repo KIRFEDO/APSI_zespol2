@@ -260,3 +260,12 @@ def employees():
     else:
         # TODO unauthantized
         return 0
+
+# Invoice printing
+@app.route('/projects/<int:project_id>/invoice', methods=['GET', 'POST'])
+#@login_required    # TODO: Uncomment in final
+def invoice_view(project_id):
+    project = Project.query.get_or_404(project_id)
+    current_view = 'invoice-view'
+    u = check_user()
+    return render_template('common/project/invoice-view.html', u=u, project=project, current_view=current_view)

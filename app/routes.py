@@ -202,7 +202,7 @@ def projects():
     #   tylko te przypisane dla pracownika
     if(u.role == 'pracownik'):
         #projectlist = Project.query.all()
-        projectlist = u.assigned_projects
+        projectlist = [p.assigned_project for p in u.assigned_projects]
 
     return render_template('common/project/project-list.html', projects=projectlist, u=u, current_view=current_view)
 

@@ -198,11 +198,11 @@ def projects():
     if(u.role == 'klient'):
         projectlist = Project.query.filter(Project.client == u.id)
 
-    # TODO: Pokazywać pracownikom tylko projekty, do których są przypisani
-    # projectlist = Project.query.filter(u.id in Project.workers)
-    # Tymczasowo wyświetlam wszystkie:
+    # Zmienic komentarz na czas developmentu jesli chcemy wyswietlac wszystkie projekty, a nie
+    #   tylko te przypisane dla pracownika
     if(u.role == 'pracownik'):
-        projectlist = Project.query.all()
+        #projectlist = Project.query.all()
+        projectlist = u.assigned_projects
 
     return render_template('common/project/project-list.html', projects=projectlist, u=u, current_view=current_view)
 

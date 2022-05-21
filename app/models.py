@@ -37,7 +37,7 @@ class Project(db.Model):
     client = db.Column(db.Integer, db.ForeignKey('users.id'))
     projects_tasks = db.relationship('Task', backref='associated_project', cascade="all,delete", lazy=True,
                                      foreign_keys='Task.project')
-    workers = db.relationship('ProjectAssignment', backref='assigned_projects', cascade="all,delete", lazy=True,
+    workers = db.relationship('ProjectAssignment', backref='assigned_project', cascade="all,delete", lazy=True,
                               foreign_keys='ProjectAssignment.project_id')
 
 

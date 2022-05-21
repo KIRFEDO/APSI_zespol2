@@ -21,13 +21,13 @@
             <div class="project-list">
                 {% for project in projects %}
                 <div class="project-one">
-                    <a class="view-project" href="/projects/{{project.id}}" title="Project details">Szczegóły projektu</a>
+                    <a class="view-project" href="/projects/{{project.assigned_project.id}}" title="Project details">Szczegóły projektu</a>
                     <div class="row">
                         <div class="col">
-                            <p class="name">{{project.name}}</p>
+                            <p class="name">{{project.assigned_project.name}}</p>
                         </div>
                         <div class="col">
-                            <p class="name">{{project.description}}</p>
+                            <p class="name">{{project.assigned_project.description}}</p>
                         </div>
                     </div>
                 </div>

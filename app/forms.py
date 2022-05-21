@@ -42,6 +42,16 @@ class ProjectForm(FlaskForm):
             raise ValidationError('Istnieje już projekt o takiej nazwie.')
 
 
+class EmployeeAssignForm(FlaskForm):
+    employee = SelectField('Pracownik')
+    submit = SubmitField('Przypisz pracownika')
+
+    def __init__(self, *args, **kwargs):
+        super(EmployeeAssignForm, self).__init__(*args, **kwargs)
+        self.employee.choices = [("", "Brak" + " " + "pracownika")] + [(c.id, c.name + " " + c.surname) for c in
+                                                                  User.query.filter(User.role == "pracownik")]
+
+
 class AddActivityForm(FlaskForm):
     description = TextAreaField('Opis aktywności:', validators=[DataRequired(), Length(max=500)])
     task = SelectField('Zadanie:', validators=[DataRequired()])

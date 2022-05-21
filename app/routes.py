@@ -1,8 +1,8 @@
 from app import app, db, bcrypt
 from flask import render_template, redirect, flash, url_for, request, abort
 from flask_login import current_user, login_user, logout_user, login_required
-from app.forms import LoginForm, RegistrationForm, ProjectForm, TaskForm, AddActivityForm
-from app.models import User, Project, Task, Activity
+from app.forms import LoginForm, RegistrationForm, ProjectForm, TaskForm, AddActivityForm, EmployeeAssignForm
+from app.models import User, Project, Task, Activity, ProjectAssignment
 import datetime
 
 
@@ -165,14 +165,25 @@ def task_delete(project_id = None, task_id = None):
 # ------------------------------------------------------------------------------
 
 # Single project view
-@app.route('/projects/<int:project_id>')
+@app.route('/projects/<int:project_id>', methods=['GET', 'POST'])
 #@login_required    # TODO: Uncomment in final
 def projects_view(project_id):
     project = Project.query.get_or_404(project_id)
     current_view = 'projects-view'
     u = check_user()
 
-    return render_template('common/project/project-view.html', u=u, project=project, current_view=current_view)
+    # Employee assign form
+    form = EmployeeAssignForm()
+    if form.validate_on_submit():
+        emp = form.employee.data
+        if emp != "" and (emp not in [str(e.user_id) for e in project.workers]):
+            pAssignment = ProjectAssignment(user_id=form.employee.data, project_id=project_id)
+            db.session.add(pAssignment)
+            db.session.commit()
+            # TODO: Clear form and assign properly
+            return redirect(url_for('projects'))
+
+    return render_template('common/project/project-view.html', u=u, project=project, current_view=current_view, form=form)
 
 # Projects list
 @app.route('/projects')

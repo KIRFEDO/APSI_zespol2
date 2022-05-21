@@ -139,7 +139,7 @@
 
                         <ul class="member-list">
                           {% for worker in project.workers %}
-                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{worker.name}} {{worker.surname}}">{{worker.name|first}}</li>
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{worker.assigned_person.name}} {{worker.assigned_person.surname}}">{{worker.assigned_person.name|first}}{{worker.assigned_person.surname|first}}</li>
                           {% endfor %}
                         </ul>
 

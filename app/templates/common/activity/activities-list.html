@@ -29,12 +29,14 @@
         {{activity.time}}
         {{activity.date}}
 
-        {% if activity.client_approved == None %}
-          <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
-        {% elif activity.client_approved == True %}
-          <p class="status"><span class="done">Zaakceptowane (Klient)</span></p>
-        {% else %}
-          <p class="status"><span class="pending">Odrzucone (Klient)</span></p>
+        {% if activity.associated_task.associated_project.client != None %}
+          {% if activity.client_approved == None %}
+            <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
+          {% elif activity.client_approved == True %}
+            <p class="status"><span class="done">Zaakceptowane (Klient)</span></p>
+          {% else %}
+            <p class="status"><span class="pending">Odrzucone (Klient)</span></p>
+          {% endif %}
         {% endif %}
 
         {% if activity.supervisor_approved == None %}

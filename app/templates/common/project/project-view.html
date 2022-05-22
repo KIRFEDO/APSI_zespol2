@@ -53,13 +53,15 @@
                                         <div class="row">
                                             <div class="col-11">
                                               <p class="name"><span class="key">{{activity.date}}</span></p>
-                                              {% if activity.client_approved == None %}
-                                                <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
+                                              {% if project.client != None %}
+                                                {% if activity.client_approved == None %}
+                                                  <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
                                                 {% elif activity.client_approved == True %}
                                                   <p class="status"><span class="done">Zaakceptowane (Klient)</span></p>
                                                 {% else %}
                                                   <p class="status"><span class="pending">Odrzucone (Klient)</span></p>
                                                 {% endif %}
+                                              {% endif %}
 
                                               {% if activity.supervisor_approved == None %}
                                                 <p class="status"><span class="todo">Oczekuje na akceptację (Kierownik)</span></p>
@@ -150,22 +152,25 @@
                             <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{worker.assigned_person.name}} {{worker.assigned_person.surname}}">{{worker.assigned_person.name|first}}{{worker.assigned_person.surname|first}}</li>
                           {% endfor %}
                         </ul>
-                        <!-- End Lista pracowników -->
-
-
-                        <p class="content-title">
-                            Zlecający
-                        </p>
-
-                        <!-- Klient -->
-                        <ul class="member-list">
-                          <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{project.project_commissioner.name}} {{project.project_commissioner.surname}}">{{project.project_commissioner.name|first}}{{project.project_commissioner.surname|first}}</li>
-                        </ul>
-                        <!-- End Klient -->
-
                         {% if project.workers|length == 0 %}
                           <p>Brak przypisanych pracowników</p>
                         {% endif %}
+                        <!-- End Lista pracowników -->
+
+
+
+                        {% if project.client != None %}
+                          <p class="content-title">
+                              Zlecający
+                          </p>
+
+                          <!-- Klient -->
+                          <ul class="member-list">
+                            <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{project.project_commissioner.name}} {{project.project_commissioner.surname}}">{{project.project_commissioner.name|first}}{{project.project_commissioner.surname|first}}</li>
+                          </ul>
+                          <!-- End Klient -->
+                        {% endif %}
+
                     </div>
                 </div>
 

@@ -114,7 +114,33 @@ def activity_delete(project_id = None, task_id = None, activity_id = None):
     db.session.commit()
     return redirect(url_for('projects'))
 
+# Accept activity - supervisor
+@app.route('/projects/<int:project_id>/<int:task_id>/<int:activity_id>/accept_supervisor/<int:state>')
+#@login_required    # TODO: Uncomment in final
+def activity_accept_supervisor(project_id = None, task_id = None, activity_id = None, state=None):
+    u = check_user()
+    if u.role == 'kierownik':
+        activity = Activity.query.filter(Activity.id == activity_id).first()
+        if state == 0:
+            activity.supervisor_approved = False
+        else:
+            activity.supervisor_approved = True
+        db.session.commit()
+    return redirect(url_for('projects'))
 
+# Accept activity - customer
+@app.route('/projects/<int:project_id>/<int:task_id>/<int:activity_id>/accept_client/<int:state>')
+#@login_required    # TODO: Uncomment in final
+def activity_accept_client(project_id = None, task_id = None, activity_id = None, state=None):
+    u = check_user()
+    if u.role == 'klient':
+        activity = Activity.query.filter(Activity.id == activity_id).first()
+        if state == 0:
+            activity.client_approved = False
+        else:
+            activity.client_approved = True
+        db.session.commit()
+    return redirect(url_for('projects'))
 
 
 

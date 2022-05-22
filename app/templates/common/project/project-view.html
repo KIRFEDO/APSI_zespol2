@@ -81,9 +81,13 @@
                                                       <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-{{activity.id}}"><i class="fa-solid fa-eye"></i> Edytuj aktywność</a></li>
                                                       <li><hr class="dropdown-divider"></li>
                                                     {% endif %}
-                                                    {% if u.role == 'kierownik' or u.role == 'klient' %}
-                                                      <li><a class="dropdown-item dropdown-status pending" href="#">Odrzuć</a></li>
-                                                      <li><a class="dropdown-item dropdown-status done" href="#">Zaakceptuj</a></li>
+                                                    {% if u.role == 'kierownik' %}
+                                                      <li><a class="dropdown-item dropdown-status pending" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a></li>
+                                                      <li><a class="dropdown-item dropdown-status done" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a></li>
+                                                      <li><hr class="dropdown-divider"></li>
+                                                    {% elif u.role == 'klient' %}
+                                                      <li><a class="dropdown-item dropdown-status pending" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a></li>
+                                                      <li><a class="dropdown-item dropdown-status done" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a></li>
                                                       <li><hr class="dropdown-divider"></li>
                                                     {% endif %}
                                                     <li><a class="dropdown-item delete-task" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/delete"><i class="fa-solid fa-trash-can"></i> Usuń aktywność</a></li>

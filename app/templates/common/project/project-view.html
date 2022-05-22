@@ -21,12 +21,14 @@
 
                 <div class="row">
                     <div class="col-9">
-                      {% if u.role == 'kierownik' or (u.role == 'klient' and u.id == project.supervisor) %}
+                      {% if u.role == 'kierownik' or (u.role == 'klient' and u.id == project.client) %}
                       <p class="content-title">Zadania
                         <a class="btn btn-warning" title="Dodaj zadanie" href="/projects/{{project.id}}/task/add"><i class="fa-solid fa-plus"></i> Dodaj zadanie</a>
                         <a class="btn btn-info" title="Wydrukuj fakturę" href="/projects/{{project.id}}/invoice" target="_blank"><i class="fa-solid fa-receipt"></i> Wydrukuj fakturę</a>
                         <!-- TODO: Delete confirmation pop-up -->
-                        <a class="btn btn-danger" title="Usuń projekt" href="/projects/{{project.id}}/delete"><i class="fa-solid fa-trash"></i> Usuń projekt</a>
+                        {% if u.role == 'kierownik' %}
+                          <a class="btn btn-danger" title="Usuń projekt" href="/projects/{{project.id}}/delete"><i class="fa-solid fa-trash"></i> Usuń projekt</a>
+                        {% endif %}
                       </p>
                       {% endif %}
                       <div class="accordion" id="epic-list">
@@ -141,11 +143,25 @@
                         {% endif %}
                         <!-- End Obsluga przypisania pracownikow -->
 
+
+                        <!-- Lista pracowników -->
                         <ul class="member-list">
                           {% for worker in project.workers %}
                             <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{worker.assigned_person.name}} {{worker.assigned_person.surname}}">{{worker.assigned_person.name|first}}{{worker.assigned_person.surname|first}}</li>
                           {% endfor %}
                         </ul>
+                        <!-- End Lista pracowników -->
+
+
+                        <p class="content-title">
+                            Zlecający
+                        </p>
+
+                        <!-- Klient -->
+                        <ul class="member-list">
+                          <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{project.project_commissioner.name}} {{project.project_commissioner.surname}}">{{project.project_commissioner.name|first}}{{project.project_commissioner.surname|first}}</li>
+                        </ul>
+                        <!-- End Klient -->
 
                         {% if project.workers|length == 0 %}
                           <p>Brak przypisanych pracowników</p>

@@ -49,7 +49,7 @@
                                 <p class="name">{{employee.name}} {{employee.surname}}</p>
 
                                 {% for project in employee.commissioned_projects%}
-                                  <a class="btn btn-info" title="Dodaj zadanie" href="/projects/{{project.assigned_project.id}}"><i class="fa-solid fa-star"></i>{{project.assigned_project.name}}</a>
+                                  <a class="btn btn-warning" title="Dodaj zadanie" href="/projects/{{project.id}}"><i class="fa-solid fa-star"></i>{{project.name}}</a>
                                 {% endfor %}
 
                             </div>

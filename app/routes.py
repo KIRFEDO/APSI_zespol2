@@ -77,8 +77,8 @@ def activities():
     if (u.role == 'pracownik'):
         activityList = Activity.query.filter(Activity.user_id == u.id)
     elif (u.role == 'klient'):
-        print("TODO")
-        #TODO: Tylko czynności w projektach klienta
+        activityList = db.session.query(Activity, Project).filter(Project.supervisor == u.id).all()
+        #activityList = Activity.query.filter(Activity.associated_task.associated_project.project_supervisor == u.id)
     elif (u.role == 'kierownik'):
         activityList = Activity.query.all()
     return render_template('common/activity/activities-list.html', activities=activityList, u=u, current_view=current_view)

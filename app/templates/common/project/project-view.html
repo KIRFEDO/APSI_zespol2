@@ -21,10 +21,12 @@
 
                 <div class="row">
                     <div class="col-9">
-                      {% if u.role == 'kierownik' or u.role == 'klient' %}
+                      {% if u.role == 'kierownik' or (u.role == 'klient' and u.id == project.supervisor) %}
                       <p class="content-title">Zadania
                         <a class="btn btn-warning" title="Dodaj zadanie" href="/projects/{{project.id}}/task/add"><i class="fa-solid fa-plus"></i> Dodaj zadanie</a>
-                        <a class="btn btn-info" title="Wydrukuj fakturę" href="/projects/{{project.id}}/invoice" target="_blank"><i class="fa-solid fa-plus"></i> Wydrukuj fakturę</a>
+                        <a class="btn btn-info" title="Wydrukuj fakturę" href="/projects/{{project.id}}/invoice" target="_blank"><i class="fa-solid fa-receipt"></i> Wydrukuj fakturę</a>
+                        <!-- TODO: Delete confirmation pop-up -->
+                        <a class="btn btn-danger" title="Usuń projekt" href="/projects/{{project.id}}/delete"><i class="fa-solid fa-trash"></i> Usuń projekt</a>
                       </p>
                       {% endif %}
                       <div class="accordion" id="epic-list">
@@ -64,7 +66,6 @@
                                               {% else %}
                                                 <p class="status"><span class="pending">Odrzucone (Kierownik)</span></p>
                                               {% endif %}
-                                              <p class="external"><a href="#" target="_blank" title="Przejdź do problemu #123456"><i class="fa-solid fa-arrow-up-right-from-square"></i> #123456</a></p>
                                             </div>
                                             <div class="col">
                                                 <div class="btn-group options">

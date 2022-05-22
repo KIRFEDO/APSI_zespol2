@@ -14,9 +14,8 @@
     {% include 'common/navbar.html' %}
 
     <div class="content-wrapper">
-        <div class="container">
-            <h1>Czynności <a class="btn btn-primary" title="New activity" href="/activities/add"><i
-                    class="fa-solid fa-plus"></i>Nowa czynność</a></h1>
+      <div class="container">
+        <h1>Czynności <a class="btn btn-primary" title="New activity" href="/activities/add"><i class="fa-solid fa-plus"></i>Nowa czynność</a></h1>
 
         <!--TODO wyświetlanie czynności-->
         Do obróbki na froncie
@@ -24,8 +23,25 @@
         Czynność:
         {{activity.description}}
         {{activity.time}}
-        {{activity.supervisor_approved}}
-        {{activity.client_approved}}
+        {{activity.date}}
+
+        {% if activity.client_approved == None %}
+          <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
+        {% elif activity.client_approved == True %}
+          <p class="status"><span class="done">Zaakceptowane (Klient)</span></p>
+        {% else %}
+          <p class="status"><span class="pending">Odrzucone (Klient)</span></p>
+        {% endif %}
+
+        {% if activity.supervisor_approved == None %}
+          <p class="status"><span class="todo">Oczekuje na akceptację (Kierownik)</span></p>
+        {% elif activity.supervisor_approved == True %}
+          <p class="status"><span class="done">Zaakceptowane (Kierownik)</span></p>
+        {% else %}
+          <p class="status"><span class="pending">Odrzucone (Kierownik)</span></p>
+        {% endif %}
+
+
         {{activity.done_by.name}}
         {{activity.done_by.surname}}
         {% endfor %}

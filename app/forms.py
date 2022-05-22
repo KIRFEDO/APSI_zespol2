@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
+from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, SelectField, TextAreaField, DateField, DecimalField
 from wtforms.validators import DataRequired, Length, ValidationError, EqualTo
-from app.models import User, Project, Task
+from app.models import User, Project, Task, ProjectAssignment
 
 
 class RegistrationForm(FlaskForm):
@@ -49,7 +50,7 @@ class EmployeeAssignForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(EmployeeAssignForm, self).__init__(*args, **kwargs)
         self.employee.choices = [("", "Brak" + " " + "pracownika")] + [(c.id, c.name + " " + c.surname) for c in
-                                                                  User.query.filter(User.role == "pracownik")]
+                                                                       User.query.filter(User.role == "pracownik")]
 
 
 class AddActivityForm(FlaskForm):
@@ -61,13 +62,15 @@ class AddActivityForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super(AddActivityForm, self).__init__(*args, **kwargs)
-        self.task.choices = [("", "Wybierz zadanie")] + [(c.id, c.name) for c in Task.query]
+        self.task.choices = [("", "Wybierz zadanie")] + [(c.id, c.name) for c in
+                                                         Task.query.join(Project).join(ProjectAssignment).filter(
+                                                             ProjectAssignment.user_id == current_user.get_id())]
 
 
 class TaskForm(FlaskForm):
     name = StringField('Nazwa', validators=[DataRequired(), Length(max=50)])
     description = TextAreaField('Opis', validators=[Length(max=500)])
-    submit = SubmitField('Stwórz projekt')
+    submit = SubmitField('Stwórz zadanie')
 
     def validate_name(self, name):
         t = Task.query.filter_by(name=name.data, project=self.project_id).first()

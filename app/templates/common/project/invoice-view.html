@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 
-<head>
+<head type="text/css" media="print">
   <meta charset="utf-8">
   <title>First test project - APSI</title>
   <meta name="description" content="Revolutionary task managment system.">
@@ -15,15 +15,23 @@
         <div class="content-wrapper">
             <div class="container">
 
-                <h2>Faktura VAT</h2>
+                <h2>Zestawienie czynności wykonanych w ramach projektu</h2>
                 <h2>Projekt: {{project.name}}</h2>
 
                 {% for task in project.projects_tasks %}
-                  <h3>{{task.description}}</h3>
+                  <h3>Dla zadania: {{task.description}}</h3>
                   {% for activity in task.associated_activities %}
-                    <p>{{activity.description}} {{activity.time}} {{activity.done_by.name}} {{activity.done_by.surname}}</p>
+                    {% if activity.supervisor_approved == True %}
+                      {% if activity.client_approved == None or activity.client_approved == True %}
+                        <p>Czynność: {{activity.description}}</p>
+                        <p>Czas trwania: {{activity.time}} {{activity.time.hours}}</p>
+                        <p>Zarejestrował {{activity.done_by.name}} {{activity.done_by.surname}} w dniu {{activity.date}}</p>
+                      {% endif%}
+                    {% endif%}
                   {% endfor%}
                 {% endfor%}
+
+                <a class="btn btn-primary" title="Wydrukuj" href="#" onclick="window.print();return false;"><i class="fa-solid fa-print"></i>Wydrukuj</a>
 
             </div>
         </div>

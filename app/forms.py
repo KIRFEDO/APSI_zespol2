@@ -43,14 +43,22 @@ class ProjectForm(FlaskForm):
             raise ValidationError('Istnieje już projekt o takiej nazwie.')
 
 
-class EmployeeAssignForm(FlaskForm):
-    employee = SelectField('Pracownik')
-    submit = SubmitField('Przypisz pracownika')
+def create_employee_assign_form(assigned_users):
+    class EmployeeAssignForm(FlaskForm):
+        employee = SelectField('Pracownik')
+        submit = SubmitField('Przypisz pracownika')
 
-    def __init__(self, *args, **kwargs):
-        super(EmployeeAssignForm, self).__init__(*args, **kwargs)
-        self.employee.choices = [("", "Brak" + " " + "pracownika")] + [(c.id, c.name + " " + c.surname) for c in
-                                                                       User.query.filter(User.role == "pracownik")]
+        def __init__(self, *args, **kwargs):
+            super(EmployeeAssignForm, self).__init__(*args, **kwargs)
+            self.employee.choices = [("", "Brak" + " " + "pracownika")] + [(c.id, c.name + " " + c.surname) for c in
+                                                                           User.query.filter(User.role == "pracownik",
+                                                                                             User.supervisor == int(
+                                                                                                 current_user.get_id()),
+                                                                                             User.id.not_in(
+                                                                                                 assigned_users))]
+
+    setattr(EmployeeAssignForm, "assigned_users", assigned_users)
+    return EmployeeAssignForm()
 
 
 class AddActivityForm(FlaskForm):

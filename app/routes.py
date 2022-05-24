@@ -1,7 +1,7 @@
 from app import app, db, bcrypt
 from flask import render_template, redirect, flash, url_for, request, abort
 from flask_login import current_user, login_user, logout_user, login_required
-from app.forms import LoginForm, RegistrationForm, ProjectForm, TaskForm, AddActivityForm, EmployeeAssignForm
+from app.forms import LoginForm, RegistrationForm, ProjectForm, TaskForm, AddActivityForm, create_employee_assign_form
 from app.models import User, Project, Task, Activity, ProjectAssignment
 import datetime
 
@@ -216,16 +216,17 @@ def projects_view(project_id):
     project = Project.query.get_or_404(project_id)
     current_view = 'projects-view'
     u = get_user()
+    project_assigns = ProjectAssignment.query.filter(ProjectAssignment.project_id == project_id)
+    assigned_users = [a.user_id for a in project_assigns]
 
     # Employee assign form
-    form = EmployeeAssignForm()
+    form = create_employee_assign_form(assigned_users)
     if form.validate_on_submit():
         emp = form.employee.data
         if emp != "" and (emp not in [str(e.user_id) for e in project.workers]):
             pAssignment = ProjectAssignment(user_id=form.employee.data, project_id=project_id)
             db.session.add(pAssignment)
             db.session.commit()
-            # TODO: Clear form and assign properly
             return redirect(url_for('projects'))
 
     return render_template('common/project/project-view.html', u=u, project=project, current_view=current_view,

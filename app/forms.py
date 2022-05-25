@@ -52,8 +52,8 @@ def create_employee_assign_form(assigned_users):
             super(EmployeeAssignForm, self).__init__(*args, **kwargs)
             self.employee.choices = [("", "Brak" + " " + "pracownika")] + [(c.id, c.name + " " + c.surname) for c in
                                                                            User.query.filter(User.role == "pracownik",
-                                                                                             User.supervisor == int(
-                                                                                                 current_user.get_id()),
+                                                                                             #User.supervisor == int(
+                                                                                            #     current_user.get_id()),
                                                                                              User.id.not_in(
                                                                                                  assigned_users))]
 

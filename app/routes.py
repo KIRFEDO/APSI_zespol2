@@ -3,8 +3,13 @@ from flask import render_template, redirect, flash, url_for, request, abort
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import LoginForm, RegistrationForm, ProjectForm, TaskForm, AddActivityForm, create_employee_assign_form
 from app.models import User, Project, Task, Activity, ProjectAssignment
-import datetime
 
+import datetime
+from babel.dates import format_timedelta
+
+@app.template_filter('formatdatetime')
+def formatdatetime(value):
+    return str(value.days * 24 + value.seconds // 3600) + " h"
 
 # ------------------------------------------------------------------------------
 # Login/Register/Logout --------------------------------------------------------
@@ -90,6 +95,13 @@ def activities():
 @app.route('/activities/add/<task_id>/', methods=['GET', 'POST'])
 @login_required
 def activity_add(task_id=None):
+
+    # Go back descitnation url
+    if request.args.get('go_back'):
+        go_back=request.args.get('go_back')
+    else:
+        go_back='project-view'
+
     form = AddActivityForm(task=task_id)
     current_view = 'activities-add'
     u = get_user()
@@ -100,10 +112,13 @@ def activity_add(task_id=None):
             activity = Activity(date=form.date.data, description=form.description.data, user_id=user,
                                 task_id=form.task.data, time=datetime.timedelta(hours=float(form.activityTime.data)))
             db.session.add(activity)
-            print(activity)
             db.session.commit()
             flash('Aktywność utworzona', 'success')
-            return redirect(url_for('activities'))
+
+            if go_back=='project-view':
+                return redirect(url_for('projects_view', project_id=activity.associated_task.associated_project.id, active_task_id=task_id))
+            elif go_back=='activities':
+                return redirect(url_for('activities'))
         return render_template('common/activity/activity-add.html', u=u, current_view=current_view, form=form,
                                task_id=task_id)
     else:
@@ -128,7 +143,7 @@ def activity_delete(project_id=None, task_id=None, activity_id=None):
 
     Activity.query.filter(Activity.id == activity_id).delete()
     db.session.commit()
-    return redirect(url_for('projects'))
+    return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))
 
 
 # Accept activity - supervisor
@@ -145,7 +160,7 @@ def activity_accept_supervisor(project_id=None, task_id=None, activity_id=None, 
         else:
             activity.supervisor_approved = True
         db.session.commit()
-    return redirect(url_for('projects'))
+    return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))
 
 
 # Accept activity - customer
@@ -162,7 +177,7 @@ def activity_accept_client(project_id=None, task_id=None, activity_id=None, stat
         else:
             activity.client_approved = True
         db.session.commit()
-    return redirect(url_for('projects'))
+    return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))
 
 
 # ------------------------------------------------------------------------------
@@ -219,6 +234,12 @@ def projects_view(project_id):
     project_assigns = ProjectAssignment.query.filter(ProjectAssignment.project_id == project_id)
     assigned_users = [a.user_id for a in project_assigns]
 
+    # Active task
+    if request.args.get('active_task_id'):
+        active_task_id = int(request.args.get('active_task_id'))
+    else:
+        active_task_id = 0
+
     # Employee assign form
     form = create_employee_assign_form(assigned_users)
     if form.validate_on_submit():
@@ -227,9 +248,9 @@ def projects_view(project_id):
             pAssignment = ProjectAssignment(user_id=form.employee.data, project_id=project_id)
             db.session.add(pAssignment)
             db.session.commit()
-            return redirect(url_for('projects'))
+            return redirect(url_for('projects_view', project_id=project_id))
 
-    return render_template('common/project/project-view.html', u=u, project=project, current_view=current_view,
+    return render_template('common/project/project-view.html', u=u, project=project, active_task_id=active_task_id, current_view=current_view,
                            form=form)
 
 

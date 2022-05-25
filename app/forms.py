@@ -45,7 +45,7 @@ class ProjectForm(FlaskForm):
 
 def create_employee_assign_form(assigned_users):
     class EmployeeAssignForm(FlaskForm):
-        employee = SelectField('Pracownik')
+        employee = SelectField('Wybierz pracownika')
         submit = SubmitField('Przypisz pracownika')
 
         def __init__(self, *args, **kwargs):

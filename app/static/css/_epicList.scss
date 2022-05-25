@@ -36,11 +36,38 @@
                     border-radius: 0;
                     border: 1px solid #eee;
 
+                    .empty-list{
+                      text-align: center;
+                      padding: 30px;
+                      margin: 0;
+                    }
+
                     .task-one{
                         border-bottom: 1px solid #f8f9ff;
 
                         &:last-child{
                             border-bottom: 0;
+                        }
+
+                        .user{
+                          display: inline-block;
+                          padding: 15px 7.5px 15px 15px;
+                          margin: 0;
+
+                          span{
+                            background: #0984e3;
+                            background: linear-gradient(45deg, #0984e3 41%, #74b9ff 75%);
+                            color: #fff;
+                            border-radius: 6px;
+                            text-align: center;
+                            line-height: 21px;
+                            font-weight: 900;
+                            margin: 0;
+                            font-size: 12px;
+                            padding: 0 15px;
+                            height: 21px;
+                            display: block;
+                          }
                         }
 
                         .name{
@@ -88,24 +115,6 @@
                             }
                         }
 
-                        .external{
-                            padding: 15px 7.5px;
-                            margin: 0;
-                            display: inline-block;
-
-                            a{
-                                color: #333;
-                                text-decoration: none;
-                                border-bottom: 1px dotted;
-                                font-weight: 600;
-                                font-size: 14px;
-
-                                &:hover{
-                                    color: #000;
-                                }
-                            }
-                        }
-
                         .options{
                             margin: 0;
                             padding: 15px;
@@ -141,19 +150,14 @@
                                         &.dropdown-status{
                                             font-weight: 900;
 
-                                            &.todo{
-                                                color: #42526E;
-                                                background-color: #DFE1E6;
+                                           &.decline{
+                                             background-color: #f5e6e3;
+                                             color: #e17055;
                                             }
 
-                                            &.inprogress, &.pending{
-                                                color: #0747A6;
-                                                background-color: #DEEBFF;
-                                            }
-
-                                            &.done{
-                                                color: #006644;
-                                                background-color: #E3FCEF;
+                                            &.accept{
+                                              color: #006644;
+                                              background-color: #E3FCEF;
                                             }
                                         }
 
@@ -168,7 +172,7 @@
                     }
                 }
 
-                .task-description{
+                .task-description, .task-time{
                   padding: 0 15px 15px 15px;
                   margin: 0;
                   font-size: 14px;
@@ -180,26 +184,6 @@
                     font-size: 12px;
                     margin: 0 0 3px 0;
                   }
-                }
-
-                .task-time{
-                  padding: 0 15px 5px 15px;
-                  margin: 0;
-
-                  text-transform: uppercase;
-                  font-weight: 600;
-                  font-size: 12px;
-                  margin: 0 0 3px 0;
-                }
-
-                .member-list{
-                    border-top: 1px solid #eee;
-                    padding: 15px 0 0 0;
-                    margin: 0 15px 15px;
-
-                    li{
-                        margin-bottom: 0;
-                    }
                 }
 
                 .add-task{

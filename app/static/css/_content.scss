@@ -9,15 +9,21 @@
         padding: 0 0 15px 0;
         border-bottom: 1px solid #eee;
 
-        .btn-primary{
-            float: right;
-            background-color: #4b7bec;
-            border-radius: 5px;
-            text-transform: uppercase;
-            font-weight: 600;
-            font-size: 12px;
-            margin: 3px 0 0 0;
+        .btn{
+          float: right;
+          border-radius: 5px;
+          text-transform: uppercase;
+          font-weight: 600;
+          font-size: 12px;
+          margin: 3px 0 0 15px;
 
+          &.btn-primary{
+              background-color: #4b7bec;
+          }
+
+          i{
+            margin-right: 3px;
+          }
         }
     }
 

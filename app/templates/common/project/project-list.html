@@ -15,8 +15,13 @@
 
     <div class="content-wrapper">
         <div class="container">
-            <h1>Projekty {% if u.role == 'kierownik' %} <a class="btn btn-primary" title="New project" href="/projects/add"><i
-                    class="fa-solid fa-plus"></i>Nowy projekt</a>{% endif %}</h1>
+            <h1>Projekty
+              {% if u.role == 'kierownik' %}
+                <a class="btn btn-primary" title="New project" href="/projects/add">
+                  <i class="fa-solid fa-plus"></i>Nowy projekt
+                </a>
+              {% endif %}
+            </h1>
 
             <div class="project-list">
                 {% for project in projects %}

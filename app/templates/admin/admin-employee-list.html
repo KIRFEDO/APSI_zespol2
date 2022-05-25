@@ -26,10 +26,15 @@
                                 <p class="key">#{{employee.login}}</p>
                                 <p class="name">{{employee.name}} {{employee.surname}}</p>
 
-                                {% for project in employee.assigned_projects%}
-                                  <a class="btn btn-info" title="Dodaj zadanie" href="/projects/{{project.assigned_project.id}}"><i class="fa-solid fa-star"></i>{{project.assigned_project.name}}</a>
-                                {% endfor %}
-
+                                {% if employee.assigned_projects|length > 0 %}
+                                  <p class="assigned-projects">
+                                    <span>Przypisane projekty: </span>
+                                    {% for i in range(employee.assigned_projects|length) %}
+                                      <a title="{{employee.assigned_projects[i].assigned_project.name}}" href="/projects/{{employee.assigned_projects[i].assigned_project.id}}">{{employee.assigned_projects[i].assigned_project.name}}</a>
+                                      {% if i+1 != employee.assigned_projects|length %},{% endif %}
+                                    {% endfor %}
+                                  </p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -48,10 +53,15 @@
                                 <p class="key">#{{employee.login}}</p>
                                 <p class="name">{{employee.name}} {{employee.surname}}</p>
 
-                                {% for project in employee.commissioned_projects%}
-                                  <a class="btn btn-warning" title="Dodaj zadanie" href="/projects/{{project.id}}"><i class="fa-solid fa-star"></i>{{project.name}}</a>
-                                {% endfor %}
-
+                                {% if employee.commissioned_projects|length > 0 %}
+                                  <p class="assigned-projects">
+                                    <span>Przypisane projekty: </span>
+                                    {% for i in range(employee.commissioned_projects|length) %}
+                                      <a title="{{employee.commissioned_projects[i].name}}" href="/projects/{{employee.commissioned_projects[i].id}}">{{employee.commissioned_projects[i].name}}</a>
+                                      {% if i+1 != employee.commissioned_projects|length %},{% endif %}
+                                    {% endfor %}
+                                  </p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

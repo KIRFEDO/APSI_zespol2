@@ -15,7 +15,16 @@
 
         <div class="content-wrapper">
             <div class="container">
-                <h1>{{project.name}}</h1>
+                <h1>
+                  {{project.name}}
+
+                  {% if u.role == 'kierownik' %}
+                    <a class="btn btn-danger" title="Usuń projekt" href="/projects/{{project.id}}/delete"><i class="fa-solid fa-trash"></i> Usuń projekt</a>
+                  {% endif %}
+                  {% if u.role == 'kierownik' %}
+                    <a class="btn btn-primary" title="Wydrukuj fakturę" href="/projects/{{project.id}}/invoice" target="_blank"><i class="fa-solid fa-receipt"></i> Wydrukuj fakturę</a>
+                  {% endif %}
+                </h1>
 
                 <p class="project-descirption">{{project.description}}</p>
 
@@ -24,34 +33,32 @@
                       {% if u.role == 'kierownik' or (u.role == 'klient' and u.id == project.client) %}
                       <p class="content-title">Zadania
                         <a class="btn btn-warning" title="Dodaj zadanie" href="/projects/{{project.id}}/task/add"><i class="fa-solid fa-plus"></i> Dodaj zadanie</a>
-                        <a class="btn btn-info" title="Wydrukuj fakturę" href="/projects/{{project.id}}/invoice" target="_blank"><i class="fa-solid fa-receipt"></i> Wydrukuj fakturę</a>
-                        <!-- TODO: Delete confirmation pop-up -->
-                        {% if u.role == 'kierownik' %}
-                          <a class="btn btn-danger" title="Usuń projekt" href="/projects/{{project.id}}/delete"><i class="fa-solid fa-trash"></i> Usuń projekt</a>
-                        {% endif %}
                       </p>
                       {% endif %}
                       <div class="accordion" id="epic-list">
                         {% for task in project.projects_tasks %}
                           <div class="accordion-item">
                             <h2 class="accordion-header" id="heading-{{task.id}}">
-                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{task.id}}" aria-expanded="true" aria-controls="collapse-{{task.id}}">
+                              <button class="accordion-button {% if active_task_id != task.id %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{task.id}}" aria-expanded="true" aria-controls="collapse-{{task.id}}">
                                 <span class="key">#{{task.id}}</span> {{task.name}}
                               </button>
                             </h2>
 
-                            <div id="collapse-{{task.id}}" class="accordion-collapse collapse" aria-labelledby="heading-{{task.id}}">
+                            <div id="collapse-{{task.id}}" class="accordion-collapse collapse {% if active_task_id == task.id %}show{% endif %}" aria-labelledby="heading-{{task.id}}">
                               <div class="accordion-body">
                                 <p>{{task.description}}</p>
                                 <div class="task-list">
                                   {% if task.associated_activities|length == 0 %}
-                                    <p>Brak czynności</p>
+                                    <p class="empty-list">Brak czynności</p>
                                   {% endif %}
 
                                   {% for activity in task.associated_activities %}
                                     <div class="task-one">
                                         <div class="row">
                                             <div class="col-11">
+                                              <p class="user" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{activity.done_by.name}} {{activity.done_by.surname}}">
+                                                <span>{{activity.done_by.name|first}}{{activity.done_by.surname|first}}</span>
+                                              </p>
                                               <p class="name"><span class="key">{{activity.date}}</span></p>
                                               {% if project.client != None %}
                                                 {% if activity.client_approved == None %}
@@ -79,36 +86,40 @@
                                                   <ul class="dropdown-menu">
                                                     {% if activity.supervisor_approved == False or (activity.supervisor_approved == None and activity.client_approved == None) or activity.client_approved == False %}
                                                       {% if activity.done_by.id == u.id %}
-                                                      <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-{{activity.id}}"><i class="fa-solid fa-eye"></i> Edytuj aktywność</a></li>
-                                                      <li><hr class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-{{activity.id}}"><i class="fa-solid fa-eye"></i> Edytuj aktywność</a></li>
+                                                        <li><hr class="dropdown-divider"></li>
                                                       {% endif %}
                                                     {% endif %}
                                                     {% if u.role == 'kierownik' %}
-                                                      <li><a class="dropdown-item dropdown-status pending" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a></li>
-                                                      <li><a class="dropdown-item dropdown-status done" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a></li>
-                                                      <li><hr class="dropdown-divider"></li>
+                                                      <li><a class="dropdown-item dropdown-status decline" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a></li>
+                                                      <li><a class="dropdown-item dropdown-status accept" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a></li>
                                                     {% elif u.role == 'klient' %}
-                                                      <li><a class="dropdown-item dropdown-status pending" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a></li>
-                                                      <li><a class="dropdown-item dropdown-status done" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a></li>
-                                                      <li><hr class="dropdown-divider"></li>
+                                                      <li><a class="dropdown-item dropdown-status decline" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a></li>
+                                                      <li><a class="dropdown-item dropdown-status accept" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a></li>
                                                     {% endif %}
-                                                    {% if activity.done_by.id == u.id %}
-                                                      <li><a class="dropdown-item delete-task" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/delete"><i class="fa-solid fa-trash-can"></i> Usuń aktywność</a></li>
+                                                    {% if activity.supervisor_approved == True or activity.client_approved == True %}
+                                                      {% if activity.done_by.id == u.id %}
+                                                        <li><a class="dropdown-item delete-task" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/delete"><i class="fa-solid fa-trash-can"></i> Usuń aktywność</a></li>
+                                                      {% endif %}
                                                     {% endif %}
                                                   </ul>
                                                 </div>
                                             </div>
                                         </div>
-                                        <p class="task-description">
-                                          <span><i class="fa-solid fa-comment"></i> Opis</span>
-                                          {{activity.description}}
-                                        </p>
-                                        <p class="task-time">
-                                          <span><i class="fa-solid fa-clock"></i> {{activity.time}}</span>
-                                        </p>
-                                        <ul class="member-list">
-                                          <li data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{activity.done_by.name}} {{activity.done_by.surname}}">{{activity.done_by.name|first}}{{activity.done_by.surname|first}}</li>
-                                        </ul>
+                                        <div class="row">
+                                          <div class="col-9">
+                                            <p class="task-description">
+                                              <span><i class="fa-solid fa-comment"></i> Opis</span>
+                                              {{activity.description}}
+                                            </p>
+                                          </div>
+                                          <div class="col-3">
+                                            <p class="task-time">
+                                              <span><i class="fa-solid fa-clock"></i> Czas pracy</span>
+                                              {{activity.time|formatdatetime}}
+                                            </p>
+                                          </div>
+                                        </div>
 
                                         <div class="modal fade" id="modal-{{activity.id}}" tabindex="-1" aria-labelledby="modal-{{activity.id}}-label" aria-hidden="true">
                                           <div class="modal-dialog">
@@ -127,7 +138,7 @@
                                     {% endfor %}
                                   </div>
                                   {% if u.role == 'pracownik' %}
-                                  <a href="/activities/add/{{task.id}}" title="Dodaj czynność" class="add-task"><i class="fa-solid fa-plus"></i> Dodaj czynność</a>
+                                    <a href="/activities/add/{{task.id}}?go_back=project-view" title="Dodaj czynność" class="add-task"><i class="fa-solid fa-plus"></i> Dodaj czynność</a>
                                   {% endif %}
                                 </div>
                               </div>
@@ -138,21 +149,31 @@
                     <div class="col-3">
                         <p class="content-title">
                             Przypisani pracownicy
+
+                            {% if u.role == 'kierownik' %}
+                              <a href="#" id="toggle-assigned-member-form">
+                                <i class="fa-solid fa-plus"></i>
+                              </a>
+                            {% endif %}
                         </p>
 
                         <!-- Obsluga przypisania pracownikow -->
                         {% if u.role == 'kierownik' %}
-                          <form method="POST" action="">
-                            {{ form.hidden_tag() }}
-                            <div class="mb-3">
-                                {{ form.employee.label(class="form-label") }}
-                                {{ form.employee(class="form-control") }}
+                          <div class="assign-member-form-wrapper">
+                            <div class="assign-member-form">
+                              <form method="POST">
+                                <p class="form-title">Przypisz nowego pracownika</p>
+                                {{ form.hidden_tag() }}
+                                  <div class="mb-3">
+                                    {{ form.employee.label(class="form-label") }}
+                                    {{ form.employee(class="form-control") }}
+                                  </div>
+                                {{ form.submit(class="btn btn-primary") }}
+                              </form>
                             </div>
-                            {{ form.submit(class="btn btn-primary") }}
-                          </form>
+                          </div>
                         {% endif %}
                         <!-- End Obsluga przypisania pracownikow -->
-
 
                         <!-- Lista pracowników -->
                         <ul class="member-list">
@@ -165,11 +186,9 @@
                         {% endif %}
                         <!-- End Lista pracowników -->
 
-
-
                         {% if project.client != None %}
                           <p class="content-title">
-                              Zlecający
+                              Klient
                           </p>
 
                           <!-- Klient -->
@@ -178,10 +197,8 @@
                           </ul>
                           <!-- End Klient -->
                         {% endif %}
-
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

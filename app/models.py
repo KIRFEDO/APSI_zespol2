@@ -47,7 +47,7 @@ class Task(db.Model):
     name = db.Column(db.String(50), unique=True, nullable=False)
     description = db.Column(db.String(500))
     project = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
-    associated_activities = db.relationship('Activity', backref='associated_task', cascade="all,delete", lazy=True,
+    associated_activities = db.relationship('Activity', order_by="desc(Activity.date),desc(Activity.time)", backref='associated_task', cascade="all,delete", lazy=True,
                                             foreign_keys='Activity.task_id')
 
 

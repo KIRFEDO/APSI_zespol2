@@ -77,9 +77,11 @@
                                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                                   </button>
                                                   <ul class="dropdown-menu">
-                                                    {% if activity.supervisor_approved == False or activity.client_approved == False %}
+                                                    {% if activity.supervisor_approved == False or (activity.supervisor_approved == None and activity.client_approved == None) or activity.client_approved == False %}
+                                                      {% if activity.done_by.id == u.id %}
                                                       <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-{{activity.id}}"><i class="fa-solid fa-eye"></i> Edytuj aktywność</a></li>
                                                       <li><hr class="dropdown-divider"></li>
+                                                      {% endif %}
                                                     {% endif %}
                                                     {% if u.role == 'kierownik' %}
                                                       <li><a class="dropdown-item dropdown-status pending" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a></li>
@@ -90,7 +92,9 @@
                                                       <li><a class="dropdown-item dropdown-status done" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a></li>
                                                       <li><hr class="dropdown-divider"></li>
                                                     {% endif %}
-                                                    <li><a class="dropdown-item delete-task" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/delete"><i class="fa-solid fa-trash-can"></i> Usuń aktywność</a></li>
+                                                    {% if activity.done_by.id == u.id %}
+                                                      <li><a class="dropdown-item delete-task" href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/delete"><i class="fa-solid fa-trash-can"></i> Usuń aktywność</a></li>
+                                                    {% endif %}
                                                   </ul>
                                                 </div>
                                             </div>

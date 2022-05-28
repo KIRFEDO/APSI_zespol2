@@ -45,8 +45,9 @@ class ProjectForm(FlaskForm):
 
 def create_employee_assign_form(assigned_users):
     class EmployeeAssignForm(FlaskForm):
-        employee = SelectField('Wybierz pracownika')
-        submit = SubmitField('Przypisz pracownika')
+        employee = SelectField('Wybierz:')
+        submit = SubmitField('Zapisz')
+        employee_to_remove = SelectField('Wybierz:')
 
         def __init__(self, *args, **kwargs):
             super(EmployeeAssignForm, self).__init__(*args, **kwargs)
@@ -56,6 +57,9 @@ def create_employee_assign_form(assigned_users):
                                                                                             #     current_user.get_id()),
                                                                                              User.id.not_in(
                                                                                                  assigned_users))]
+            self.employee_to_remove.choices = [("", "Brak" + " " + "pracownika")] + \
+                                              [(c.id, c.name + " " + c.surname) for c in
+                                               User.query.filter(User.id.in_(assigned_users))]
 
     setattr(EmployeeAssignForm, "assigned_users", assigned_users)
     return EmployeeAssignForm()

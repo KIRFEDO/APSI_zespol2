@@ -95,7 +95,6 @@ def activities():
 @app.route('/activities/add/<task_id>/', methods=['GET', 'POST'])
 @login_required
 def activity_add(task_id=None):
-
     # Go back descitnation url
     if request.args.get('go_back'):
         go_back=request.args.get('go_back')
@@ -240,7 +239,7 @@ def projects_view(project_id):
     else:
         active_task_id = 0
 
-    # Employee assign form
+    # Employee assign/remove form
     form = create_employee_assign_form(assigned_users)
     if form.validate_on_submit():
         emp = form.employee.data
@@ -250,8 +249,15 @@ def projects_view(project_id):
             db.session.commit()
             return redirect(url_for('projects_view', project_id=project_id))
 
-    return render_template('common/project/project-view.html', u=u, project=project, active_task_id=active_task_id, current_view=current_view,
-                           form=form)
+        emp_to_remove = form.employee_to_remove.data
+        if emp_to_remove != "" and (emp_to_remove in [str(e.user_id) for e in project.workers]):
+            ProjectAssignment.query.filter(ProjectAssignment.project_id == project_id,
+                                           ProjectAssignment.user_id == emp_to_remove).delete()
+            db.session.commit()
+            return redirect(url_for('projects_view', project_id=project_id))
+
+    return render_template('common/project/project-view.html', u=u, project=project, active_task_id=active_task_id,
+                           current_view=current_view, form=form)
 
 
 # Projects list

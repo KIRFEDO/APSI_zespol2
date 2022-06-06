@@ -85,7 +85,7 @@
                                                 {% elif activity.client_approved == True %}
                                                   <p class="status"><span class="done">Zaakceptowane (Klient)</span></p>
                                                 {% else %}
-                                                  <p class="status"><span class="pending">Odrzucone (Klient)</span></p>
+                                                  <p class="status"><span class="rejected">Odrzucone (Klient)</span></p>
                                                 {% endif %}
                                               {% endif %}
 
@@ -94,7 +94,7 @@
                                               {% elif activity.supervisor_approved == True %}
                                                 <p class="status"><span class="done">Zaakceptowane (Kierownik)</span></p>
                                               {% else %}
-                                                <p class="status"><span class="pending">Odrzucone (Kierownik)</span></p>
+                                                <p class="status"><span class="rejected">Odrzucone (Kierownik)</span></p>
                                               {% endif %}
                                             </div>
                                             <div class="col">
@@ -167,13 +167,13 @@
                     </div>
                     <div class="col-3">
                         <p class="content-title">
-                            Przypisani pracownicy
+                          Przypisani pracownicy
 
-                            {% if u.role == 'kierownik' %}
-                              <a href="#" id="toggle-assigned-member-form">
-                                <i class="fa-solid fa-pencil"></i>
-                              </a>
-                            {% endif %}
+                          {% if u.role == 'kierownik' %}
+                            <a href="#" id="toggle-assigned-member-form">
+                              <i class="fa-solid fa-pencil"></i>
+                            </a>
+                          {% endif %}
                         </p>
 
                         <!-- Obsluga przypisania pracownikow -->
@@ -184,28 +184,23 @@
                                 <p class="form-title">Edycja listy członków projektu</p>
                                 {{ form.hidden_tag() }}
                                   <div class="mb-3">
-                                      <br>
-                                        <div class="units" id="workerListAction">
-                                            <label>
-                                              <input type="radio" name="worker-action" id="addWorker"> Dodaj pracownika
-                                            </label>
-                                            <label>
-                                              <input type="radio" name="worker-action" id="removeWorker"> Usuń pracownika
-                                            </label>
-                                        </div>
-
-                                      <br>
+                                    <div class="units" id="workerListAction">
+                                      <label>
+                                        <input type="radio" name="worker-action" id="addWorker"> Dodaj pracownika
+                                      </label>
+                                      <label>
+                                        <input type="radio" name="worker-action" id="removeWorker"> Usuń pracownika
+                                      </label>
+                                    </div>
 
                                     <div id="addWorkerDiv">
-                                        {{ form.employee.label(class="form-label") }}
-                                        {{ form.employee(class="form-control") }}
+                                      {{ form.employee.label(class="form-label") }}
+                                      {{ form.employee(class="form-control") }}
                                     </div>
-
                                     <div id="removeWorkerDiv">
-                                        {{ form.employee_to_remove.label(class="form-label") }}
-                                        {{ form.employee_to_remove(class="form-control") }}
+                                      {{ form.employee_to_remove.label(class="form-label") }}
+                                      {{ form.employee_to_remove(class="form-control") }}
                                     </div>
-
                                   </div>
                                 {{ form.submit(class="btn btn-primary") }}
                               </form>

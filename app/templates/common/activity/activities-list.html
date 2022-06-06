@@ -21,37 +21,172 @@
           {% endif %}
         </h1>
 
-        <!--TODO wyświetlanie czynności-->
-        Do obróbki na froncie
-        {% for activity in activities %}
-          Czynność:
-          {{activity.description}}
-          {{activity.time}}
-          {{activity.date}}
+        <div class="task-board">
+          <div class="task-board">
+            <div class="row">
+               <div class="col-4">
+                 <div class="col-wrapper todo">
+                   <h4 class="col-title">Do akceptacji</h4>
+                   <div class="task-boxes" id="to-review-boxes">
+                     {% for activity in activities %}
+                      {% if (activity.supervisor_approved == None and u.role == 'kierownik') or (activity.client_approved == None and u.role == 'klient') %}
+                         <div class="task-box">
+                           <div class="btn-group options">
+                             <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                               <i class="fa-solid fa-ellipsis-vertical"></i>
+                             </button>
+                             <ul class="dropdown-menu">
+                               {% if activity.supervisor_approved == False or (activity.supervisor_approved == None and activity.client_approved == None) or activity.client_approved == False %}
+                                 {% if activity.done_by.id == u.id %}
+                                   <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-{{activity.id}}"><i class="fa-solid fa-eye"></i> Edytuj aktywność</a></li>
+                                   <li><hr class="dropdown-divider"></li>
+                                 {% endif %}
+                               {% endif %}
+                               {% if u.role == 'kierownik' %}
+                                 <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a></li>
+                                 <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a></li>
+                               {% elif u.role == 'klient' %}
+                                 <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a></li>
+                                 <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a></li>
+                               {% endif %}
+                               {% if activity.supervisor_approved == True or activity.client_approved == True %}
+                                 {% if activity.done_by.id == u.id %}
+                                   <li><a class="dropdown-item delete-task" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/delete"><i class="fa-solid fa-trash-can"></i> Usuń aktywność</a></li>
+                                 {% endif %}
+                               {% endif %}
+                             </ul>
+                           </div>
 
-          {% if activity.associated_task.associated_project.client != None %}
-            {% if activity.client_approved == None %}
-              <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
-            {% elif activity.client_approved == True %}
-              <p class="status"><span class="done">Zaakceptowane (Klient)</span></p>
-            {% else %}
-              <p class="status"><span class="pending">Odrzucone (Klient)</span></p>
-            {% endif %}
-          {% endif %}
+                           <p class="task-author">{{activity.done_by.name}} {{activity.done_by.surname}}</p>
 
-          {% if activity.supervisor_approved == None %}
-            <p class="status"><span class="todo">Oczekuje na akceptację (Kierownik)</span></p>
-          {% elif activity.supervisor_approved == True %}
-            <p class="status"><span class="done">Zaakceptowane (Kierownik)</span></p>
-          {% else %}
-            <p class="status"><span class="pending">Odrzucone (Kierownik)</span></p>
-          {% endif %}
+                           {% if activity.associated_task.associated_project.client != None %}
+                             {% if activity.client_approved == None %}
+                               <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
+                             {% elif activity.client_approved == True %}
+                               <p class="status"><span class="done">Zaakceptowane (Klient)</span></p>
+                             {% else %}
+                               <p class="status"><span class="rejected">Odrzucone (Klient)</span></p>
+                             {% endif %}
+                           {% endif %}
 
+                           {% if activity.supervisor_approved == None %}
+                             <p class="status"><span class="todo">Oczekuje na akceptację (Kierownik)</span></p>
+                           {% elif activity.supervisor_approved == True %}
+                             <p class="status"><span class="done">Zaakceptowane (Kierownik)</span></p>
+                           {% else %}
+                             <p class="status"><span class="rejected">Odrzucone (Kierownik)</span></p>
+                           {% endif %}
 
-          {{activity.done_by.name}}
-          {{activity.done_by.surname}}
-        {% endfor %}
+                            <p class="task-description">{{activity.description}}</p>
+                            <p class="task-details"><i class="fa-solid fa-calendar-day"></i> {{activity.date}} <i class="fa-solid fa-clock"></i> {{activity.time|formatdatetime}}</p>
+                         </div>
+                       {% endif %}
+                     {% endfor %}
+                   </div>
+                 </div>
+               </div>
 
+               <div class="col-4">
+                 <div class="col-wrapper rejected">
+                   <h4 class="col-title">Odrzucone</h4>
+                   <div class="task-boxes" id="rejected-boxes">
+                     {% for activity in activities %}
+                      {% if activity.supervisor_approved == False or activity.client_approved == False %}
+                        <div class="task-box">
+                          <div class="btn-group options">
+                            <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                              {% if activity.supervisor_approved == False or (activity.supervisor_approved == None and activity.client_approved == None) or activity.client_approved == False %}
+                                {% if activity.done_by.id == u.id %}
+                                  <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-{{activity.id}}"><i class="fa-solid fa-eye"></i> Edytuj aktywność</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                {% endif %}
+                              {% endif %}
+                              {% if u.role == 'kierownik' %}
+                                <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a></li>
+                                <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a></li>
+                              {% elif u.role == 'klient' %}
+                                <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a></li>
+                                <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a></li>
+                              {% endif %}
+                              {% if activity.supervisor_approved == True or activity.client_approved == True %}
+                                {% if activity.done_by.id == u.id %}
+                                  <li><a class="dropdown-item delete-task" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/delete"><i class="fa-solid fa-trash-can"></i> Usuń aktywność</a></li>
+                                {% endif %}
+                              {% endif %}
+                            </ul>
+                          </div>
+                          
+                          <p class="task-author">{{activity.done_by.name}} {{activity.done_by.surname}}</p>
+
+                          {% if activity.associated_task.associated_project.client != None %}
+                            {% if activity.client_approved == None %}
+                              <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
+                            {% elif activity.client_approved == True %}
+                              <p class="status"><span class="done">Zaakceptowane (Klient)</span></p>
+                            {% else %}
+                              <p class="status"><span class="rejected">Odrzucone (Klient)</span></p>
+                            {% endif %}
+                          {% endif %}
+
+                          {% if activity.supervisor_approved == None %}
+                            <p class="status"><span class="todo">Oczekuje na akceptację (Kierownik)</span></p>
+                          {% elif activity.supervisor_approved == True %}
+                            <p class="status"><span class="done">Zaakceptowane (Kierownik)</span></p>
+                          {% else %}
+                            <p class="status"><span class="rejected">Odrzucone (Kierownik)</span></p>
+                          {% endif %}
+
+                           <p class="task-description">{{activity.description}}</p>
+                           <p class="task-details"><i class="fa-solid fa-calendar-day"></i> {{activity.date}} <i class="fa-solid fa-clock"></i> {{activity.time|formatdatetime}}</p>
+                        </div>
+                       {% endif %}
+                     {% endfor %}
+                   </div>
+                 </div>
+               </div>
+
+               <div class="col-4">
+                 <div class="col-wrapper done">
+                   <h4 class="col-title">Zakończone</h4>
+                   <div class="task-boxes" id="done-boxes">
+                     {% for activity in activities %}
+                      {% if activity.supervisor_approved == True and activity.client_approved == True %}
+                          <div class="task-box">
+                            <p class="task-author">
+                              {{activity.done_by.name}} {{activity.done_by.surname}}
+                            </p>
+
+                            {% if activity.associated_task.associated_project.client != None %}
+                              {% if activity.client_approved == None %}
+                                <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
+                              {% elif activity.client_approved == True %}
+                                <p class="status"><span class="done">Zaakceptowane (Klient)</span></p>
+                              {% else %}
+                                <p class="status"><span class="rejected">Odrzucone (Klient)</span></p>
+                              {% endif %}
+                            {% endif %}
+
+                            {% if activity.supervisor_approved == None %}
+                              <p class="status"><span class="todo">Oczekuje na akceptację (Kierownik)</span></p>
+                            {% elif activity.supervisor_approved == True %}
+                              <p class="status"><span class="done">Zaakceptowane (Kierownik)</span></p>
+                            {% else %}
+                              <p class="status"><span class="rejected">Odrzucone (Kierownik)</span></p>
+                            {% endif %}
+
+                             <p class="task-description">{{activity.description}}</p>
+                             <p class="task-details"><i class="fa-solid fa-calendar-day"></i> {{activity.date}} <i class="fa-solid fa-clock"></i> {{activity.time|formatdatetime}}</p>
+                          </div>
+                       {% endif %}
+                     {% endfor %}
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
         </div>
     </div>
 </div>

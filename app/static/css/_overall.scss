@@ -149,6 +149,14 @@ body{
       cursor: pointer;
     }
 
+    #workerListAction{
+      margin: 5px 0 10px 0;
+
+      label{
+        cursor: pointer;
+      }
+    }
+
     .btn-primary{
       font-size: 14px;
       padding: 6px;

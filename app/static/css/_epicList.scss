@@ -103,9 +103,9 @@
                                     background-color: #DFE1E6;
                                 }
 
-                                &.inprogress, &.pending{
-                                    color: #0747A6;
-                                    background-color: #DEEBFF;
+                                &.rejected{
+                                  background-color: #f5e6e3;
+                                  color: #e17055;
                                 }
 
                                 &.done{
@@ -116,58 +116,7 @@
                         }
 
                         .options{
-                            margin: 0;
                             padding: 15px;
-                            float: right;
-                            display: inline-block;
-
-                            button{
-                                display: inline-block;
-                                background: transparent;
-                                border: 0;
-                            }
-
-                            .dropdown-menu{
-                                li{
-                                    padding: 2px 5px;
-
-                                    hr{
-                                        margin: 0 !important;
-                                    }
-
-                                    .dropdown-item{
-                                        font-size: 12px;
-                                        font-size: 12px;
-                                        padding: 4px 8px;
-                                        font-weight: 600;
-                                        text-transform: uppercase;
-                                        border-radius: 3px;
-
-                                        i{
-                                            margin: 0 3px 0 0;
-                                        }
-
-                                        &.dropdown-status{
-                                            font-weight: 900;
-
-                                           &.decline{
-                                             background-color: #f5e6e3;
-                                             color: #e17055;
-                                            }
-
-                                            &.accept{
-                                              color: #006644;
-                                              background-color: #E3FCEF;
-                                            }
-                                        }
-
-                                        &.delete-task{
-                                            background-color: #f5e6e3;
-                                            color: #e17055;
-                                        }
-                                    }
-                                }
-                            }
                         }
                     }
                 }

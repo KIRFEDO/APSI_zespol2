@@ -13,3 +13,11 @@ $(document).ready(function(){
     $('.assign-member-form').toggleClass('trigged');
   });
 });
+
+// Scrollbars
+
+$(document).ready(function(){
+  const toReviewScrollbar = new PerfectScrollbar('#to-review-boxes');
+  const rejectedScrollbar = new PerfectScrollbar('#rejected-boxes');
+  const doneScrollbar = new PerfectScrollbar('#done-boxes');
+});

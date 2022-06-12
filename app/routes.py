@@ -150,6 +150,12 @@ def activity_delete(project_id=None, task_id=None, activity_id=None):
 @login_required
 def activity_accept_supervisor(project_id=None, task_id=None, activity_id=None, state=None):
     u = get_user()
+
+    if request.args.get('go_back'):
+        go_back=request.args.get('go_back')
+    else:
+        go_back='project-view'
+
     project = Project.query.get_or_404(project_id)
     check_ownership(u.id, project.supervisor)
     if u.role == 'kierownik':
@@ -161,14 +167,23 @@ def activity_accept_supervisor(project_id=None, task_id=None, activity_id=None, 
         elif state == 2:
             activity.supervisor_approved = None
         db.session.commit()
-    return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))
 
+    if go_back=='project-view':
+        return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))
+    elif go_back=='activities':
+        return redirect(url_for('activities'))
 
 # Accept activity - customer
 @app.route('/projects/<int:project_id>/<int:task_id>/<int:activity_id>/accept_client/<int:state>')
 @login_required
 def activity_accept_client(project_id=None, task_id=None, activity_id=None, state=None):
     u = get_user()
+
+    if request.args.get('go_back'):
+        go_back=request.args.get('go_back')
+    else:
+        go_back='project-view'
+
     project = Project.query.get_or_404(project_id)
     check_ownership(u.id, project.client)
     if u.role == 'klient':
@@ -180,8 +195,11 @@ def activity_accept_client(project_id=None, task_id=None, activity_id=None, stat
         elif state == 2:
             activity.client_approved = None
         db.session.commit()
-    return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))
 
+    if go_back=='project-view':
+        return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))
+    elif go_back=='activities':
+        return redirect(url_for('activities'))
 
 # ------------------------------------------------------------------------------
 # Tasks ------------------------------------------------------------------------

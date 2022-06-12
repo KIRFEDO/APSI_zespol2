@@ -37,10 +37,10 @@
                 <h1>
                   {{project.name}}
 
-                  {% if u.role == 'kierownik' %}
+                  {% if u.role == 'kierownik' and not project.projects_tasks|length %}
                     <a class="btn btn-danger" title="Usuń projekt" href="/projects/{{project.id}}/delete"><i class="fa-solid fa-trash"></i> Usuń projekt</a>
                   {% endif %}
-                  {% if u.role == 'kierownik' %}
+                  {% if u.role == 'kierownik' and project.projects_tasks|length %}
                     <a class="btn btn-primary" title="Wydrukuj fakturę" href="/projects/{{project.id}}/invoice" target="_blank"><i class="fa-solid fa-receipt"></i> Wydrukuj fakturę</a>
                   {% endif %}
                 </h1>

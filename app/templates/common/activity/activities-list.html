@@ -43,11 +43,31 @@
                                  {% endif %}
                                {% endif %}
                                {% if u.role == 'kierownik' %}
-                                 <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a></li>
-                                 <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a></li>
+                                   {% if activity.supervisor_approved == None %}
+                                     <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a></li>
+                                     <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a></li>
+                                   {% else %}
+                                       {% if activity.supervisor_approved == True %}
+                                         <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a></li>
+                                         <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/2">Cofnij akceptację</a></li>
+                                       {% elif activity.supervisor_approved == False %}
+                                         <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/2">Cofnij odrzucenie</a></li>
+                                         <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a></li>
+                                       {% endif %}
+                                   {% endif %}
                                {% elif u.role == 'klient' %}
-                                 <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a></li>
-                                 <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a></li>
+                                  {% if activity.client_approved == None %}
+                                    <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a></li>
+                                    <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a></li>
+                                  {% else %}
+                                      {% if activity.client_approved == True %}
+                                        <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a></li>
+                                        <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/2">Cofnij akceptację</a></li>
+                                      {% elif activity.client_approved == False %}
+                                        <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/2">Cofnij odrzucenie</a></li>
+                                        <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a></li>
+                                      {% endif %}
+                                  {% endif %}
                                {% endif %}
                                {% if activity.supervisor_approved == True or activity.client_approved == True %}
                                  {% if activity.done_by.id == u.id %}
@@ -105,11 +125,31 @@
                                 {% endif %}
                               {% endif %}
                               {% if u.role == 'kierownik' %}
-                                <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a></li>
-                                <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a></li>
+                                  {% if activity.supervisor_approved == None %}
+                                    <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a></li>
+                                    <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a></li>
+                                  {% else %}
+                                      {% if activity.supervisor_approved == True %}
+                                        <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a></li>
+                                        <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/2">Cofnij akceptację</a></li>
+                                      {% elif activity.supervisor_approved == False %}
+                                        <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/2">Cofnij odrzucenie</a></li>
+                                        <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a></li>
+                                      {% endif %}
+                                  {% endif %}
                               {% elif u.role == 'klient' %}
-                                <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a></li>
-                                <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a></li>
+                                 {% if activity.client_approved == None %}
+                                   <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a></li>
+                                   <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a></li>
+                                 {% else %}
+                                     {% if activity.client_approved == True %}
+                                       <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a></li>
+                                       <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/2">Cofnij akceptację</a></li>
+                                     {% elif activity.client_approved == False %}
+                                       <li><a class="dropdown-item dropdown-status decline" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/2">Cofnij odrzucenie</a></li>
+                                       <li><a class="dropdown-item dropdown-status accept" href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a></li>
+                                     {% endif %}
+                                 {% endif %}
                               {% endif %}
                               {% if activity.supervisor_approved == True or activity.client_approved == True %}
                                 {% if activity.done_by.id == u.id %}
@@ -118,7 +158,7 @@
                               {% endif %}
                             </ul>
                           </div>
-                          
+
                           <p class="task-author">{{activity.done_by.name}} {{activity.done_by.surname}}</p>
 
                           {% if activity.associated_task.associated_project.client != None %}

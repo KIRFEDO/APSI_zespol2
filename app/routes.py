@@ -156,8 +156,10 @@ def activity_accept_supervisor(project_id=None, task_id=None, activity_id=None, 
         activity = Activity.query.filter(Activity.id == activity_id).first()
         if state == 0:
             activity.supervisor_approved = False
-        else:
+        elif state == 1:
             activity.supervisor_approved = True
+        elif state == 2:
+            activity.supervisor_approved = None
         db.session.commit()
     return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))
 
@@ -171,10 +173,7 @@ def activity_accept_client(project_id=None, task_id=None, activity_id=None, stat
     check_ownership(u.id, project.client)
     if u.role == 'klient':
         activity = Activity.query.filter(Activity.id == activity_id).first()
-        if state == 0:
-            activity.client_approved = False
-        else:
-            activity.client_approved = True
+        activity.client_approved = not activity.client_approved
         db.session.commit()
     return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))
 

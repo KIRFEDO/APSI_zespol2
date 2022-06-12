@@ -15,11 +15,19 @@
 		<div class="col">
 			<div class="dropdown dropdown-user-info">
 			  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="userInfoMenu" data-bs-toggle="dropdown" aria-expanded="false">
-				<span class="icon">{{u.name|first}}</span> {{u.name}} {{u.surname}}
+					<span class="icon">{{u.name|first}}</span> {{u.name}} {{u.surname}}
 			  </a>
 
 			  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userInfoMenu">
-				<li><a class="dropdown-item" href="/logout">Wyloguj</a></li>
+					{% if u.role == 'kierownik' %}
+						<li class="userRole">Zalogowano jako: <strong>Menedżer</strong></li>
+					{% elif u.role == 'pracownik' %}
+						<li class="userRole">Zalogowano jako: <strong>Pracownik</strong></li>
+					{% elif u.role == 'klient' %}
+						<li class="userRole">Zalogowano jako: <strong>Klient</strong></li>
+					{% endif %}
+					<div class="dropdown-divider"></div>
+					<li><a class="dropdown-item" href="/logout">Wyloguj</a></li>
 			  </ul>
 			</div>
 		</div>

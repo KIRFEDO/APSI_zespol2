@@ -43,23 +43,34 @@ class ProjectForm(FlaskForm):
             raise ValidationError('Istnieje już projekt o takiej nazwie.')
 
 
-def create_employee_assign_form(assigned_users):
+def create_employee_assign_form(assigned_users, project, supervisors):
     class EmployeeAssignForm(FlaskForm):
         employee = SelectField('Wybierz:')
+        employee_role = SelectField('Rola', choices=['kierownik projektu', 'uczestnik projektu'])
         submit = SubmitField('Zapisz')
         employee_to_remove = SelectField('Wybierz:')
 
         def __init__(self, *args, **kwargs):
             super(EmployeeAssignForm, self).__init__(*args, **kwargs)
             self.employee.choices = [("", "Brak" + " " + "pracownika")] + [(c.id, c.name + " " + c.surname) for c in
-                                                                           User.query.filter(User.role == "pracownik",
-                                                                                             #User.supervisor == int(
-                                                                                            #     current_user.get_id()),
-                                                                                             User.id.not_in(
-                                                                                                 assigned_users))]
-            self.employee_to_remove.choices = [("", "Brak" + " " + "pracownika")] + \
-                                              [(c.id, c.name + " " + c.surname) for c in
-                                               User.query.filter(User.id.in_(assigned_users))]
+                                                                           User.query.filter((
+                                                                                   (User.role == "pracownik") | (
+                                                                                   User.role == "kierownik")),
+                                                                               # User.supervisor == int(
+                                                                               #     current_user.get_id()),
+                                                                               User.id.not_in(
+                                                                                   assigned_users))]
+            if int(current_user.get_id()) == project.creator:
+                self.employee_to_remove.choices = [("", "Brak" + " " + "pracownika")] + \
+                                                  [(c.id, c.name + " " + c.surname) for c in
+                                                   User.query.filter(User.id != current_user.get_id(),
+                                                                     User.id.in_(assigned_users))]
+            else:
+                self.employee_to_remove.choices = [("", "Brak" + " " + "pracownika")] + \
+                                                  [(c.id, c.name + " " + c.surname) for c in
+                                                   User.query.filter(User.id != current_user.get_id(),
+                                                                     User.id.in_(assigned_users), User.id.not_in(
+                                                           supervisors))]
 
     setattr(EmployeeAssignForm, "assigned_users", assigned_users)
     return EmployeeAssignForm()

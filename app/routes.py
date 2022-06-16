@@ -7,9 +7,11 @@ from app.models import User, Project, Task, Activity, ProjectAssignment
 import datetime
 from babel.dates import format_timedelta
 
+
 @app.template_filter('formatdatetime')
 def formatdatetime(value):
     return str(value.days * 24 + value.seconds // 3600) + " h"
+
 
 # ------------------------------------------------------------------------------
 # Login/Register/Logout --------------------------------------------------------
@@ -83,7 +85,7 @@ def activities():
     if u.role == 'pracownik':
         activityList = Activity.query.filter(Activity.user_id == u.id)
     elif u.role == 'klient':
-        activityList = db.session.query(Activity, Project).filter(Project.supervisor == u.id).all()
+        activityList = db.session.query(Activity, Project).filter(Project.creator == u.id).all()
     elif u.role == 'kierownik':
         activityList = Activity.query.all()
     return render_template('common/activity/activities-list.html', activities=activityList, u=u,
@@ -97,9 +99,9 @@ def activities():
 def activity_add(task_id=None):
     # Go back descitnation url
     if request.args.get('go_back'):
-        go_back=request.args.get('go_back')
+        go_back = request.args.get('go_back')
     else:
-        go_back='project-view'
+        go_back = 'project-view'
 
     form = AddActivityForm(task=task_id)
     current_view = 'activities-add'
@@ -114,9 +116,10 @@ def activity_add(task_id=None):
             db.session.commit()
             flash('Aktywność utworzona', 'success')
 
-            if go_back=='project-view':
-                return redirect(url_for('projects_view', project_id=activity.associated_task.associated_project.id, active_task_id=task_id))
-            elif go_back=='activities':
+            if go_back == 'project-view':
+                return redirect(url_for('projects_view', project_id=activity.associated_task.associated_project.id,
+                                        active_task_id=task_id))
+            elif go_back == 'activities':
                 return redirect(url_for('activities'))
         return render_template('common/activity/activity-add.html', u=u, current_view=current_view, form=form,
                                task_id=task_id)
@@ -138,7 +141,7 @@ def activity_delete(project_id=None, task_id=None, activity_id=None):
         check_ownership(u.id, project.client)
     elif u.role == 'kierownik':
         project = Project.query.get_or_404(project_id)
-        check_ownership(u.id, project.supervisor)
+        check_ownership(u.id, project.creator)
 
     Activity.query.filter(Activity.id == activity_id).delete()
     db.session.commit()
@@ -152,12 +155,12 @@ def activity_accept_supervisor(project_id=None, task_id=None, activity_id=None, 
     u = get_user()
 
     if request.args.get('go_back'):
-        go_back=request.args.get('go_back')
+        go_back = request.args.get('go_back')
     else:
-        go_back='project-view'
+        go_back = 'project-view'
 
     project = Project.query.get_or_404(project_id)
-    check_ownership(u.id, project.supervisor)
+    check_ownership(u.id, project.creator)
     if u.role == 'kierownik':
         activity = Activity.query.filter(Activity.id == activity_id).first()
         if state == 0:
@@ -168,10 +171,11 @@ def activity_accept_supervisor(project_id=None, task_id=None, activity_id=None, 
             activity.supervisor_approved = None
         db.session.commit()
 
-    if go_back=='project-view':
+    if go_back == 'project-view':
         return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))
-    elif go_back=='activities':
+    elif go_back == 'activities':
         return redirect(url_for('activities'))
+
 
 # Accept activity - customer
 @app.route('/projects/<int:project_id>/<int:task_id>/<int:activity_id>/accept_client/<int:state>')
@@ -180,9 +184,9 @@ def activity_accept_client(project_id=None, task_id=None, activity_id=None, stat
     u = get_user()
 
     if request.args.get('go_back'):
-        go_back=request.args.get('go_back')
+        go_back = request.args.get('go_back')
     else:
-        go_back='project-view'
+        go_back = 'project-view'
 
     project = Project.query.get_or_404(project_id)
     check_ownership(u.id, project.client)
@@ -196,10 +200,11 @@ def activity_accept_client(project_id=None, task_id=None, activity_id=None, stat
             activity.client_approved = None
         db.session.commit()
 
-    if go_back=='project-view':
+    if go_back == 'project-view':
         return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))
-    elif go_back=='activities':
+    elif go_back == 'activities':
         return redirect(url_for('activities'))
+
 
 # ------------------------------------------------------------------------------
 # Tasks ------------------------------------------------------------------------
@@ -213,7 +218,7 @@ def task_add(project_id):
     current_view = 'task-add'
     u = get_user()
     project = Project.query.get_or_404(project_id)
-    check_ownership(u.id, project.supervisor)
+    check_ownership(u.id, project.creator)
     project = Project.query.get_or_404(project_id)
     form.project_id = project.id
 
@@ -235,7 +240,7 @@ def task_add(project_id):
 @login_required
 def task_delete(project_id=None, task_id=None):
     project = Project.query.get_or_404(project_id)
-    check_ownership(int(current_user.get_id()), project.supervisor)
+    check_ownership(int(current_user.get_id()), project.creator)
     Task.query.filter(Task.id == task_id).delete()
     db.session.commit()
     return redirect(url_for('projects'))
@@ -252,8 +257,12 @@ def projects_view(project_id):
     project = Project.query.get_or_404(project_id)
     current_view = 'projects-view'
     u = get_user()
-    project_assigns = ProjectAssignment.query.filter(ProjectAssignment.project_id == project_id)
+    project_assigns = ProjectAssignment.query.filter(ProjectAssignment.project_id == project_id,
+                                                     ProjectAssignment.end.is_(None))
     assigned_users = [a.user_id for a in project_assigns]
+    project_supervisors = ProjectAssignment.query.filter(ProjectAssignment.project_id == project_id,
+                                                         ProjectAssignment.project_role == 'kierownik projektu')
+    supervisors = [a.user_id for a in project_supervisors]
 
     # Active task
     if request.args.get('active_task_id'):
@@ -262,24 +271,33 @@ def projects_view(project_id):
         active_task_id = 0
 
     # Employee assign/remove form
-    form = create_employee_assign_form(assigned_users)
+    form = create_employee_assign_form(assigned_users, project, supervisors)
     if form.validate_on_submit():
         emp = form.employee.data
-        if emp != "" and (emp not in [str(e.user_id) for e in project.workers]):
-            pAssignment = ProjectAssignment(user_id=form.employee.data, project_id=project_id)
-            db.session.add(pAssignment)
+        if emp != "" and (int(emp) not in assigned_users):
+            past_assign = ProjectAssignment.query.filter(ProjectAssignment.project_id == project_id,
+                                                         ProjectAssignment.user_id == emp,
+                                                         ProjectAssignment.project_role == form.employee_role.data).first()
+            if past_assign is None:
+                pAssignment = ProjectAssignment(user_id=form.employee.data, project_id=project_id,
+                                                project_role=form.employee_role.data, start=datetime.date.today())
+                db.session.add(pAssignment)
+            else:
+                past_assign.end = None
             db.session.commit()
             return redirect(url_for('projects_view', project_id=project_id))
 
         emp_to_remove = form.employee_to_remove.data
-        if emp_to_remove != "" and (emp_to_remove in [str(e.user_id) for e in project.workers]):
-            ProjectAssignment.query.filter(ProjectAssignment.project_id == project_id,
-                                           ProjectAssignment.user_id == emp_to_remove).delete()
+        if emp_to_remove != "" and (int(emp_to_remove) in assigned_users):
+            eAssignment = ProjectAssignment.query.filter(ProjectAssignment.project_id == project_id,
+                                                         ProjectAssignment.user_id == emp_to_remove,
+                                                         ProjectAssignment.end.is_(None)).first()
+            eAssignment.end = datetime.date.today()
             db.session.commit()
             return redirect(url_for('projects_view', project_id=project_id))
 
-    return render_template('common/project/project-view.html', u=u, project=project, active_task_id=active_task_id,
-                           current_view=current_view, form=form)
+    return render_template('common/project/project-view.html', u=u, project=project, project_assigns=project_assigns,
+                           active_task_id=active_task_id, current_view=current_view, form=form)
 
 
 # Projects list
@@ -289,17 +307,11 @@ def projects():
     current_view = 'projects'
     u = get_user()
 
-    if u.role == 'kierownik':
-        projectlist = Project.query.filter(Project.supervisor == u.id)
+    if u.role == 'kierownik' or u.role == 'pracownik':
+        projectlist = [p.assigned_project for p in u.assigned_projects]
 
     if u.role == 'klient':
         projectlist = Project.query.filter(Project.client == u.id)
-
-    # Zmienic komentarz na czas developmentu jesli chcemy wyswietlac wszystkie projekty, a nie
-    #   tylko te przypisane dla pracownika
-    if u.role == 'pracownik':
-        # projectlist = Project.query.all()
-        projectlist = [p.assigned_project for p in u.assigned_projects]
 
     return render_template('common/project/project-list.html', projects=projectlist, u=u, current_view=current_view)
 
@@ -318,9 +330,14 @@ def project_add():
             if c == "":
                 c = None
             user = current_user.get_id()
-            project = Project(name=form.name.data, description=form.description.data, supervisor=user,
+            project = Project(name=form.name.data, description=form.description.data, creator=user,
                               client=c)
             db.session.add(project)
+            db.session.flush()
+            db.session.refresh(project)
+            pAssignment = ProjectAssignment(user_id=project.creator, project_id=project.id,
+                                            project_role='kierownik projektu')
+            db.session.add(pAssignment)
             db.session.commit()
             flash('Projekt utworzony', 'success')
             return redirect(url_for('projects'))
@@ -334,7 +351,7 @@ def project_add():
 @login_required
 def project_delete(project_id=None):
     project = Project.query.get_or_404(project_id)
-    check_ownership(int(current_user.get_id()), project.supervisor)
+    check_ownership(int(current_user.get_id()), project.creator)
     Project.query.filter(Project.id == project_id).delete()
     db.session.commit()
     return redirect(url_for('projects'))

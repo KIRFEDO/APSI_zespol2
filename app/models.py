@@ -18,8 +18,8 @@ class User(db.Model, UserMixin):
     supervisor = db.Column(db.Integer, db.ForeignKey('users.id'))
     subordinates = db.relationship('User', remote_side=[id], backref='worker_supervisor', lazy=True,
                                    foreign_keys='User.supervisor')
-    supervised_projects = db.relationship('Project', backref='project_supervisor', lazy=True,
-                                          foreign_keys='Project.supervisor')
+    supervised_projects = db.relationship('Project', backref='project_creator', lazy=True,
+                                          foreign_keys='Project.creator')
     commissioned_projects = db.relationship('Project', backref='project_commissioner', lazy=True,
                                             foreign_keys='Project.client')
     assigned_projects = db.relationship('ProjectAssignment', backref='assigned_person', cascade="all,delete", lazy=True,
@@ -33,7 +33,7 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
     description = db.Column(db.String(500))
-    supervisor = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    creator = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     client = db.Column(db.Integer, db.ForeignKey('users.id'))
     projects_tasks = db.relationship('Task', backref='associated_project', cascade="all,delete", lazy=True,
                                      foreign_keys='Task.project')
@@ -47,7 +47,8 @@ class Task(db.Model):
     name = db.Column(db.String(50), unique=True, nullable=False)
     description = db.Column(db.String(500))
     project = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
-    associated_activities = db.relationship('Activity', order_by="desc(Activity.date),desc(Activity.time)", backref='associated_task', cascade="all,delete", lazy=True,
+    associated_activities = db.relationship('Activity', order_by="desc(Activity.date),desc(Activity.time)",
+                                            backref='associated_task', cascade="all,delete", lazy=True,
                                             foreign_keys='Activity.task_id')
 
 
@@ -56,6 +57,9 @@ class ProjectAssignment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    project_role = db.Column(db.Enum('kierownik projektu', 'uczestnik projektu', name='project_role'), nullable=False)
+    start = db.Column(db.Date, nullable=False)
+    end = db.Column(db.Date)
 
 
 class Activity(db.Model):
@@ -66,5 +70,5 @@ class Activity(db.Model):
     date = db.Column(db.Date, nullable=False)
     time = db.Column(db.Interval, nullable=False)
     description = db.Column(db.String(500))
-    supervisor_approved = db.Column(db.Boolean)     # null before review, after edit
-    client_approved = db.Column(db.Boolean)     # null before review, after edit
+    supervisor_approved = db.Column(db.Boolean)  # null before review, after edit
+    client_approved = db.Column(db.Boolean)  # null before review, after edit

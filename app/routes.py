@@ -3,6 +3,7 @@ from flask import render_template, redirect, flash, url_for, request, abort
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import LoginForm, RegistrationForm, ProjectForm, TaskForm, AddActivityForm, create_employee_assign_form
 from app.models import User, Project, Task, Activity, ProjectAssignment
+import json
 
 import datetime
 from babel.dates import format_timedelta
@@ -90,6 +91,13 @@ def activities():
         activityList = Activity.query.all()
     return render_template('common/activity/activities-list.html', activities=activityList, u=u,
                            current_view=current_view)
+
+
+@app.route("/activities/info")
+@login_required
+def api_info():
+    u = get_user()
+    return json.dumps([ob.dump() for ob in list(Activity.query.filter(Activity.user_id == u.id))])
 
 
 # Activity add

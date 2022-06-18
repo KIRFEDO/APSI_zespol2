@@ -7,8 +7,19 @@
     <meta name="description" content="Revolutionary task managment system.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static',filename='css/style.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/_calendar.css') }}">
     <meta name="theme-color" content="#fff">
+    <script src="/static/js/lib/jquery.min.js"></script>
+    <script src="/static/js/lib/popper.js"></script>
+    <script src="/static/js/lib/bootstrap.min.js"></script>
+    <script src="/static/js/lib/calendar.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
+
 <body>
 <div class="page {{u.role}}-{{current_view}}-page">
     {% include 'common/navbar.html' %}
@@ -16,10 +27,109 @@
     <div class="content-wrapper">
       <div class="container">
         <h1>Czynności
-          {% if u.role == 'pracownik' %}
+          {% if u.role != 'klient' %}
             <a class="btn btn-primary" title="New activity" href="/activities/add?go_back=activities"><i class="fa-solid fa-plus"></i>Nowa czynność</a>
           {% endif %}
         </h1>
+
+          <!-- CALENDAR -->
+          {% if u.role != 'klient' %}
+          <section class="ftco-section">
+		  <div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="elegant-calencar d-md-flex">
+						<div class="wrap-header d-flex align-items-center">
+				      <p id="reset">Dzisiaj</p>
+			        <div id="header" class="p-0">
+		            <div class="pre-button d-flex align-items-center justify-content-center"><i class="fa fa-chevron-left"></i></div>
+                        <h5 style="color: white;">ZAREJESTROWANE GODZINY<br></h5>
+		            <div class="head-info">
+                        <div class="head-month"></div>
+		                <div class="head-day"></div>
+                        <div class="head-description"></div>
+		            </div>
+		            <div class="next-button d-flex align-items-center justify-content-center"><i class="fa fa-chevron-right"></i></div>
+			        </div>
+			      </div>
+			      <div class="calendar-wrap">
+			        <table id="calendar">
+		            <thead>
+		                <tr>
+		                    <th>Pn</th>
+		                    <th>Wt</th>
+		                    <th>Śr</th>
+		                    <th>Cz</th>
+		                    <th>Pt</th>
+		                    <th style="color: red">Sb</th>
+                            <th style="color: red">Nd</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+	                <tr>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td style="opacity: 40%;"></td>
+	                  <td style="opacity: 40%;"></td>
+	                </tr>
+	                <tr>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td style="opacity: 40%;"></td>
+	                  <td style="opacity: 40%;"></td>
+	                </tr>
+	                <tr>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td style="opacity: 40%;"></td>
+	                  <td style="opacity: 40%;"></td>
+	                </tr>
+	                <tr>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td style="opacity: 40%;"></td>
+	                  <td style="opacity: 40%;"></td>
+	                </tr>
+	                <tr>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td style="opacity: 40%;"></td>
+	                  <td style="opacity: 40%;"></td>
+	                </tr>
+	                <tr>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td></td>
+	                  <td style="opacity: 40%;"></td>
+	                  <td style="opacity: 40%;"></td>
+	                </tr>
+		            </tbody>
+			        </table>
+			      </div>
+			    </div>
+				</div>
+			</div>
+		  </div>
+	      </section>
+          {% endif %}
+          <!-- END OF CALENDAR -->
 
         <div class="task-board">
           <div class="task-board">
@@ -229,6 +339,7 @@
            </div>
         </div>
     </div>
+</div>
 </div>
 
 {% include 'common/footer.html' %}

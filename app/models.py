@@ -72,3 +72,14 @@ class Activity(db.Model):
     description = db.Column(db.String(500))
     supervisor_approved = db.Column(db.Boolean)  # null before review, after edit
     client_approved = db.Column(db.Boolean)  # null before review, after edit
+
+    def dump(self):
+        return {'id': self.id,
+                   'user_id': self.user_id,
+                   'task_id': self.task_id,
+                   'date': self.date.strftime("%m/%d/%Y"),
+                   'time': self.time.seconds//3600,
+                   'description': self.description,
+                   'supervisor_approved': self.supervisor_approved,
+                   'client_approved': self.client_approved}
+

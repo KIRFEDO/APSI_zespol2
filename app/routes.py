@@ -246,10 +246,7 @@ def task_add(project_id):
 @app.route('/tasks/<int:project_id>', methods=['GET', 'POST'])
 @login_required
 def project_tasks(project_id):
-    # Project.query.get_or_404(project_id)
     tasks = [(c.id, c.name) for c in Task.query.join(Project).filter(Project.id == project_id)]
-    # u = get_user()
-    # return json.dumps([ob.dump() for ob in list(Activity.query.filter(Activity.user_id == u.id))])
     return json.dumps(tasks)
 
 

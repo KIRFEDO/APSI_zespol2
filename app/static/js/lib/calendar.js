@@ -20,7 +20,9 @@
 
     function Calendar(selector, options) {
         this.options = options;
-        this.hours = new Map();
+        this.hoursSubmitted = new Map();
+        this.hoursAccepted = new Map();
+        this.hoursDeclined = new Map();
         this.draw();
         that = this;
     }
@@ -57,14 +59,56 @@
             e?headDay[0].innerHTML = e : headDay[0].innerHTML = day;
             headMonth[0].innerHTML = monthTag[month] + " - " + year;
 
-            if(this.hours.get(parseInt(e))) {
-                headDesc[0].innerHTML = "<p style=\"color: white; font-size: 20px;\">Zarejestrowano " +
-                        this.hours.get(parseInt(e)) +" h</p>";
+            if( this.hoursAccepted.get(parseInt(e)) ||
+                this.hoursSubmitted.get(parseInt(e)) ||
+                this.hoursDeclined.get(parseInt(e))
+            ) {
+                let allHours = "<p style=\"color: white; font-size: 20px;\">Godziny:<br>";
+
+
+                if(this.hoursSubmitted.get(parseInt(e))){
+                    allHours += this.hoursSubmitted.get(parseInt(e)) + "h - zgłoszone<br>";
+                }
+
+                if(this.hoursAccepted.get(parseInt(e))){
+                    allHours += this.hoursAccepted.get(parseInt(e)) + "h - zaakceptowane<br>";
+                }
+
+                allHours += "</p>";
+
+                if(this.hoursDeclined.get(parseInt(e))){
+                    allHours += "<p style=\"color: red; font-size: 20px;\">" +  this.hoursDeclined.get(parseInt(e)) +
+                                "h - odrzucone</p>";
+                }
+
+                headDesc[0].innerHTML = allHours;
             } else {
-                headDesc[0].innerHTML = "<p style=\"color: white; font-size: 20px;\">Brak zarejestrowanych godzin</p>";
+                headDesc[0].innerHTML = "<p style=\"color: white; font-size: 20px;\">Brak zgłoszonych godzin</p>";
             }
 
+            this.drawMonthSummary();
      };
+
+     Calendar.prototype.drawMonthSummary = function() {
+
+        let headMonthSummary = document.getElementsByClassName('head-month-summary');
+        let acceptedHours = 0;
+        let submittedHours = 0;
+        let declinedHours = 0;
+        this.hoursAccepted.forEach(value => {
+          acceptedHours += value;
+        });
+        this.hoursSubmitted.forEach(value => {
+          submittedHours += value;
+        });
+        this.hoursDeclined.forEach(value => {
+          declinedHours += value;
+        });
+        headMonthSummary[0].innerHTML = "Łącznie w miesiącu:<br>" +
+            submittedHours + "h - zgłoszone<br>" +
+            acceptedHours + "h - zaakceptowane<br>" +
+            declinedHours + "h - odrzucone<br><br><br>";
+     }
     
     Calendar.prototype.drawDays = function() {
 
@@ -72,25 +116,48 @@
             url: '/activities/info',
             success: function(data) {
                 that.placeDays(JSON.parse(data));
+
+                if(new Date().getMonth() === month) {
+                    that.drawHeader(day);
+                } else {
+                    that.drawHeader(1);
+                }
+
             }
         });
     }
 
     Calendar.prototype.placeDays = function(activities) {
 
-        this.hours = new Map();
+        this.hoursSubmitted = new Map();
+        this.hoursAccepted = new Map();
+        this.hoursDeclined = new Map();
 
         activities.forEach(element => {
 
             var dt = new Date(element.date);
-            if ((dt.getFullYear() === year) && (dt.getMonth() === month) &&
-                    element.supervisor_approved !== false) {
+            if ((dt.getFullYear() === year) && (dt.getMonth() === month)) {
 
-                if (this.hours.get(dt.getDate()) === undefined) {
-                    this.hours.set(dt.getDate(), element.time);
+                if (element.supervisor_approved === null) {
+                    if (this.hoursSubmitted.get(dt.getDate()) === undefined) {
+                        this.hoursSubmitted.set(dt.getDate(), element.time);
+                    } else {
+                        this.hoursSubmitted.set(dt.getDate(), element.time + this.hoursSubmitted.get(dt.getDate()));
+                    }
+                } else if (element.supervisor_approved === true) {
+                    if (this.hoursAccepted.get(dt.getDate()) === undefined) {
+                        this.hoursAccepted.set(dt.getDate(), element.time);
+                    } else {
+                        this.hoursAccepted.set(dt.getDate(), element.time + this.hoursAccepted.get(dt.getDate()));
+                    }
                 } else {
-                    this.hours.set(dt.getDate(), element.time + this.hours.get(dt.getDate()));
+                    if (this.hoursDeclined.get(dt.getDate()) === undefined) {
+                        this.hoursDeclined.set(dt.getDate(), element.time);
+                    } else {
+                        this.hoursDeclined.set(dt.getDate(), element.time + this.hoursDeclined.get(dt.getDate()));
+                    }
                 }
+
 
             }
 
@@ -110,12 +177,19 @@
         }
 
         for(var i  = 1; i <= nDays ; i++) {
-            days[n].innerHTML = '<b>' + i + '</b><br><small>&nbsp';
+            let daysText = '<b>' + i + '</b><br><small>&nbsp';
 
-            if (this.hours.get(n-1) !== undefined) {
-                days[n].innerHTML += this.hours.get(n-1) + 'h';
+            if (this.hoursSubmitted.get(n-1) !== undefined && this.hoursAccepted.get(n-1) !== undefined) {
+                let hours = this.hoursSubmitted.get(n-1) + this.hoursAccepted.get(n-1);
+                daysText += hours + 'h';
+            } else if (this.hoursSubmitted.get(n-1) !== undefined) {
+                daysText += this.hoursSubmitted.get(n-1) + 'h';
+            } else if (this.hoursAccepted.get(n-1) !== undefined) {
+                daysText += this.hoursAccepted.get(n-1) + 'h';
             }
-            days[n].innerHTML += '</small>';
+
+            daysText += '</small>';
+            days[n].innerHTML += daysText;
 
             n++;
         }
@@ -160,7 +234,6 @@
         }else{
             month = month - 1;
         }
-        this.drawHeader(1);
         this.drawDays();
     };
     
@@ -171,7 +244,6 @@
         }else{
             month = month + 1;
         }
-        this.drawHeader(1);
         this.drawDays();
     };
     

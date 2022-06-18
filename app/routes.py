@@ -102,16 +102,16 @@ def api_info():
 
 # Activity add
 @app.route('/activities/add', methods=['GET', 'POST'])
-@app.route('/activities/add/<task_id>/', methods=['GET', 'POST'])
+@app.route('/activities/add/<project_id>/<task_id>/', methods=['GET', 'POST'])
 @login_required
-def activity_add(task_id=None):
+def activity_add(project_id=None, task_id=None):
     # Go back descitnation url
     if request.args.get('go_back'):
         go_back = request.args.get('go_back')
     else:
         go_back = 'project-view'
 
-    form = AddActivityForm(task=task_id)
+    form = AddActivityForm(task=task_id, project=project_id)
     current_view = 'activities-add'
     u = get_user()
 
@@ -241,6 +241,13 @@ def task_add(project_id):
                                form=form)
     else:
         abort(403)
+
+
+@app.route('/tasks/<int:project_id>', methods=['GET', 'POST'])
+@login_required
+def project_tasks(project_id):
+    tasks = [(c.id, c.name) for c in Task.query.join(Project).filter(Project.id == project_id)]
+    return json.dumps(tasks)
 
 
 # Delete task

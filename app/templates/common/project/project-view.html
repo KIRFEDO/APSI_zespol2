@@ -236,7 +236,7 @@
                                         {% endfor %}
                                     </div>
                                     {% if u.role == 'pracownik' %}
-                                    <a href="/activities/add/{{task.id}}?go_back=project-view" title="Dodaj czynność"
+                                    <a href="/activities/add/{{task.project}}/{{task.id}}?go_back=project-view" title="Dodaj czynność"
                                        class="add-task"><i class="fa-solid fa-plus"></i> Dodaj czynność</a>
                                     {% endif %}
                                 </div>

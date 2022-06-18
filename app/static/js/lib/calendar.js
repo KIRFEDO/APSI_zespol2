@@ -58,7 +58,8 @@
             headMonth[0].innerHTML = monthTag[month] + " - " + year;
 
             if(this.hours.get(parseInt(e))) {
-                headDesc[0].innerHTML = "<p style=\"color: white; font-size: 20px;\">" + this.hours.get(parseInt(e)) +" godzin</p>";
+                headDesc[0].innerHTML = "<p style=\"color: white; font-size: 20px;\">Zarejestrowano " +
+                        this.hours.get(parseInt(e)) +" h</p>";
             } else {
                 headDesc[0].innerHTML = "<p style=\"color: white; font-size: 20px;\">Brak zarejestrowanych godzin</p>";
             }

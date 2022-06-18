@@ -115,7 +115,7 @@ def activity_add(project_id=None, task_id=None):
     current_view = 'activities-add'
     u = get_user()
 
-    if u.role == 'pracownik':
+    if u.role != 'klient':
         if form.validate_on_submit():
             user = current_user.get_id()
             activity = Activity(date=form.date.data, description=form.description.data, user_id=user,
@@ -132,7 +132,7 @@ def activity_add(project_id=None, task_id=None):
         return render_template('common/activity/activity-add.html', u=u, current_view=current_view, form=form,
                                task_id=task_id)
     else:
-        # TODO: Co w przypadku klienta i kierownika wchodzących na formularz dodania czynnosci?
+        # TODO: Co w przypadku klienta wchodzącego na formularz dodania czynnosci?
         abort(403)
 
 

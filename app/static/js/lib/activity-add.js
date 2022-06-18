@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function(){
                             $("#task").append(
                             $("<option></option>")
                             .attr("value", element[0])
-                            .text(element[1]);
+                            .text(element[1])
                         );
                     })
                 }

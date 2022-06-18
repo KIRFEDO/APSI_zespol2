@@ -78,6 +78,7 @@ def create_employee_assign_form(assigned_users, project, supervisors):
 
 class AddActivityForm(FlaskForm):
     description = TextAreaField('Opis aktywności:', validators=[DataRequired(), Length(max=500)])
+    project = SelectField('Projekt:', validators=[DataRequired()])
     task = SelectField('Zadanie:', validators=[DataRequired()])
     date = DateField('Data wykonania:', validators=[DataRequired()])
     activityTime = DecimalField('Czas aktywności (w godzinach):', places=2, validators=[DataRequired()])
@@ -85,6 +86,10 @@ class AddActivityForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super(AddActivityForm, self).__init__(*args, **kwargs)
+        self.project.choices = [("", "Wybierz projekt")] + [(c.id, c.name) for c in
+                                                         Project.query.join(ProjectAssignment).filter(
+                                                             ProjectAssignment.user_id == current_user.get_id())]
+
         self.task.choices = [("", "Wybierz zadanie")] + [(c.id, c.name) for c in
                                                          Task.query.join(Project).join(ProjectAssignment).filter(
                                                              ProjectAssignment.user_id == current_user.get_id())]

@@ -7,6 +7,8 @@
     <meta name="description" content="Revolutionary task managment system.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static',filename='css/style.min.css') }}">
+    <script src="/static/js/lib/jquery.min.js"></script>
+    <script src="/static/js/lib/activity-add.js"></script>
     <meta name="theme-color" content="#fff">
 </head>
 <body>
@@ -32,6 +34,14 @@
                 <div class="mb-3">
                     {{ form.activityTime.label(class="form-label") }}
                     {{ form.activityTime(class="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.project.label(class="form-label") }}
+                    {% if task_id %}
+                      {{ form.project(class="form-control", readonly="readonly", disabled="disabled") }}
+                    {% else %}
+                      {{ form.project(class="form-control") }}
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     {{ form.task.label(class="form-label") }}

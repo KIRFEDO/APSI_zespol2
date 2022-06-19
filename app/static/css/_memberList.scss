@@ -3,11 +3,25 @@
     margin: 0;
     padding: 0;
 
-    li{
+    li:not(.owner){
         display: inline-block;
         background: #0984e3;
-        background: linear-gradient(45deg, #0984e3 41%, #74b9ff 75%);
         color: #fff;
+        background: linear-gradient(45deg, #0984e3 41%, #74b9ff 75%);
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        text-align: center;
+        line-height: 32px;
+        font-weight: 900;
+        margin: 0 10px 10px 0;
+        font-size: 12px;
+    }
+    li.owner{
+        display: inline-block;
+        background: #0984e3;
+        color: #fff;
+        background: linear-gradient(45deg, #e38409 41%, #ffb974 75%);
         border-radius: 50%;
         width: 32px;
         height: 32px;

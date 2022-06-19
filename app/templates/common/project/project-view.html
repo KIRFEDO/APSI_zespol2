@@ -247,7 +247,7 @@
                 </div>
                 <div class="col-3">
                     <p class="content-title">
-                        Przypisani pracownicy
+                        Członkowie projektu
 
                         {% if u.role == 'kierownik' %}
                         <a href="#" id="toggle-assigned-member-form">
@@ -266,10 +266,10 @@
                                 <div class="mb-3">
                                     <div class="units" id="workerListAction">
                                         <label>
-                                            <input type="radio" name="worker-action" id="addWorker"> Dodaj pracownika
+                                            <input type="radio" name="worker-action" id="addWorker"> Dodaj członka projektu
                                         </label>
                                         <label>
-                                            <input type="radio" name="worker-action" id="removeWorker"> Usuń pracownika
+                                            <input type="radio" name="worker-action" id="removeWorker"> Usuń członka projektu
                                         </label>
                                     </div>
 
@@ -295,7 +295,8 @@
                     <ul class="member-list">
                         {% for worker in project_assigns %}
                         <li data-bs-toggle="tooltip" data-bs-placement="bottom"
-                            title="{{worker.assigned_person.name}} {{worker.assigned_person.surname}}">
+                            title="{{worker.assigned_person.name}} {{worker.assigned_person.surname}}"
+                            {% if worker.project_role == "kierownik projektu" %}class="owner"{% endif %}>
                             {{worker.assigned_person.name|first}}{{worker.assigned_person.surname|first}}
                         </li>
                         {% endfor %}

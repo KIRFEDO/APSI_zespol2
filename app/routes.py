@@ -344,7 +344,7 @@ def project_add():
     current_view = 'projects-add'
     u = get_user()
 
-    if u.role == 'kierownik' or u.role == 'pracownik':
+    if u.role == 'kierownik':
         if form.validate_on_submit():
             c = form.client.data
             if c == "":

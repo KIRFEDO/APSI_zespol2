@@ -139,7 +139,8 @@
                    <h4 class="col-title">Do akceptacji</h4>
                    <div class="task-boxes" id="to-review-boxes">
                      {% for activity in activities %}
-                      {% if (activity.supervisor_approved == None and u.role == 'kierownik') or (activity.client_approved == None and u.role == 'klient') %}
+
+                      {% if (activity.supervisor_approved == None and u.id in activity.associated_task.associated_project.workers|selectattr("project_role", "equalto", "kierownik projektu")|map(attribute='user_id')|list) or (activity.client_approved == None and u.role == 'klient') %}
                          <div class="task-box">
                            <div class="btn-group options">
                              <button type="button" data-bs-toggle="dropdown" aria-expanded="false">

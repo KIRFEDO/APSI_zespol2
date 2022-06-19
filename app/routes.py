@@ -88,12 +88,14 @@ def activities():
 
     if u.role == 'pracownik':
         activityList = Activity.query.filter(Activity.user_id == u.id)
+        #activitiesToAccept = db.session.query(Activity, Project).filter(u.id in [worker.user_id for worker in Project.workers if worker.project_role == 'kierownik projektu']).all()
     elif u.role == 'klient':
-        activityList = db.session.query(Activity, Project).filter(Project.creator == u.id).all()
+        activityList = db.session.query(Activity, Project).filter(Project.client == u.id).all()
     elif u.role == 'kierownik':
-        activityList = Activity.query.all()
-    return render_template('common/activity/activities-list.html', activities=activityList, u=u,
-                           current_view=current_view)
+        activityList = Activity.query.filter(Activity.user_id == u.id)
+        #activitiesToAccept = db.session.query(Activity, Project).filter(u.id in [worker.user_id for worker in Project.workers if worker.project_role == 'kierownik projektu']).all()
+
+    return render_template('common/activity/activities-list.html', activities=activityList, activitiesToAccept=activitiesToAccept, u=u, current_view=current_view)
 
 
 @app.route("/activities/info")
@@ -234,18 +236,14 @@ def task_add(project_id):
     project = Project.query.get_or_404(project_id)
     form.project_id = project.id
 
-    if u.role == 'kierownik':
-        if form.validate_on_submit():
-            task = Task(name=form.name.data, description=form.description.data, project=project_id)
-            db.session.add(task)
-            db.session.commit()
-            flash('Zadanie utworzone', 'success')
-            return redirect(url_for('projects_view', project_id=project_id))
-        return render_template('admin/admin-task-add.html', u=u, current_view=current_view, project=project_id,
-                               form=form)
-    else:
-        abort(403)
-
+    if form.validate_on_submit():
+        task = Task(name=form.name.data, description=form.description.data, project=project_id)
+        db.session.add(task)
+        db.session.commit()
+        flash('Zadanie utworzone', 'success')
+        return redirect(url_for('projects_view', project_id=project_id))
+    return render_template('admin/admin-task-add.html', u=u, current_view=current_view, project=project_id,
+                           form=form)
 
 @app.route('/tasks/<int:project_id>', methods=['GET', 'POST'])
 @login_required

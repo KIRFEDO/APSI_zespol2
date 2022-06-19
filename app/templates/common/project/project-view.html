@@ -37,11 +37,12 @@
             <h1>
                 {{project.name}}
 
-                {% if u.role == 'kierownik' and not project.projects_tasks|length %}
+                {% if u.id in project.workers|selectattr("project_role", "equalto", "kierownik projektu")|map(attribute='user_id')|list and not project.projects_tasks|length %}
                 <a class="btn btn-danger" title="Usuń projekt" href="/projects/{{project.id}}/delete"><i
                         class="fa-solid fa-trash"></i> Usuń projekt</a>
                 {% endif %}
-                {% if u.role == 'kierownik' and project.projects_tasks|length %}
+
+                {% if u.id in project.workers|selectattr("project_role", "equalto", "kierownik projektu")|map(attribute='user_id')|list and project.projects_tasks|length %}
                 <a class="btn btn-primary" title="Wydrukuj fakturę" href="/projects/{{project.id}}/invoice"
                    target="_blank"><i class="fa-solid fa-receipt"></i> Wydrukuj fakturę</a>
                 {% endif %}
@@ -51,10 +52,7 @@
 
             <div class="row">
                 <div class="col-9">
-                    {project.workers|join ' '}
-                    {project.workers|selectattr("project_rule", "equalto", "kierownik projektu")|join ' '}
-                    {project.workers|selectattr("project_rule", "equalto", "kierownik projektu")|map(attribute='user_id'|join ' '}
-                    {% if u.user_id in project.workers|selectattr("project_rule", "equalto", "kierownik projektu")|map(attribute='user_id'|list) %}
+                    {% if u.id in project.workers|selectattr("project_role", "equalto", "kierownik projektu")|map(attribute='user_id')|list %}
                       <p class="content-title">Zadania
                           <a class="btn btn-warning" title="Dodaj zadanie" href="/projects/{{project.id}}/task/add"><i
                                   class="fa-solid fa-plus"></i> Dodaj zadanie</a>
@@ -121,84 +119,81 @@
                                                             <i class="fa-solid fa-ellipsis-vertical"></i>
                                                         </button>
                                                         <ul class="dropdown-menu">
-                                                            {% if activity.supervisor_approved == False or
-                                                            (activity.supervisor_approved == None and
-                                                            activity.client_approved == None) or
-                                                            activity.client_approved == False %}
-                                                            {% if activity.done_by.id == u.id %}
-                                                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                                   data-bs-target="#modal-{{activity.id}}"><i
-                                                                    class="fa-solid fa-eye"></i> Edytuj aktywność</a>
-                                                            </li>
-                                                            <li>
-                                                                <hr class="dropdown-divider">
-                                                            </li>
-                                                            {% endif %}
-                                                            {% endif %}
-                                                            {% if u.role == 'kierownik' %}
-
-                                                            {% if activity.supervisor_approved == None %}
-                                                            <li><a class="dropdown-item dropdown-status decline"
-                                                                   href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a>
-                                                            </li>
-                                                            <li><a class="dropdown-item dropdown-status accept"
-                                                                   href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a>
-                                                            </li>
-                                                            {% else %}
-                                                            {% if activity.supervisor_approved == True %}
-                                                            <li><a class="dropdown-item dropdown-status decline"
-                                                                   href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a>
-                                                            </li>
-                                                            <li><a class="dropdown-item dropdown-status accept"
-                                                                   href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/2">Cofnij
-                                                                akceptację</a></li>
-                                                            {% elif activity.supervisor_approved == False %}
-                                                            <li><a class="dropdown-item dropdown-status decline"
-                                                                   href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/2">Cofnij
-                                                                odrzucenie</a></li>
-                                                            <li><a class="dropdown-item dropdown-status accept"
-                                                                   href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a>
-                                                            </li>
-                                                            {% endif %}
+                                                            {% if not ((activity.supervisor_approved == True and activity.client_approved == True) or (activity.supervisor_approved != True and activity.client_approved == True)) %}
+                                                              {% if activity.done_by.id == u.id %}
+                                                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                                       data-bs-target="#modal-{{activity.id}}"><i
+                                                                        class="fa-solid fa-eye"></i> Edytuj aktywność</a>
+                                                                </li>
+                                                                <li>
+                                                                    <hr class="dropdown-divider">
+                                                                </li>
+                                                              {% endif %}
                                                             {% endif %}
 
+                                                            {% if u.id in project.workers|selectattr("project_role", "equalto", "kierownik projektu")|map(attribute='user_id')|list %}
+                                                              {% if activity.supervisor_approved == None %}
+                                                                <li><a class="dropdown-item dropdown-status decline"
+                                                                       href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a>
+                                                                </li>
+                                                                <li><a class="dropdown-item dropdown-status accept"
+                                                                       href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a>
+                                                                </li>
+                                                              {% else %}
+                                                                {% if activity.supervisor_approved == True %}
+                                                                <li><a class="dropdown-item dropdown-status decline"
+                                                                       href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a>
+                                                                </li>
+                                                                <li><a class="dropdown-item dropdown-status accept"
+                                                                       href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/2">Cofnij
+                                                                    akceptację</a></li>
+                                                                {% elif activity.supervisor_approved == False %}
+                                                                <li><a class="dropdown-item dropdown-status decline"
+                                                                       href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/2">Cofnij
+                                                                    odrzucenie</a></li>
+                                                                <li><a class="dropdown-item dropdown-status accept"
+                                                                       href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/1">Zaakceptuj</a>
+                                                                </li>
+                                                                {% endif %}
+                                                              {% endif %}
                                                             {% elif u.role == 'klient' %}
+                                                              {% if activity.client_approved == None %}
+                                                                <li><a class="dropdown-item dropdown-status decline"
+                                                                       href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a>
+                                                                </li>
+                                                                <li><a class="dropdown-item dropdown-status accept"
+                                                                       href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a>
+                                                                </li>
+                                                              {% else %}
+                                                                {% if activity.client_approved == True %}
+                                                                <li><a class="dropdown-item dropdown-status decline"
+                                                                       href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a>
+                                                                </li>
+                                                                <li><a class="dropdown-item dropdown-status accept"
+                                                                       href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/2">Cofnij
+                                                                    akceptację</a></li>
+                                                                {% elif activity.client_approved == False %}
+                                                                <li><a class="dropdown-item dropdown-status decline"
+                                                                       href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/2">Cofnij
+                                                                    odrzucenie</a></li>
+                                                                <li><a class="dropdown-item dropdown-status accept"
+                                                                       href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a>
+                                                                </li>
+                                                                {% endif %}
+                                                              {% endif %}
+                                                            {% endif %}
 
 
-                                                            {% if activity.client_approved == None %}
-                                                            <li><a class="dropdown-item dropdown-status decline"
-                                                                   href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a>
-                                                            </li>
-                                                            <li><a class="dropdown-item dropdown-status accept"
-                                                                   href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a>
-                                                            </li>
-                                                            {% else %}
-                                                            {% if activity.client_approved == True %}
-                                                            <li><a class="dropdown-item dropdown-status decline"
-                                                                   href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/0">Odrzuć</a>
-                                                            </li>
-                                                            <li><a class="dropdown-item dropdown-status accept"
-                                                                   href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/2">Cofnij
-                                                                akceptację</a></li>
-                                                            {% elif activity.client_approved == False %}
-                                                            <li><a class="dropdown-item dropdown-status decline"
-                                                                   href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/2">Cofnij
-                                                                odrzucenie</a></li>
-                                                            <li><a class="dropdown-item dropdown-status accept"
-                                                                   href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_client/1">Zaakceptuj</a>
-                                                            </li>
-                                                            {% endif %}
-                                                            {% endif %}
 
-                                                            {% endif %}
-                                                            {% if activity.supervisor_approved == True or
-                                                            activity.client_approved == True %}
-                                                            {% if activity.done_by.id == u.id %}
-                                                            <li><a class="dropdown-item delete-task"
-                                                                   href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/delete"><i
-                                                                    class="fa-solid fa-trash-can"></i> Usuń
-                                                                aktywność</a></li>
-                                                            {% endif %}
+
+
+                                                            {% if not ((activity.supervisor_approved == True and activity.client_approved == True) or (activity.supervisor_approved != True and activity.client_approved == True)) %}
+                                                              {% if activity.done_by.id == u.id %}
+                                                              <li><a class="dropdown-item delete-task"
+                                                                     href="/projects/{{project.id}}/{{task.id}}/{{activity.id}}/delete"><i
+                                                                      class="fa-solid fa-trash-can"></i> Usuń
+                                                                  aktywność</a></li>
+                                                              {% endif %}
                                                             {% endif %}
                                                         </ul>
                                                     </div>

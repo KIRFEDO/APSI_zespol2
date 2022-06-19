@@ -62,6 +62,7 @@ class ProjectAssignment(db.Model):
     end = db.Column(db.Date)
 
 
+
 class Activity(db.Model):
     __tablename__ = 'activities'
     id = db.Column(db.Integer, primary_key=True)
@@ -82,4 +83,3 @@ class Activity(db.Model):
                    'description': self.description,
                    'supervisor_approved': self.supervisor_approved,
                    'client_approved': self.client_approved}
-

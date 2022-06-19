@@ -27,9 +27,12 @@ def get_user():
 # Resource ownership check
 
 def check_ownership(user, required):
-    if required != user:
-        abort(403)
-
+    if isinstance(required, list):
+        if user not in required:
+            abort(403)
+    else:
+        if user != required:
+            abort(403)
 
 # Registration
 @app.route("/register", methods=['GET', 'POST'])
@@ -143,13 +146,12 @@ def activity_delete(project_id=None, task_id=None, activity_id=None):
     u = get_user()
     if u.role == 'pracownik':
         activity = Activity.query.get_or_404(activity_id)
-        check_ownership(int(current_user.get_id()), activity.user_id)
+        check_ownership(u.id, activity.user_id)
     elif u.role == 'klient':
-        project = Project.query.get_or_404(project_id)
-        check_ownership(u.id, project.client)
+        abort(403)
     elif u.role == 'kierownik':
         project = Project.query.get_or_404(project_id)
-        check_ownership(u.id, project.creator)
+        check_ownership(u.id, [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
 
     Activity.query.filter(Activity.id == activity_id).delete()
     db.session.commit()
@@ -168,7 +170,8 @@ def activity_accept_supervisor(project_id=None, task_id=None, activity_id=None, 
         go_back = 'project-view'
 
     project = Project.query.get_or_404(project_id)
-    check_ownership(u.id, project.creator)
+    check_ownership(u.id, [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
+
     if u.role == 'kierownik':
         activity = Activity.query.filter(Activity.id == activity_id).first()
         if state == 0:
@@ -198,6 +201,7 @@ def activity_accept_client(project_id=None, task_id=None, activity_id=None, stat
 
     project = Project.query.get_or_404(project_id)
     check_ownership(u.id, project.client)
+
     if u.role == 'klient':
         activity = Activity.query.filter(Activity.id == activity_id).first()
         if state == 0:
@@ -226,7 +230,7 @@ def task_add(project_id):
     current_view = 'task-add'
     u = get_user()
     project = Project.query.get_or_404(project_id)
-    check_ownership(u.id, project.creator)
+    check_ownership(u.id, [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
     project = Project.query.get_or_404(project_id)
     form.project_id = project.id
 
@@ -255,7 +259,8 @@ def project_tasks(project_id):
 @login_required
 def task_delete(project_id=None, task_id=None):
     project = Project.query.get_or_404(project_id)
-    check_ownership(int(current_user.get_id()), project.creator)
+    check_ownership(int(current_user.get_id()), [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
+
     Task.query.filter(Task.id == task_id).delete()
     db.session.commit()
     return redirect(url_for('projects'))
@@ -351,7 +356,7 @@ def project_add():
             db.session.flush()
             db.session.refresh(project)
             pAssignment = ProjectAssignment(user_id=project.creator, project_id=project.id,
-                                            project_role='kierownik projektu')
+                                            project_role='kierownik projektu', start=datetime.date.today())
             db.session.add(pAssignment)
             db.session.commit()
             flash('Projekt utworzony', 'success')
@@ -366,7 +371,9 @@ def project_add():
 @login_required
 def project_delete(project_id=None):
     project = Project.query.get_or_404(project_id)
-    check_ownership(int(current_user.get_id()), project.creator)
+    check_ownership(int(current_user.get_id()), [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
+
+
     Project.query.filter(Project.id == project_id).delete()
     db.session.commit()
     return redirect(url_for('projects'))

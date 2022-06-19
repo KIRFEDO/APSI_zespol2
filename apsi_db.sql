@@ -29,7 +29,7 @@ DROP INDEX public.projects_name_uindex;
 ALTER TABLE ONLY public.users DROP CONSTRAINT users_pk;
 ALTER TABLE ONLY public.projects DROP CONSTRAINT projects_pk;
 ALTER TABLE ONLY public.project_assignment DROP CONSTRAINT project_assignment_pk;
-ALTER TABLE ONLY public.tasks DROP CONSTRAINT epics_pk;
+ALTER TABLE ONLY public.tasks DROP CONSTRAINT tasks_pk;
 ALTER TABLE ONLY public.activities DROP CONSTRAINT activities_pk;
 ALTER TABLE public.users ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.tasks ALTER COLUMN id DROP DEFAULT;
@@ -38,16 +38,18 @@ ALTER TABLE public.project_assignment ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.activities ALTER COLUMN id DROP DEFAULT;
 DROP SEQUENCE public.users_id_seq;
 DROP TABLE public.users;
-DROP SEQUENCE public.table_name_id_seq1;
-DROP SEQUENCE public.table_name_id_seq;
+DROP SEQUENCE public.project_assignment_id_seq;
 DROP SEQUENCE public.projects_id_seq;
 DROP TABLE public.projects;
 DROP TABLE public.project_assignment;
-DROP SEQUENCE public.epics_id_seq;
+DROP SEQUENCE public.task_id_seq;
 DROP TABLE public.tasks;
 DROP TABLE public.activities;
 DROP TYPE public.role;
 DROP TYPE public.project_role;
+DROP SEQUENCE public.activities_id_seq;
+
+
 --
 -- Name: project_role; Type: TYPE; Schema: public; Owner: apsi
 --
@@ -110,10 +112,10 @@ CREATE TABLE public.tasks (
 ALTER TABLE public.tasks OWNER TO apsi;
 
 --
--- Name: epics_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
+-- Name: task_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
 --
 
-CREATE SEQUENCE public.epics_id_seq
+CREATE SEQUENCE public.task_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -122,13 +124,25 @@ CREATE SEQUENCE public.epics_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.epics_id_seq OWNER TO apsi;
+ALTER TABLE public.task_id_seq OWNER TO apsi;
 
+ALTER SEQUENCE public.task_id_seq OWNED BY public.tasks.id;
 --
--- Name: epics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: apsi
+-- Name: activities_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
 --
 
-ALTER SEQUENCE public.epics_id_seq OWNED BY public.tasks.id;
+CREATE SEQUENCE public.activities_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.activities_id_seq OWNER TO apsi;
+
+ALTER SEQUENCE public.activities_id_seq OWNED BY public.activities.id;
 
 
 --
@@ -185,10 +199,10 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 
 
 --
--- Name: table_name_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
+-- Name: project_assignment_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
 --
 
-CREATE SEQUENCE public.table_name_id_seq
+CREATE SEQUENCE public.project_assignment_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -197,35 +211,13 @@ CREATE SEQUENCE public.table_name_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.table_name_id_seq OWNER TO apsi;
+ALTER TABLE public.project_assignment_id_seq OWNER TO apsi;
 
 --
--- Name: table_name_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: apsi
+-- Name: project_assignment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: apsi
 --
 
-ALTER SEQUENCE public.table_name_id_seq OWNED BY public.activities.id;
-
-
---
--- Name: table_name_id_seq1; Type: SEQUENCE; Schema: public; Owner: apsi
---
-
-CREATE SEQUENCE public.table_name_id_seq1
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.table_name_id_seq1 OWNER TO apsi;
-
---
--- Name: table_name_id_seq1; Type: SEQUENCE OWNED BY; Schema: public; Owner: apsi
---
-
-ALTER SEQUENCE public.table_name_id_seq1 OWNED BY public.project_assignment.id;
+ALTER SEQUENCE public.project_assignment_id_seq OWNED BY public.project_assignment.id;
 
 
 --
@@ -268,17 +260,10 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: activities id; Type: DEFAULT; Schema: public; Owner: apsi
---
-
-ALTER TABLE ONLY public.activities ALTER COLUMN id SET DEFAULT nextval('public.table_name_id_seq'::regclass);
-
-
---
 -- Name: project_assignment id; Type: DEFAULT; Schema: public; Owner: apsi
 --
 
-ALTER TABLE ONLY public.project_assignment ALTER COLUMN id SET DEFAULT nextval('public.table_name_id_seq1'::regclass);
+ALTER TABLE ONLY public.project_assignment ALTER COLUMN id SET DEFAULT nextval('public.project_assignment_id_seq'::regclass);
 
 
 --
@@ -292,8 +277,13 @@ ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.pro
 -- Name: tasks id; Type: DEFAULT; Schema: public; Owner: apsi
 --
 
-ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.epics_id_seq'::regclass);
+ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.task_id_seq'::regclass);
 
+--
+-- Name: activities id; Type: DEFAULT; Schema: public; Owner: apsi
+--
+
+ALTER TABLE ONLY public.activities ALTER COLUMN id SET DEFAULT nextval('public.activities_id_seq'::regclass);
 
 --
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: apsi
@@ -359,7 +349,6 @@ INSERT INTO public.activities (id, user_id, task_id, date, "time", description, 
 INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved) VALUES (6, 3, 1, '2022-06-13', INTERVAL '3' HOUR, 'Poprawki widoku podstrony produktu X', NULL, NULL);
 INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved) VALUES (7, 3, 1, '2022-06-13', INTERVAL '5' HOUR, 'Podstrona produktu Y', NULL, NULL);
 INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved) VALUES (8, 4, 1, '2022-06-16', INTERVAL '12' HOUR, 'Backend produktów', NULL, NULL);
-
 INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved) VALUES (9, 4, 2, '2022-06-17', INTERVAL '12' HOUR, 'Baza dla SEO strony głównej', TRUE, NULL);
 INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved) VALUES (10, 4, 2, '2022-06-18', INTERVAL '7' HOUR, 'SEO podstron produktów', FALSE, NULL);
 INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved) VALUES (11, 4, 2, '2022-06-18', INTERVAL '1' HOUR, 'Poprawka SEO podstron produktów', FALSE, NULL);
@@ -410,46 +399,37 @@ INSERT INTO public.activities (id, user_id, task_id, date, "time", description, 
 INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved) VALUES (25, 5, 6, '2022-06-26', INTERVAL '7' HOUR, 'Instalacja programów W', NULL, NULL);
 
 
+--
+-- Name: task_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
+--
+
+SELECT pg_catalog.setval('public.task_id_seq', 7, true);
 
 
 --
--- Data for Name: tasks; Type: TABLE DATA; Schema: public; Owner: apsi
+-- Name: task_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-
---
--- Name: epics_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
---
-
-SELECT pg_catalog.setval('public.epics_id_seq', 4, true);
-
+SELECT pg_catalog.setval('public.activities_id_seq', 26, true);
 
 --
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 5, true);
-
-
---
--- Name: table_name_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
---
-
-SELECT pg_catalog.setval('public.table_name_id_seq', 3, true);
-
+SELECT pg_catalog.setval('public.projects_id_seq', 4, true);
 
 --
--- Name: table_name_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: apsi
+-- Name: project_assignment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-SELECT pg_catalog.setval('public.table_name_id_seq1', 17, true);
+SELECT pg_catalog.setval('public.project_assignment_id_seq', 13, true);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 7, true);
+SELECT pg_catalog.setval('public.users_id_seq', 11, true);
 
 
 --
@@ -461,11 +441,11 @@ ALTER TABLE ONLY public.activities
 
 
 --
--- Name: tasks epics_pk; Type: CONSTRAINT; Schema: public; Owner: apsi
+-- Name: tasks tasks_pk; Type: CONSTRAINT; Schema: public; Owner: apsi
 --
 
 ALTER TABLE ONLY public.tasks
-    ADD CONSTRAINT epics_pk PRIMARY KEY (id);
+    ADD CONSTRAINT tasks_pk PRIMARY KEY (id);
 
 
 --
@@ -573,4 +553,3 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
-

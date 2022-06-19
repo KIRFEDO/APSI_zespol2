@@ -51,11 +51,14 @@
 
             <div class="row">
                 <div class="col-9">
-                    {% if u.role == 'kierownik' %}
-                    <p class="content-title">Zadania
-                        <a class="btn btn-warning" title="Dodaj zadanie" href="/projects/{{project.id}}/task/add"><i
-                                class="fa-solid fa-plus"></i> Dodaj zadanie</a>
-                    </p>
+                    {project.workers|join ' '}
+                    {project.workers|selectattr("project_rule", "equalto", "kierownik projektu")|join ' '}
+                    {project.workers|selectattr("project_rule", "equalto", "kierownik projektu")|map(attribute='user_id'|join ' '}
+                    {% if u.user_id in project.workers|selectattr("project_rule", "equalto", "kierownik projektu")|map(attribute='user_id'|list) %}
+                      <p class="content-title">Zadania
+                          <a class="btn btn-warning" title="Dodaj zadanie" href="/projects/{{project.id}}/task/add"><i
+                                  class="fa-solid fa-plus"></i> Dodaj zadanie</a>
+                      </p>
                     {% endif %}
                     <div class="accordion" id="epic-list">
                         {% for task in project.projects_tasks %}
@@ -235,9 +238,8 @@
                                         </div>
                                         {% endfor %}
                                     </div>
-                                    {% if u.role == 'pracownik' %}
-                                    <a href="/activities/add/{{task.project}}/{{task.id}}?go_back=project-view" title="Dodaj czynność"
-                                       class="add-task"><i class="fa-solid fa-plus"></i> Dodaj czynność</a>
+                                    {% if u.role != 'klient' %}
+                                      <a href="/activities/add/{{task.project}}/{{task.id}}?go_back=project-view" title="Dodaj czynność" class="add-task"><i class="fa-solid fa-plus"></i> Dodaj czynność</a>
                                     {% endif %}
                                 </div>
                             </div>

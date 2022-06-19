@@ -16,7 +16,7 @@
     <div class="content-wrapper">
         <div class="container">
             <h1>Projekty
-              {% if u.role == 'kierownik' or u.role == 'pracownik' %}
+              {% if u.role == 'kierownik' %}
                 <a class="btn btn-primary" title="Nowy projekt" href="/projects/add">
                   <i class="fa-solid fa-plus"></i>Nowy projekt
                 </a>

@@ -46,7 +46,7 @@ class ProjectForm(FlaskForm):
 def create_employee_assign_form(assigned_users, project, supervisors):
     class EmployeeAssignForm(FlaskForm):
         employee = SelectField('Wybierz:')
-        employee_role = SelectField('Rola', choices=['kierownik projektu', 'uczestnik projektu'])
+        employee_role = SelectField('Rola', choices=['uczestnik projektu', 'kierownik projektu'])
         submit = SubmitField('Zapisz')
         employee_to_remove = SelectField('Wybierz:')
 

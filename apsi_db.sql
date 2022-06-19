@@ -35,7 +35,7 @@ ALTER TABLE ONLY public.users DROP CONSTRAINT users_pk;
 ALTER TABLE ONLY public.submitted_errors DROP CONSTRAINT submitted_errors_pk;
 ALTER TABLE ONLY public.projects DROP CONSTRAINT projects_pk;
 ALTER TABLE ONLY public.project_assignment DROP CONSTRAINT project_assignment_pk;
-ALTER TABLE ONLY public.tasks DROP CONSTRAINT epics_pk;
+ALTER TABLE ONLY public.tasks DROP CONSTRAINT tasks_pk;
 ALTER TABLE ONLY public.documents DROP CONSTRAINT documents_pk;
 ALTER TABLE ONLY public.activities DROP CONSTRAINT activities_pk;
 ALTER TABLE public.users ALTER COLUMN id DROP DEFAULT;
@@ -47,14 +47,13 @@ ALTER TABLE public.documents ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.activities ALTER COLUMN id DROP DEFAULT;
 DROP SEQUENCE public.users_id_seq;
 DROP TABLE public.users;
-DROP SEQUENCE public.table_name_id_seq1;
-DROP SEQUENCE public.table_name_id_seq;
+DROP SEQUENCE public.project_assignment_id_seq;
 DROP SEQUENCE public.submitted_errors_id_seq;
 DROP TABLE public.submitted_errors;
 DROP SEQUENCE public.projects_id_seq;
 DROP TABLE public.projects;
 DROP TABLE public.project_assignment;
-DROP SEQUENCE public.epics_id_seq;
+DROP SEQUENCE public.task_id_seq;
 DROP TABLE public.tasks;
 DROP SEQUENCE public.documents_id_seq;
 DROP TABLE public.documents;
@@ -62,6 +61,9 @@ DROP TABLE public.activities;
 DROP TYPE public.role;
 DROP TYPE public.related_resource;
 DROP TYPE public.project_role;
+DROP SEQUENCE public.activities_id_seq;
+
+
 --
 -- Name: project_role; Type: TYPE; Schema: public; Owner: apsi
 --
@@ -175,10 +177,10 @@ CREATE TABLE public.tasks (
 ALTER TABLE public.tasks OWNER TO apsi;
 
 --
--- Name: epics_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
+-- Name: task_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
 --
 
-CREATE SEQUENCE public.epics_id_seq
+CREATE SEQUENCE public.task_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -187,13 +189,25 @@ CREATE SEQUENCE public.epics_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.epics_id_seq OWNER TO apsi;
+ALTER TABLE public.task_id_seq OWNER TO apsi;
 
+ALTER SEQUENCE public.task_id_seq OWNED BY public.tasks.id;
 --
--- Name: epics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: apsi
+-- Name: activities_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
 --
 
-ALTER SEQUENCE public.epics_id_seq OWNED BY public.tasks.id;
+CREATE SEQUENCE public.activities_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.activities_id_seq OWNER TO apsi;
+
+ALTER SEQUENCE public.activities_id_seq OWNED BY public.activities.id;
 
 
 --
@@ -285,10 +299,10 @@ ALTER SEQUENCE public.submitted_errors_id_seq OWNED BY public.submitted_errors.i
 
 
 --
--- Name: table_name_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
+-- Name: project_assignment_id_seq; Type: SEQUENCE; Schema: public; Owner: apsi
 --
 
-CREATE SEQUENCE public.table_name_id_seq
+CREATE SEQUENCE public.project_assignment_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -297,35 +311,13 @@ CREATE SEQUENCE public.table_name_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.table_name_id_seq OWNER TO apsi;
+ALTER TABLE public.project_assignment_id_seq OWNER TO apsi;
 
 --
--- Name: table_name_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: apsi
+-- Name: project_assignment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: apsi
 --
 
-ALTER SEQUENCE public.table_name_id_seq OWNED BY public.activities.id;
-
-
---
--- Name: table_name_id_seq1; Type: SEQUENCE; Schema: public; Owner: apsi
---
-
-CREATE SEQUENCE public.table_name_id_seq1
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.table_name_id_seq1 OWNER TO apsi;
-
---
--- Name: table_name_id_seq1; Type: SEQUENCE OWNED BY; Schema: public; Owner: apsi
---
-
-ALTER SEQUENCE public.table_name_id_seq1 OWNED BY public.project_assignment.id;
+ALTER SEQUENCE public.project_assignment_id_seq OWNED BY public.project_assignment.id;
 
 
 --
@@ -368,13 +360,6 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: activities id; Type: DEFAULT; Schema: public; Owner: apsi
---
-
-ALTER TABLE ONLY public.activities ALTER COLUMN id SET DEFAULT nextval('public.table_name_id_seq'::regclass);
-
-
---
 -- Name: documents id; Type: DEFAULT; Schema: public; Owner: apsi
 --
 
@@ -385,7 +370,7 @@ ALTER TABLE ONLY public.documents ALTER COLUMN id SET DEFAULT nextval('public.do
 -- Name: project_assignment id; Type: DEFAULT; Schema: public; Owner: apsi
 --
 
-ALTER TABLE ONLY public.project_assignment ALTER COLUMN id SET DEFAULT nextval('public.table_name_id_seq1'::regclass);
+ALTER TABLE ONLY public.project_assignment ALTER COLUMN id SET DEFAULT nextval('public.project_assignment_id_seq'::regclass);
 
 
 --
@@ -406,8 +391,13 @@ ALTER TABLE ONLY public.submitted_errors ALTER COLUMN id SET DEFAULT nextval('pu
 -- Name: tasks id; Type: DEFAULT; Schema: public; Owner: apsi
 --
 
-ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.epics_id_seq'::regclass);
+ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.task_id_seq'::regclass);
 
+--
+-- Name: activities id; Type: DEFAULT; Schema: public; Owner: apsi
+--
+
+ALTER TABLE ONLY public.activities ALTER COLUMN id SET DEFAULT nextval('public.activities_id_seq'::regclass);
 
 --
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: apsi
@@ -420,30 +410,111 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: activities; Type: TABLE DATA; Schema: public; Owner: apsi
 --
 
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (8, 4, 1, '2022-06-16', '12:00:00', 'Backend produktów', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (22, 2, 6, '2022-06-23', '07:00:00', 'Instalacja programów X', true, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (21, 5, 4, '2022-06-22', '12:00:00', 'UX podstron cd', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (23, 3, 6, '2022-06-24', '07:00:00', 'Instalacja programów Y', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (18, 5, 4, '2022-06-14', '05:00:00', 'UX strony startowej', true, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (17, 5, 3, '2022-06-14', '03:00:00', 'Poprawki funkcjonalne do mockupu', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (20, 5, 4, '2022-06-20', '08:00:00', 'UX podstron', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (19, 5, 4, '2022-06-19', '07:00:00', 'UX przycisków aplikacji', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (25, 5, 6, '2022-06-26', '07:00:00', 'Instalacja programów W', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (16, 4, 3, '2022-06-13', '02:00:00', 'Poprawki wizualne do mockupu', true, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (6, 3, 1, '2022-06-13', '03:00:00', 'Poprawki widoku podstrony produktu X', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (5, 3, 1, '2022-06-12', '02:00:00', 'Poprawki widoku strony głównej', true, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (24, 4, 6, '2022-06-25', '07:00:00', 'Instalacja programów Z', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (7, 3, 1, '2022-06-13', '05:00:00', 'Podstrona produktu Y', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (2, 2, 1, '2022-06-12', '05:00:00', 'Widok strony głównej', true, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (4, 2, 1, '2022-06-14', '04:00:00', 'Poprawiony widok podstrony produktu X', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (3, 2, 1, '2022-06-13', '07:00:00', 'Widok podstrony produktu X', false, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (14, 6, 5, '2022-06-13', '03:00:00', 'Struktura deploymentu', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (13, 3, 5, '2022-06-13', '01:00:00', 'Bazowa infrastruktura', true, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (15, 3, 3, '2022-06-13', '04:00:00', 'Wstępna wersja mockupu', true, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (10, 4, 2, '2022-06-18', '07:00:00', 'SEO podstron produktów', false, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (9, 4, 2, '2022-06-17', '12:00:00', 'Baza dla SEO strony głównej', true, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (12, 4, 2, '2022-06-18', '02:00:00', 'SEO strony głównej - poprawki', NULL, NULL, 'brak', NULL, NULL);
-INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (11, 4, 2, '2022-06-18', '01:00:00', 'Poprawka SEO podstron produktów', false, NULL, 'brak', NULL, NULL);
+
+
+
+
+--
+-- Domyślni użytkownicy do developmentu
+-- Hasło dla wszystkich to 123456
+--
+
+--	Pracownicy	--
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (2, 'pracownik1', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Janusz', 'Kowal', 'pracownik', NULL);
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (3, 'pracownik2', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Andrzej', 'Nowakowski', 'pracownik', NULL);
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (4, 'pracownik3', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Krzysztof', 'Janowski', 'pracownik', NULL);
+--	Kierownicy/menadżerowie	--
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (5, 'kierownik1', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Adrian', 'Kierwoniczy', 'kierownik', NULL);
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (6, 'kierownik2', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Jan', 'Testowy', 'kierownik', NULL);
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (7, 'kierownik3', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Przemysław', 'Bazowy', 'kierownik', NULL);
+--	Klienci	--
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (8, 'klient1', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Radosław', 'Kliencki', 'klient', NULL);
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (9, 'klient2', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Mścisław', 'Klientowy', 'klient', NULL);
+INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (10, 'klient3', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Dobromir', 'Kustomerowy', 'klient', NULL);
+
+
+
+
+
+
+--- Projekt nr 1, brak klienta, 1 pracownik jako kierownik projektu (zakładający), 2 pracowników zwykłych, 1 menadżer również jako kierownik projektu
+
+INSERT INTO public.projects (id, name, description, creator, client) VALUES (1, 'Projekt sklepu SuperABC', 'Bardzo ciekawy projekt sklepu spożywczego', 2, NULL);
+
+INSERT INTO public.tasks (id, name, description, project) VALUES (1, 'Strona internetowa SuperABC', 'Stworzenie strony internetowej sklepu spożywczego SuperABC', 1);
+INSERT INTO public.tasks (id, name, description, project) VALUES (2, 'SEO strony internetowej', 'Elementy związane z SEO strony', 1);
+
+INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (1, 2, 1, 'kierownik projektu', '2022-06-16', NULL);
+INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (2, 3, 1, 'uczestnik projektu', '2022-06-16', NULL);
+INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (3, 4, 1, 'uczestnik projektu', '2022-06-16', NULL);
+INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (4, 5, 1, 'kierownik projektu', '2022-06-16', NULL);
+
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (2, 2, 1, '2022-06-12', INTERVAL '5' HOUR, 'Widok strony głównej', TRUE, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (3, 2, 1, '2022-06-13', INTERVAL '7' HOUR, 'Widok podstrony produktu X', FALSE, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (4, 2, 1, '2022-06-14', INTERVAL '4' HOUR, 'Poprawiony widok podstrony produktu X', NULL, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (5, 3, 1, '2022-06-12', INTERVAL '2' HOUR, 'Poprawki widoku strony głównej', TRUE, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (6, 3, 1, '2022-06-13', INTERVAL '3' HOUR, 'Poprawki widoku podstrony produktu X', NULL, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (7, 3, 1, '2022-06-13', INTERVAL '5' HOUR, 'Podstrona produktu Y', NULL, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (8, 4, 1, '2022-06-16', INTERVAL '12' HOUR, 'Backend produktów', NULL, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (9, 4, 2, '2022-06-17', INTERVAL '12' HOUR, 'Baza dla SEO strony głównej', TRUE, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (10, 4, 2, '2022-06-18', INTERVAL '7' HOUR, 'SEO podstron produktów', FALSE, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (11, 4, 2, '2022-06-18', INTERVAL '1' HOUR, 'Poprawka SEO podstron produktów', FALSE, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (12, 4, 2, '2022-06-18', INTERVAL '2' HOUR, 'SEO strony głównej - poprawki', NULL, NULL, 'brak', NULL, NULL);
+
+
+
+
+--- Projekt nr 2, 1 klient, 1 menadżer jako kierownik projektu (zakładający), 2 pracowników zwykłych, 1 menadżer również jako kierownik projektu
+
+INSERT INTO public.projects (id, name, description, creator, client) VALUES (2, 'Aplikacja mobilna dla Firmy Testowej S.A.', 'Aplikacja mobilna dla klienta', 5, 8);
+
+INSERT INTO public.tasks (id, name, description, project) VALUES (3, 'Mockup aplikacji', 'Mockup aplikacji mobilnej dla klienta', 2);
+INSERT INTO public.tasks (id, name, description, project) VALUES (4, 'UX design', 'Projekt UX dla aplikacji mobilnej klienta', 2);
+INSERT INTO public.tasks (id, name, description, project) VALUES (5, 'Infrastruktura', 'Elementy związane z infrastrukturą i deploymentem', 2);
+
+INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (5, 3, 2, 'uczestnik projektu', '2022-06-16', NULL);
+INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (6, 4, 2, 'uczestnik projektu', '2022-06-16', NULL);
+INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (7, 5, 2, 'kierownik projektu', '2022-06-16', NULL);
+INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (8, 6, 2, 'kierownik projektu', '2022-06-16', NULL);
+
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (13, 3, 5, '2022-06-13', INTERVAL '1' HOUR, 'Bazowa infrastruktura', TRUE, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (14, 6, 5, '2022-06-13', INTERVAL '3' HOUR, 'Struktura deploymentu', NULL, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (15, 3, 3, '2022-06-13', INTERVAL '4' HOUR, 'Wstępna wersja mockupu', TRUE, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (16, 4, 3, '2022-06-13', INTERVAL '2' HOUR, 'Poprawki wizualne do mockupu', TRUE, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (17, 5, 3, '2022-06-14', INTERVAL '3' HOUR, 'Poprawki funkcjonalne do mockupu', NULL, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (18, 5, 4, '2022-06-14', INTERVAL '5' HOUR, 'UX strony startowej', TRUE, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (19, 5, 4, '2022-06-19', INTERVAL '7' HOUR, 'UX przycisków aplikacji', NULL, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (20, 5, 4, '2022-06-20', INTERVAL '8' HOUR, 'UX podstron', NULL, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (21, 5, 4, '2022-06-22', INTERVAL '12' HOUR, 'UX podstron cd', NULL, NULL, 'brak', NULL, NULL);
+
+
+
+--- Projekt nr 3, 1 klient, 1 menadżer jako kierownik projektu (zakładający), 1 pracowników zwykłych
+
+INSERT INTO public.projects (id, name, description, creator, client) VALUES (3, 'Instalacja oprogramowania w Firmie Testowej S.A.', 'Instalacja oprogramowania dla Firmy Testowej', 5, 8);
+
+INSERT INTO public.tasks (id, name, description, project) VALUES (6, 'Instalacja on-site', 'Instalacja oprogramowania w firmie klienta', 3);
+
+INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (9, 2, 3, 'uczestnik projektu', '2022-06-16', NULL);
+INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (10, 3, 3, 'uczestnik projektu', '2022-06-16', NULL);
+INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (11, 4, 3, 'uczestnik projektu', '2022-06-16', NULL);
+INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (12, 5, 3, 'kierownik projektu', '2022-06-16', NULL);
+
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (22, 2, 6, '2022-06-23', INTERVAL '7' HOUR, 'Instalacja programów X', TRUE, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (23, 3, 6, '2022-06-24', INTERVAL '7' HOUR, 'Instalacja programów Y', NULL, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (24, 4, 6, '2022-06-25', INTERVAL '7' HOUR, 'Instalacja programów Z', NULL, NULL, 'brak', NULL, NULL);
+INSERT INTO public.activities (id, user_id, task_id, date, "time", description, supervisor_approved, client_approved, related_resource, document, error) VALUES (25, 5, 6, '2022-06-26', INTERVAL '7' HOUR, 'Instalacja programów W', NULL, NULL, 'brak', NULL, NULL);
+
+
+
+--
+-- Data for Name: submitted_errors; Type: TABLE DATA; Schema: public; Owner: apsi
+--
+
+INSERT INTO public.submitted_errors (id, project, name) VALUES (1, 1, '20931 - Connection error');
+INSERT INTO public.submitted_errors (id, project, name) VALUES (2, 1, '13339 - Wrong validation');
+INSERT INTO public.submitted_errors (id, project, name) VALUES (3, 2, '18992 - Infinite loading');
+INSERT INTO public.submitted_errors (id, project, name) VALUES (4, 3, '22301 - UI bug');
 
 
 --
@@ -458,67 +529,10 @@ INSERT INTO public.documents (id, project, name) VALUES (5, 1, 'wykresy');
 
 
 --
--- Data for Name: project_assignment; Type: TABLE DATA; Schema: public; Owner: apsi
+-- Name: task_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (1, 2, 1, 'kierownik projektu', '2022-06-16', NULL);
-INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (2, 3, 1, 'uczestnik projektu', '2022-06-16', NULL);
-INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (3, 4, 1, 'uczestnik projektu', '2022-06-16', NULL);
-INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (4, 5, 1, 'kierownik projektu', '2022-06-16', NULL);
-INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (5, 3, 2, 'uczestnik projektu', '2022-06-16', NULL);
-INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (6, 4, 2, 'uczestnik projektu', '2022-06-16', NULL);
-INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (7, 5, 2, 'kierownik projektu', '2022-06-16', NULL);
-INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (8, 6, 2, 'kierownik projektu', '2022-06-16', NULL);
-INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (9, 2, 3, 'uczestnik projektu', '2022-06-16', NULL);
-INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (10, 3, 3, 'uczestnik projektu', '2022-06-16', NULL);
-INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (11, 4, 3, 'uczestnik projektu', '2022-06-16', NULL);
-INSERT INTO public.project_assignment (id, user_id, project_id, project_role, start, "end") VALUES (12, 5, 3, 'kierownik projektu', '2022-06-16', NULL);
-
-
---
--- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: apsi
---
-
-INSERT INTO public.projects (id, name, description, creator, client) VALUES (1, 'Projekt sklepu SuperABC', 'Bardzo ciekawy projekt sklepu spożywczego', 2, NULL);
-INSERT INTO public.projects (id, name, description, creator, client) VALUES (2, 'Aplikacja mobilna dla Firmy Testowej S.A.', 'Aplikacja mobilna dla klienta', 5, 8);
-INSERT INTO public.projects (id, name, description, creator, client) VALUES (3, 'Instalacja oprogramowania w Firmie Testowej S.A.', 'Instalacja oprogramowania dla Firmy Testowej', 5, 8);
-
-
---
--- Data for Name: submitted_errors; Type: TABLE DATA; Schema: public; Owner: apsi
---
-
-INSERT INTO public.submitted_errors (id, project, name) VALUES (1, 1, '20931 - Connection error');
-INSERT INTO public.submitted_errors (id, project, name) VALUES (2, 1, '13339 - Wrong validation');
-INSERT INTO public.submitted_errors (id, project, name) VALUES (3, 2, '18992 - Infinite loading');
-INSERT INTO public.submitted_errors (id, project, name) VALUES (4, 3, '22301 - UI bug');
-
-
---
--- Data for Name: tasks; Type: TABLE DATA; Schema: public; Owner: apsi
---
-
-INSERT INTO public.tasks (id, name, description, project) VALUES (1, 'Strona internetowa SuperABC', 'Stworzenie strony internetowej sklepu spożywczego SuperABC', 1);
-INSERT INTO public.tasks (id, name, description, project) VALUES (2, 'SEO strony internetowej', 'Elementy związane z SEO strony', 1);
-INSERT INTO public.tasks (id, name, description, project) VALUES (3, 'Mockup aplikacji', 'Mockup aplikacji mobilnej dla klienta', 2);
-INSERT INTO public.tasks (id, name, description, project) VALUES (4, 'UX design', 'Projekt UX dla aplikacji mobilnej klienta', 2);
-INSERT INTO public.tasks (id, name, description, project) VALUES (5, 'Infrastruktura', 'Elementy związane z infrastrukturą i deploymentem', 2);
-INSERT INTO public.tasks (id, name, description, project) VALUES (6, 'Instalacja on-site', 'Instalacja oprogramowania w firmie klienta', 3);
-
-
---
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: apsi
---
-
-INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (2, 'pracownik1', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Janusz', 'Kowal', 'pracownik', NULL);
-INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (3, 'pracownik2', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Andrzej', 'Nowakowski', 'pracownik', NULL);
-INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (4, 'pracownik3', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Krzysztof', 'Janowski', 'pracownik', NULL);
-INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (5, 'kierownik1', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Adrian', 'Kierwoniczy', 'kierownik', NULL);
-INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (6, 'kierownik2', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Jan', 'Testowy', 'kierownik', NULL);
-INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (7, 'kierownik3', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Przemysław', 'Bazowy', 'kierownik', NULL);
-INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (8, 'klient1', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Radosław', 'Kliencki', 'klient', NULL);
-INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (9, 'klient2', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Mścisław', 'Klientowy', 'klient', NULL);
-INSERT INTO public.users (id, login, password, name, surname, role, supervisor) VALUES (10, 'klient3', '$2b$12$2pUji2QFKl2wr0O7tuMDyOvtkQBz.Qa5IuSWYw8/0RAKp2zxqn5/6', 'Dobromir', 'Kustomerowy', 'klient', NULL);
+SELECT pg_catalog.setval('public.task_id_seq', 7, true);
 
 
 --
@@ -529,18 +543,16 @@ SELECT pg_catalog.setval('public.documents_id_seq', 5, true);
 
 
 --
--- Name: epics_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
+-- Name: task_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-SELECT pg_catalog.setval('public.epics_id_seq', 7, false);
-
+SELECT pg_catalog.setval('public.activities_id_seq', 26, true);
 
 --
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 5, true);
-
+SELECT pg_catalog.setval('public.projects_id_seq', 4, true);
 
 --
 -- Name: submitted_errors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
@@ -550,24 +562,17 @@ SELECT pg_catalog.setval('public.submitted_errors_id_seq', 4, true);
 
 
 --
--- Name: table_name_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
+-- Name: project_assignment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-SELECT pg_catalog.setval('public.table_name_id_seq', 26, true);
-
-
---
--- Name: table_name_id_seq1; Type: SEQUENCE SET; Schema: public; Owner: apsi
---
-
-SELECT pg_catalog.setval('public.table_name_id_seq1', 17, true);
+SELECT pg_catalog.setval('public.project_assignment_id_seq', 13, true);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: apsi
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 11, false);
+SELECT pg_catalog.setval('public.users_id_seq', 11, true);
 
 
 --
@@ -587,11 +592,11 @@ ALTER TABLE ONLY public.documents
 
 
 --
--- Name: tasks epics_pk; Type: CONSTRAINT; Schema: public; Owner: apsi
+-- Name: tasks tasks_pk; Type: CONSTRAINT; Schema: public; Owner: apsi
 --
 
 ALTER TABLE ONLY public.tasks
-    ADD CONSTRAINT epics_pk PRIMARY KEY (id);
+    ADD CONSTRAINT tasks_pk PRIMARY KEY (id);
 
 
 --

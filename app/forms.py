@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, SelectField, TextAreaField, DateField, DecimalField
 from wtforms.validators import DataRequired, Length, ValidationError, EqualTo
-from app.models import User, Project, Task, ProjectAssignment
+from app.models import User, Project, Task, ProjectAssignment, Document, SubmittedError
 
 
 class RegistrationForm(FlaskForm):
@@ -82,17 +82,30 @@ class AddActivityForm(FlaskForm):
     task = SelectField('Zadanie:', validators=[DataRequired()])
     date = DateField('Data wykonania:', validators=[DataRequired()])
     activityTime = DecimalField('Czas aktywności (w godzinach):', places=2, validators=[DataRequired()])
+    related_resource = SelectField('Powiązany zasób', choices=['brak', 'dokument', 'zgłoszony problem'])
+    document = SelectField('Wybierz:')
+    error = SelectField('Wybierz:')
     submit = SubmitField('Zapisz aktywność')
 
     def __init__(self, *args, **kwargs):
         super(AddActivityForm, self).__init__(*args, **kwargs)
         self.project.choices = [("", "Wybierz projekt")] + [(c.id, c.name) for c in
-                                                         Project.query.join(ProjectAssignment).filter(
-                                                             ProjectAssignment.user_id == current_user.get_id())]
+                                                            Project.query.join(ProjectAssignment).filter(
+                                                                ProjectAssignment.user_id == current_user.get_id())]
 
         self.task.choices = [("", "Wybierz zadanie")] + [(c.id, c.name) for c in
                                                          Task.query.join(Project).join(ProjectAssignment).filter(
                                                              ProjectAssignment.user_id == current_user.get_id())]
+
+        self.document.choices = [("", "Wybierz dokument")] + [(c.id, c.name) for c in
+                                                              Document.query.join(Project).join(
+                                                                  ProjectAssignment).filter(
+                                                                  ProjectAssignment.user_id == current_user.get_id())]
+
+        self.error.choices = [("", "Wybierz błąd")] + [(c.id, c.name) for c in
+                                                       SubmittedError.query.join(Project).join(
+                                                           ProjectAssignment).filter(
+                                                           ProjectAssignment.user_id == current_user.get_id())]
 
 
 class TaskForm(FlaskForm):

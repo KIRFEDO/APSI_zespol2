@@ -10,6 +10,28 @@
     <script src="/static/js/lib/jquery.min.js"></script>
     <script src="/static/js/lib/activity-add.js"></script>
     <meta name="theme-color" content="#fff">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            document.getElementById("resource_type").addEventListener('change', function (e) {
+                var e = e || window.event;
+                if (e.target.value === 'brak') {
+                    document.getElementById("doc").style.display = "none";
+                    document.getElementById("err").style.display = "none";
+                } else if (e.target.value === 'dokument'){
+                    document.getElementById("doc").style.display = "block";
+                    document.getElementById("err").style.display = "none";
+                } else {
+                    document.getElementById("doc").style.display = "none";
+                    document.getElementById("err").style.display = "block";
+                }
+            });
+
+            document.getElementById("resource_type").click();
+
+        });
+    </script>
 </head>
 <body>
 <div class="page {{u.role}}-{{current_view}}-page">
@@ -38,22 +60,34 @@
                 <div class="mb-3">
                     {{ form.project.label(class="form-label") }}
                     {% if task_id %}
-                      {{ form.project(class="form-control", readonly="readonly", disabled="disabled") }}
+                    {{ form.project(class="form-control", readonly="readonly", disabled="disabled") }}
                     {% else %}
-                      {{ form.project(class="form-control") }}
+                    {{ form.project(class="form-control") }}
                     {% endif %}
                 </div>
                 <div class="mb-3">
                     {{ form.task.label(class="form-label") }}
                     {% if task_id %}
-                      {{ form.task(class="form-control", readonly="readonly", disabled="disabled") }}
+                    {{ form.task(class="form-control", readonly="readonly", disabled="disabled") }}
                     {% else %}
-                      {{ form.task(class="form-control") }}
+                    {{ form.task(class="form-control") }}
                     {% endif %}
                 </div>
                 <div class="mb-3">
                     {{ form.description.label(class="form-label") }}
                     {{ form.description(class="form-control") }}
+                </div>
+                <div class="mb-3" id="resource_type">
+                    {{ form.related_resource.label(class="form-label") }}
+                    {{ form.related_resource(class="form-control") }}
+                </div>
+                <div class="mb-3" id="doc" style="display: none;">
+                    {{ form.document.label(class="form-label") }}
+                    {{ form.document(class="form-control") }}
+                </div>
+                <div class="mb-3" id="err" style="display: none;">
+                    {{ form.error.label(class="form-label") }}
+                    {{ form.error(class="form-control") }}
                 </div>
                 {{ form.submit(class="btn btn-primary") }}
             </form>

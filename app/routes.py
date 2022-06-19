@@ -2,7 +2,7 @@ from app import app, db, bcrypt
 from flask import render_template, redirect, flash, url_for, request, abort
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import LoginForm, RegistrationForm, ProjectForm, TaskForm, AddActivityForm, create_employee_assign_form
-from app.models import User, Project, Task, Activity, ProjectAssignment
+from app.models import User, Project, Task, Activity, ProjectAssignment, Document, SubmittedError
 import json
 
 import datetime
@@ -118,8 +118,15 @@ def activity_add(project_id=None, task_id=None):
     if u.role != 'klient':
         if form.validate_on_submit():
             user = current_user.get_id()
+            doc = form.document.data
+            if doc == "":
+                doc = None
+            err = form.error.data
+            if err == "":
+                err = None
             activity = Activity(date=form.date.data, description=form.description.data, user_id=user,
-                                task_id=form.task.data, time=datetime.timedelta(hours=float(form.activityTime.data)))
+                                task_id=form.task.data, time=datetime.timedelta(hours=float(form.activityTime.data)),
+                                related_resource=form.related_resource.data, document=doc, error=err)
             db.session.add(activity)
             db.session.commit()
             flash('Aktywność utworzona', 'success')
@@ -248,6 +255,20 @@ def task_add(project_id):
 def project_tasks(project_id):
     tasks = [(c.id, c.name) for c in Task.query.join(Project).filter(Project.id == project_id)]
     return json.dumps(tasks)
+
+
+@app.route('/documents/<int:project_id>', methods=['GET', 'POST'])
+@login_required
+def project_documents(project_id):
+    documents = [(c.id, c.name) for c in Document.query.join(Project).filter(Project.id == project_id)]
+    return json.dumps(documents)
+
+
+@app.route('/errors/<int:project_id>', methods=['GET', 'POST'])
+@login_required
+def project_errors(project_id):
+    errors = [(c.id, c.name) for c in SubmittedError.query.join(Project).filter(Project.id == project_id)]
+    return json.dumps(errors)
 
 
 # Delete task

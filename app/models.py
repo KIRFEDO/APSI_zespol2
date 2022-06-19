@@ -72,14 +72,35 @@ class Activity(db.Model):
     description = db.Column(db.String(500))
     supervisor_approved = db.Column(db.Boolean)  # null before review, after edit
     client_approved = db.Column(db.Boolean)  # null before review, after edit
+    related_resource = db.Column(db.Enum('brak', 'dokument', 'zgłoszony problem', name='related_resource'),
+                                 nullable=False)
+    document = db.Column(db.Integer, db.ForeignKey('documents.id'))
+    error = db.Column(db.Integer, db.ForeignKey('submitted_errors.id'))
 
     def dump(self):
         return {'id': self.id,
-                   'user_id': self.user_id,
-                   'task_id': self.task_id,
-                   'date': self.date.strftime("%m/%d/%Y"),
-                   'time': self.time.seconds//3600,
-                   'description': self.description,
-                   'supervisor_approved': self.supervisor_approved,
-                   'client_approved': self.client_approved}
+                'user_id': self.user_id,
+                'task_id': self.task_id,
+                'date': self.date.strftime("%m/%d/%Y"),
+                'time': self.time.seconds // 3600,
+                'description': self.description,
+                'supervisor_approved': self.supervisor_approved,
+                'client_approved': self.client_approved}
 
+
+class Document(db.Model):
+    __tablename__ = 'documents'
+    id = db.Column(db.Integer, primary_key=True)
+    project = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    activities = db.relationship('Activity', backref='related_document', cascade="all,delete", lazy=True,
+                                 foreign_keys='Activity.document')
+
+
+class SubmittedError(db.Model):
+    __tablename__ = 'submitted_errors'
+    id = db.Column(db.Integer, primary_key=True)
+    project = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    activities = db.relationship('Activity', backref='related_error', cascade="all,delete", lazy=True,
+                                 foreign_keys='Activity.error')

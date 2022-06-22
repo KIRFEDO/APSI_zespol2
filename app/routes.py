@@ -328,11 +328,9 @@ def project_errors(project_id):
 def task_delete(project_id=None, task_id=None):
     project = Project.query.get_or_404(project_id)
     check_ownership(int(current_user.get_id()), [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
-
     Task.query.filter(Task.id == task_id).delete()
     db.session.commit()
-    return redirect(url_for('projects'))
-
+    return redirect(url_for('projects_view', project_id=project_id, active_task_id=None))
 
 # ------------------------------------------------------------------------------
 # Projects ---------------------------------------------------------------------

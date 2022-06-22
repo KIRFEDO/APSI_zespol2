@@ -60,6 +60,14 @@
                     {% endif %}
                     <div class="accordion" id="epic-list">
                         {% for task in project.projects_tasks %}
+
+
+                        {% if u.id in project.workers|selectattr("project_role", "equalto", "kierownik projektu")|map(attribute='user_id')|list and not task.associated_activities|length %}
+                          <a class="btn btn-danger" title="Usuń zadanie" href="/projects/{{project.id}}/{{task.id}}/delete">
+                              <i class="fa-solid fa-trash"></i> Usuń zadanie
+                          </a>
+                        {% endif %}
+
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading-{{task.id}}">
                                 <button class="accordion-button {% if active_task_id != task.id %}collapsed{% endif %}"

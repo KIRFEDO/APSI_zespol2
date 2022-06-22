@@ -230,15 +230,14 @@ def activity_accept_supervisor(project_id=None, task_id=None, activity_id=None, 
     project = Project.query.get_or_404(project_id)
     check_ownership(u.id, [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
 
-    if u.role == 'kierownik':
-        activity = Activity.query.filter(Activity.id == activity_id).first()
-        if state == 0:
-            activity.supervisor_approved = False
-        elif state == 1:
-            activity.supervisor_approved = True
-        elif state == 2:
-            activity.supervisor_approved = None
-        db.session.commit()
+    activity = Activity.query.filter(Activity.id == activity_id).first()
+    if state == 0:
+        activity.supervisor_approved = False
+    elif state == 1:
+        activity.supervisor_approved = True
+    elif state == 2:
+        activity.supervisor_approved = None
+    db.session.commit()
 
     if go_back == 'project-view':
         return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))

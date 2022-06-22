@@ -133,7 +133,7 @@
                                                               {% endif %}
                                                             {% endif %}
 
-                                                            {% if u.id in project.workers|selectattr("project_role", "equalto", "kierownik projektu")|map(attribute='user_id')|list %}
+                                                            {% if u.id in project.workers|selectattr("project_role", "equalto", "kierownik projektu")|map(attribute='user_id')|list and u.id != activity.user_id  %}
                                                               {% if activity.supervisor_approved == None %}
                                                                 <li><a class="dropdown-item dropdown-status decline"
                                                                        href="/projects/{{activity.associated_task.associated_project.id}}/{{activity.associated_task.id}}/{{activity.id}}/accept_supervisor/0">Odrzuć</a>

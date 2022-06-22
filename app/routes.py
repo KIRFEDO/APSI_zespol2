@@ -95,7 +95,7 @@ def activities():
         activityList = Activity.query.filter(Activity.user_id == u.id)
         #activitiesToAccept = db.session.query(Activity, Project).filter(u.id in [worker.user_id for worker in Project.workers if worker.project_role == 'kierownik projektu']).all()
 
-    return render_template('common/activity/activities-list.html', activities=activityList, activitiesToAccept=activitiesToAccept, u=u, current_view=current_view)
+    return render_template('common/activity/activities-list.html', activities=activityList, u=u, current_view=current_view)#, activitiesToAccept=activitiesToAccept)
 
 
 @app.route("/activities/info")
@@ -146,6 +146,55 @@ def activity_add(project_id=None, task_id=None):
     else:
         # TODO: Co w przypadku klienta wchodzącego na formularz dodania czynnosci?
         abort(403)
+
+
+
+# Modify activity
+@app.route('/activities/modify/<project_id>/<task_id>/<activity_id>', methods=['GET', 'POST'])
+@login_required
+def activity_modify(project_id=None, task_id=None, activity_id=None):
+    # Go back descitnation url
+    if request.args.get('go_back'):
+        go_back = request.args.get('go_back')
+    else:
+        go_back = 'project-view'
+    current_view = 'activities-add'
+    u = get_user()
+
+    activity = Activity.query.filter(Activity.id == activity_id).first()
+    form = AddActivityForm(task=task_id, project=project_id, date=activity.date,
+                                activityTime=activity.time.seconds//3600, description=activity.description,
+                                related_resource = activity.related_resource)
+
+    if u.role != 'klient':
+        if form.validate_on_submit():
+            user = current_user.get_id()
+            doc = form.document.data
+            if doc == "":
+                doc = None
+            err = form.error.data
+            if err == "":
+                err = None
+
+            activity.date = form.date.data
+            activity.time = datetime.timedelta(hours=float(form.activityTime.data))
+            activity.description = form.description.data
+            activity.related_resource = form.related_resource.data
+            activity.document = doc
+
+            db.session.commit()
+            flash('Aktywność utworzona', 'success')
+
+            if go_back == 'project-view' or go_back == None:
+                return redirect(url_for('projects_view', project_id=project_id, active_task_id=task_id))
+            elif go_back == 'activities':
+                return redirect(url_for('activities'))
+        return render_template('common/activity/activity-add.html', u=u, current_view=current_view, form=form,
+                               task_id=task_id)
+    else:
+        # TODO: Co w przypadku klienta wchodzącego na formularz dodania czynnosci?
+        abort(403)
+
 
 
 # Delete activity

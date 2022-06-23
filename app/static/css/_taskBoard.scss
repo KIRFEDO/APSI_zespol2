@@ -27,6 +27,14 @@
             }
         }
 
+        &.pending{
+            background-color: #d4dffb;
+
+            .col-title{
+                color: #657187;
+            }
+        }
+
         .col-title{
             text-transform: uppercase;
             font-weight: 600;

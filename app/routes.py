@@ -86,16 +86,18 @@ def activities():
     current_view = 'activities'
     u = get_user()
 
+    # Aktywności wszystkich pracowników w projektach, w których jesteśmy kierownikiem
     if u.role == 'pracownik':
-        activityList = Activity.query.filter(Activity.user_id == u.id)
-        #activitiesToAccept = db.session.query(Activity, Project).filter(u.id in [worker.user_id for worker in Project.workers if worker.project_role == 'kierownik projektu']).all()
+        ownActivities = Activity.query.filter(Activity.user_id == u.id)
+        activitiesInMyProjects = Activity.query.join(Task).join(Project).filter(Project.id.in_(projectAssignment.project_id for projectAssignment in u.assigned_projects)).all()
     elif u.role == 'klient':
-        activityList = db.session.query(Activity, Project).filter(Project.client == u.id).all()
+        activityList = []   # Klient nie rejestruje własnych czynności
+        activitiesToAccept = db.session.query(Activity, Project).filter(Project.client == u.id).all()
     elif u.role == 'kierownik':
-        activityList = Activity.query.filter(Activity.user_id == u.id)
-        #activitiesToAccept = db.session.query(Activity, Project).filter(u.id in [worker.user_id for worker in Project.workers if worker.project_role == 'kierownik projektu']).all()
+        ownActivities = Activity.query.filter(Activity.user_id == u.id)
+        activitiesInMyProjects = Activity.query.join(Task).join(Project).filter(Project.id.in_(projectAssignment.project_id for projectAssignment in u.assigned_projects)).all()
 
-    return render_template('common/activity/activities-list.html', activities=activityList, u=u, current_view=current_view)#, activitiesToAccept=activitiesToAccept)
+    return render_template('common/activity/activities-list.html', activities=ownActivities, u=u, current_view=current_view, activitiesToAccept=activitiesInMyProjects)
 
 
 @app.route("/activities/info")
@@ -115,8 +117,7 @@ def activity_add(project_id=None, task_id=None):
         go_back = request.args.get('go_back')
     else:
         go_back = 'project-view'
-
-    form = AddActivityForm(task=task_id, project=project_id)
+    form = AddActivityForm(project=project_id, task=task_id)
     current_view = 'activities-add'
     u = get_user()
 
@@ -160,9 +161,8 @@ def activity_modify(project_id=None, task_id=None, activity_id=None):
         go_back = 'project-view'
     current_view = 'activities-add'
     u = get_user()
-
     activity = Activity.query.filter(Activity.id == activity_id).first()
-    form = AddActivityForm(task=task_id, project=project_id, date=activity.date,
+    form = AddActivityForm(project=str(project_id), task=str(task_id), date=activity.date,
                                 activityTime=activity.time.seconds//3600, description=activity.description,
                                 related_resource = activity.related_resource)
 
@@ -393,7 +393,7 @@ def projects():
     u = get_user()
 
     if u.role == 'kierownik' or u.role == 'pracownik':
-        projectlist = [p.assigned_project for p in u.assigned_projects]
+        projectlist = [p.assigned_project for p in u.assigned_projects if p.end == None]
 
     if u.role == 'klient':
         projectlist = Project.query.filter(Project.client == u.id)

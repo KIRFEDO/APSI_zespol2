@@ -35,6 +35,23 @@
                                     {% endfor %}
                                   </p>
                                 {% endif %}
+
+
+                                {% for i in range(employee.assigned_projects|length) if employee.assigned_projects[i].project_role == "kierownik projektu" %}
+                                  {% if loop.index0 == 0 %}
+
+                                    <p class="assigned-projects">
+                                      <span>Kierownictwo w projektach: </span>
+                                      {% for i in range(employee.assigned_projects|length) if employee.assigned_projects[i].project_role == "kierownik projektu" %}
+                                        <a title="{{employee.assigned_projects[i].assigned_project.name}}" href="/projects/{{employee.assigned_projects[i].assigned_project.id}}">{{employee.assigned_projects[i].assigned_project.name}}</a>
+                                        {% if loop.nextitem %},{% endif %}
+                                      {% endfor %}
+                                    </p>
+
+                                  {% endif %}
+                                {% endfor %}
+
+
                             </div>
                         </div>
                     </div>
@@ -62,6 +79,49 @@
                                     {% endfor %}
                                   </p>
                                 {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+
+                <h1>Menedżerzy</h1>
+                <div class="employees-list">
+                    {% for employee in employees %}
+                    {% if employee.role == 'kierownik' %}
+                    <div class="employee-one">
+                        <div class="row">
+                            <div class="col">
+                                <span class="icon">{{employee.name[0]}}{{employee.surname[0]}}</span>
+                                <p class="key">#{{employee.login}}</p>
+                                <p class="name">{{employee.name}} {{employee.surname}}</p>
+
+                                {% if employee.assigned_projects|length > 0 %}
+                                  <p class="assigned-projects">
+                                    <span>Przypisane projekty: </span>
+                                    {% for i in range(employee.assigned_projects|length) %}
+                                      <a title="{{employee.assigned_projects[i].assigned_project.name}}" href="/projects/{{employee.assigned_projects[i].assigned_project.id}}">{{employee.assigned_projects[i].assigned_project.name}}</a>
+                                      {% if i+1 != employee.assigned_projects|length %},{% endif %}
+                                    {% endfor %}
+                                  </p>
+                                {% endif %}
+
+
+                                {% for i in range(employee.assigned_projects|length) if employee.assigned_projects[i].project_role == "kierownik projektu" %}
+                                  {% if loop.index0 == 0 %}
+
+                                    <p class="assigned-projects">
+                                      <span>Kierownictwo w projektach: </span>
+                                      {% for i in range(employee.assigned_projects|length) if employee.assigned_projects[i].project_role == "kierownik projektu" %}
+                                        <a title="{{employee.assigned_projects[i].assigned_project.name}}" href="/projects/{{employee.assigned_projects[i].assigned_project.id}}">{{employee.assigned_projects[i].assigned_project.name}}</a>
+                                        {% if loop.nextitem %},{% endif %}
+                                      {% endfor %}
+                                    </p>
+
+                                  {% endif %}
+                                {% endfor %}
+                                
                             </div>
                         </div>
                     </div>

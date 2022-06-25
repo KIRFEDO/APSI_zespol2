@@ -178,6 +178,8 @@
             <td colspan="3"><b>Zadanie:</b> {{task.description}}</td>
           </tr>
 
+          {% set sum_task = (task_times[loop.index0] * 25) %}
+
           {% for activity in task.associated_activities %}
             {% if activity.supervisor_approved == True %}
               {% if activity.client_approved == None or activity.client_approved == True %}
@@ -203,7 +205,7 @@
   				<tr class="total">
   					<td></td>
   					<td>Suma: </td>
-  					<td><b>{{ task.associated_activities|length *25 }} PLN </b></td>
+  					<td><b>{{ sum_task }} PLN </b></td>
   				</tr>
 
           <tr class="item last">

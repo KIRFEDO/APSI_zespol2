@@ -474,4 +474,13 @@ def invoice_view(project_id):
     year_str = year.strftime("%Y")
     today_str = year.strftime("%Y-%m-%d")
     invoice_num = "FV-" + str(project.id) + "-" + year_str
-    return render_template('invoice/invoice.html', u=u, project=project, current_view=current_view, invoice_num=invoice_num, date_today=today_str)
+    task_times = [0] * len(project.projects_tasks)
+    i = 0
+    for task in project.projects_tasks:
+        for act in task.associated_activities:
+            if act.supervisor_approved == True:
+                if act.client_approved == None or act.client_approved == True:
+                    task_times[i] = task_times[i] + act.time.total_seconds() / 3600
+        i = i + 1
+    print(task_times)
+    return render_template('invoice/invoice.html', u=u, project=project, current_view=current_view, invoice_num=invoice_num, date_today=today_str, task_times=task_times)

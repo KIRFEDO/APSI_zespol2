@@ -28,7 +28,7 @@
 				vertical-align: top;
 			}
 
-			.invoice-box table tr td:nth-child(2) {
+			.invoice-box table tr td:nth-child(3) {
 				text-align: right;
 			}
 
@@ -110,7 +110,7 @@
 									<img src="https://www.sparksuite.com/images/logo.png" style="width: 100%; max-width: 300px" />
 								</td>
 
-								<td>
+								<td colspan="2">
 									Faktura nr.: {{ invoice_num }}<br />
 									Data wystawienia faktury: {{ date_today }}<br />
 									Data zakończenia dostawy/usługi: {{ project.workers[0].start }}
@@ -133,7 +133,7 @@
                   PL1234123412341234
 								</td>
 
-								<td>
+                <td colspan="2">
                   <b>Odbiorca</b><br />
 									{{ project.project_commissioner.name }} {{ project.project_commissioner.surname }}
 								</td>
@@ -145,25 +145,22 @@
 				<tr class="heading">
 					<td>Typ zlecenia</td>
 					<td></td>
-					<td>Nazwa</td>
+					<td></td>
 				</tr>
 
 				<tr class="details">
 					<td>Projekt</td>
-					<td></td>
-					<td>{{ project.name }}</td>
+					<td colspan="2">{{ project.name }}</td>
 				</tr>
 
 				<tr class="heading">
 					<td>Metoda płatności</td>
-					<td></td>
-					<td></td>
+					<td colspan="2"></td>
 				</tr>
 
 				<tr class="details">
 					<td>Przelew</td>
-					<td></td>
-					<td></td>
+					<td colspan="2"></td>
 				</tr>
 
 
@@ -206,7 +203,7 @@
   				<tr class="total">
   					<td></td>
   					<td>Suma: </td>
-  					<td>{{ task.associated_activities|length *25 }} PLN</td>
+  					<td><b>{{ task.associated_activities|length *25 }} PLN </b></td>
   				</tr>
 
           <tr class="item last">

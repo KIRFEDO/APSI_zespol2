@@ -482,5 +482,5 @@ def invoice_view(project_id):
                 if act.client_approved == None or act.client_approved == True:
                     task_times[i] = task_times[i] + act.time.total_seconds() / 3600
         i = i + 1
-    print(task_times)
-    return render_template('invoice/invoice.html', u=u, project=project, current_view=current_view, invoice_num=invoice_num, date_today=today_str, task_times=task_times)
+    total = sum(task_times) * 25
+    return render_template('invoice/invoice.html', u=u, project=project, current_view=current_view, invoice_num=invoice_num, date_today=today_str, task_times=task_times, total=total)

@@ -465,9 +465,13 @@ def employees():
 
 # Invoice printing
 @app.route('/projects/<int:project_id>/invoice', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def invoice_view(project_id):
     project = Project.query.get_or_404(project_id)
     current_view = 'invoice-view'
     u = get_user()
-    return render_template('common/project/invoice-view.html', u=u, project=project, current_view=current_view)
+    year = datetime.date.today()
+    year_str = year.strftime("%Y")
+    today_str = year.strftime("%Y-%m-%d")
+    invoice_num = "FV-" + str(project.id) + "-" + year_str
+    return render_template('invoice/invoice.html', u=u, project=project, current_view=current_view, invoice_num=invoice_num, date_today=today_str)

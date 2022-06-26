@@ -138,8 +138,16 @@
                 <div class="task-board">
                     <div class="row">
 
+                        {% if u.role == 'klient' %}
+                        <div class="col-3"></div>
+                        {% endif %}
+
                         <!-- Aktywności do akceptacji (w przypadku bycia kierownikiem w projektach) -->
-                        <div class="col-4">
+                          {% if u.role == 'klient' %}
+                          <div class="col-6">
+                          {% else %}
+                          <div class="col-4">
+                          {% endif %}
                             <div class="col-wrapper pending">
                                 <h4 class="col-title">Do naszej akceptacji</h4>
                                 <div class="task-boxes" id="to-review-boxes">
@@ -271,6 +279,10 @@
                                 </div>
                             </div>
                         </div>
+
+                        {% if u.role == 'klient' %}
+                        <div class="col-3"></div>
+                        {% endif %}
 
 
                         <!-- Aktywności własne oczekujące na akceptację -->

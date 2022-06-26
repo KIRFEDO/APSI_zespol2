@@ -93,8 +93,8 @@ def activities():
         activitiesInMyProjects = Activity.query.join(Task).join(Project).filter(
             Project.id.in_(projectAssignment.project_id for projectAssignment in u.assigned_projects)).all()
     elif u.role == 'klient':
-        activityList = []  # Klient nie rejestruje własnych czynności
-        activitiesToAccept = db.session.query(Activity, Project).filter(Project.client == u.id).all()
+        ownActivities = []  # Klient nie rejestruje własnych czynności
+        activitiesInMyProjects = Activity.query.join(Task).join(Project).filter(Project.client == u.id).all()
     elif u.role == 'kierownik':
         ownActivities = Activity.query.filter(Activity.user_id == u.id)
         activitiesInMyProjects = Activity.query.join(Task).join(Project).filter(

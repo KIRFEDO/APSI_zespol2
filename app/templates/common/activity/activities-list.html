@@ -227,6 +227,8 @@
                                         <p class="task-author">{{activity.done_by.name}}
                                             {{activity.done_by.surname}}</p>
 
+                                        <p class="task-info"><b>Projekt: {{activity.associated_task.associated_project.name}}</b></p>
+
                                         {% if activity.associated_task.associated_project.client != None %}
                                         {% if activity.client_approved == None %}
                                         <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
@@ -247,14 +249,19 @@
                                         {% endif %}
 
                                         <p class="task-description">{{activity.description}}</p>
-                                        <p class="task-description">Powiązany zasób: {{activity.related_resource}}</p>
-                                        {% if activity.related_resource == "dokument" %}
-                                        <p class="task-description">Powiązany dokument:
-                                            {{activity.related_document.name}}</p>
+
+                                        {% if activity.related_resource  == "dokument" or activity.related_resource  == "zgłoszony problem" %}
+                                          <p class="task-description">
+                                            {% if activity.related_resource == "dokument" %}
+                                              <span><i class="fa-solid fa-link"></i> Dokument: {{activity.related_document.name}}</span>
+                                            {% endif %}
+                                            {% if activity.related_resource == "zgłoszony problem" %}
+                                              <span><i class="fa-solid fa-link"></i> Błąd: {{activity.related_error.name}}</span>
+                                            {% endif %}
+                                          </p>
                                         {% endif %}
-                                        {% if activity.related_resource == "zgłoszony problem" %}
-                                        <p class="task-description">Powiązany błąd: {{activity.related_error.name}}</p>
-                                        {% endif %}
+
+
                                         <p class="task-details"><i class="fa-solid fa-calendar-day"></i>
                                             {{activity.date}} <i class="fa-solid fa-clock"></i>
                                             {{activity.time|formatdatetime}}</p>
@@ -267,6 +274,7 @@
 
 
                         <!-- Aktywności własne oczekujące na akceptację -->
+                        {% if u.role != 'klient' %}
                         <div class="col-4">
                             <div class="col-wrapper todo">
                                 <h4 class="col-title">Własne oczekujące</h4>
@@ -370,6 +378,8 @@
                                             {{activity.done_by.name}} {{activity.done_by.surname}}
                                         </p>
 
+                                        <p class="task-info"><b>Projekt: {{activity.associated_task.associated_project.name}}</b></p>
+
                                         {% if activity.associated_task.associated_project.client != None %}
                                         {% if activity.client_approved == None %}
                                         <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
@@ -388,15 +398,21 @@
                                         {% else %}
                                         <p class="status"><span class="rejected">Odrzucone (Kierownik)</span></p>
                                         {% endif %}
+
+
                                         <p class="task-description">{{activity.description}}</p>
-                                        <p class="task-description">Powiązany zasób: {{activity.related_resource}}</p>
-                                        {% if activity.related_resource == "dokument" %}
-                                        <p class="task-description">Powiązany dokument:
-                                            {{activity.related_document.name}}</p>
+
+                                        {% if activity.related_resource  == "dokument" or activity.related_resource  == "zgłoszony problem" %}
+                                          <p class="task-description">
+                                            {% if activity.related_resource == "dokument" %}
+                                              <span><i class="fa-solid fa-link"></i> Dokument: {{activity.related_document.name}}</span>
+                                            {% endif %}
+                                            {% if activity.related_resource == "zgłoszony problem" %}
+                                              <span><i class="fa-solid fa-link"></i> Błąd: {{activity.related_error.name}}</span>
+                                            {% endif %}
+                                          </p>
                                         {% endif %}
-                                        {% if activity.related_resource == "zgłoszony problem" %}
-                                        <p class="task-description">Powiązany błąd: {{activity.related_error.name}}</p>
-                                        {% endif %}
+
                                         <p class="task-details"><i class="fa-solid fa-calendar-day"></i>
                                             {{activity.date}} <i class="fa-solid fa-clock"></i>
                                             {{activity.time|formatdatetime}}</p>
@@ -406,9 +422,11 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
 
 
                         <!-- Aktywności własne odrzucone -->
+                        {% if u.role != 'klient' %}
                         <div class="col-4">
                             <div class="col-wrapper rejected">
                                 <h4 class="col-title">Własne odrzucone</h4>
@@ -510,6 +528,8 @@
                                         <p class="task-author">{{activity.done_by.name}}
                                             {{activity.done_by.surname}}</p>
 
+                                        <p class="task-info"><b>Projekt: {{activity.associated_task.associated_project.name}}</b></p>
+
                                         {% if activity.associated_task.associated_project.client != None %}
                                         {% if activity.client_approved == None %}
                                         <p class="status"><span class="todo">Oczekuje na akceptację (Klient)</span></p>
@@ -529,15 +549,20 @@
                                         <p class="status"><span class="rejected">Odrzucone (Kierownik)</span></p>
                                         {% endif %}
 
+
                                         <p class="task-description">{{activity.description}}</p>
-                                        <p class="task-description">Powiązany zasób: {{activity.related_resource}}</p>
-                                        {% if activity.related_resource == "dokument" %}
-                                        <p class="task-description">Powiązany dokument:
-                                            {{activity.related_document.name}}</p>
+
+                                        {% if activity.related_resource  == "dokument" or activity.related_resource  == "zgłoszony problem" %}
+                                          <p class="task-description">
+                                            {% if activity.related_resource == "dokument" %}
+                                              <span><i class="fa-solid fa-link"></i> Dokument: {{activity.related_document.name}}</span>
+                                            {% endif %}
+                                            {% if activity.related_resource == "zgłoszony problem" %}
+                                              <span><i class="fa-solid fa-link"></i> Błąd: {{activity.related_error.name}}</span>
+                                            {% endif %}
+                                          </p>
                                         {% endif %}
-                                        {% if activity.related_resource == "zgłoszony problem" %}
-                                        <p class="task-description">Powiązany błąd: {{activity.related_error.name}}</p>
-                                        {% endif %}
+
                                         <p class="task-details"><i class="fa-solid fa-calendar-day"></i>
                                             {{activity.date}} <i class="fa-solid fa-clock"></i>
                                             {{activity.time|formatdatetime}}</p>
@@ -547,6 +572,7 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
 
 
                     </div>

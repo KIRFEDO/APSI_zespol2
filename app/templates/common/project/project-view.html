@@ -217,18 +217,19 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-4">
-                                                        <p class="task-description">
-                                                            <span> Powiązany zasób: {{activity.related_resource}}</span>
-                                                            {% if activity.related_resource == "dokument" %}
-                                                        <p class="task-description">Powiązany dokument:
-                                                            {{activity.related_document.name}}</p>
-                                                        {% endif %}
-                                                        {% if activity.related_resource == "zgłoszony problem" %}
-                                                        <p class="task-description">Powiązany błąd:
-                                                            {{activity.related_error.name}}</p>
-                                                        {% endif %}
-                                                        </p>
-                                                    </div>
+                                                  {% if activity.related_resource  == "dokument" or activity.related_resource  == "zgłoszony problem" %}
+                                                    <p class="task-description">
+                                                      {% if activity.related_resource == "dokument" %}
+                                                        <span><i class="fa-solid fa-link"></i> Dołączony dokument</span>
+                                                        Typ dokumentu: {{activity.related_document.name}}
+                                                      {% endif %}
+                                                      {% if activity.related_resource == "zgłoszony problem" %}
+                                                        <span><i class="fa-solid fa-link"></i> Zgłoszony problem</span>
+                                                        Typ błędu: {{activity.related_error.name}}
+                                                      {% endif %}
+                                                    </p>
+                                                  {% endif %}
+                                                </div>
                                                 <div class="col-3">
                                                     <p class="task-time">
                                                         <span><i class="fa-solid fa-clock"></i> Czas pracy</span>

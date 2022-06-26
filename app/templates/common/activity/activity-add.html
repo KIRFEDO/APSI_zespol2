@@ -19,7 +19,7 @@
                 if (e.target.value === 'brak') {
                     document.getElementById("doc").style.display = "none";
                     document.getElementById("err").style.display = "none";
-                } else if (e.target.value === 'dokument'){
+                } else if (e.target.value === 'dokument') {
                     document.getElementById("doc").style.display = "block";
                     document.getElementById("err").style.display = "none";
                 } else {
@@ -32,6 +32,19 @@
 
         });
     </script>
+    <script>
+        document.onload = function docCheck() {
+            if (document.getElementById("resource_type").value == "dokument") {
+                document.getElementById("doc").style.display = "block";
+                document.getElementById("err").style.display = "none";
+            }
+            if (document.getElementById("resource_type").value == "zgłoszony problem") {
+                document.getElementById("err").style.display = "none";
+                document.getElementById("err").style.display = "block";
+            }
+        }
+    </script>
+
 </head>
 <body>
 <div class="page {{u.role}}-{{current_view}}-page">

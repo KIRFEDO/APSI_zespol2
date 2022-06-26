@@ -210,12 +210,25 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-9">
+                                                <div class="col-4">
                                                     <p class="task-description">
                                                         <span><i class="fa-solid fa-comment"></i> Opis</span>
                                                         {{activity.description}}
                                                     </p>
                                                 </div>
+                                                <div class="col-4">
+                                                        <p class="task-description">
+                                                            <span> Powiązany zasób: {{activity.related_resource}}</span>
+                                                            {% if activity.related_resource == "dokument" %}
+                                                        <p class="task-description">Powiązany dokument:
+                                                            {{activity.related_document.name}}</p>
+                                                        {% endif %}
+                                                        {% if activity.related_resource == "zgłoszony problem" %}
+                                                        <p class="task-description">Powiązany błąd:
+                                                            {{activity.related_error.name}}</p>
+                                                        {% endif %}
+                                                        </p>
+                                                    </div>
                                                 <div class="col-3">
                                                     <p class="task-time">
                                                         <span><i class="fa-solid fa-clock"></i> Czas pracy</span>

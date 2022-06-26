@@ -34,6 +34,7 @@ def check_ownership(user, required):
         if user != required:
             abort(403)
 
+
 # Registration
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -89,15 +90,18 @@ def activities():
     # Aktywności wszystkich pracowników w projektach, w których jesteśmy kierownikiem
     if u.role == 'pracownik':
         ownActivities = Activity.query.filter(Activity.user_id == u.id)
-        activitiesInMyProjects = Activity.query.join(Task).join(Project).filter(Project.id.in_(projectAssignment.project_id for projectAssignment in u.assigned_projects)).all()
+        activitiesInMyProjects = Activity.query.join(Task).join(Project).filter(
+            Project.id.in_(projectAssignment.project_id for projectAssignment in u.assigned_projects)).all()
     elif u.role == 'klient':
-        activityList = []   # Klient nie rejestruje własnych czynności
+        activityList = []  # Klient nie rejestruje własnych czynności
         activitiesToAccept = db.session.query(Activity, Project).filter(Project.client == u.id).all()
     elif u.role == 'kierownik':
         ownActivities = Activity.query.filter(Activity.user_id == u.id)
-        activitiesInMyProjects = Activity.query.join(Task).join(Project).filter(Project.id.in_(projectAssignment.project_id for projectAssignment in u.assigned_projects)).all()
+        activitiesInMyProjects = Activity.query.join(Task).join(Project).filter(
+            Project.id.in_(projectAssignment.project_id for projectAssignment in u.assigned_projects)).all()
 
-    return render_template('common/activity/activities-list.html', activities=ownActivities, u=u, current_view=current_view, activitiesToAccept=activitiesInMyProjects)
+    return render_template('common/activity/activities-list.html', activities=ownActivities, u=u,
+                           current_view=current_view, activitiesToAccept=activitiesInMyProjects)
 
 
 @app.route("/activities/info")
@@ -149,7 +153,6 @@ def activity_add(project_id=None, task_id=None):
         abort(403)
 
 
-
 # Modify activity
 @app.route('/activities/modify/<project_id>/<task_id>/<activity_id>', methods=['GET', 'POST'])
 @login_required
@@ -163,8 +166,10 @@ def activity_modify(project_id=None, task_id=None, activity_id=None):
     u = get_user()
     activity = Activity.query.filter(Activity.id == activity_id).first()
     form = AddActivityForm(project=str(project_id), task=str(task_id), date=activity.date,
-                                activityTime=activity.time.seconds//3600, description=activity.description,
-                                related_resource = activity.related_resource)
+                           activityTime=activity.time.seconds // 3600, description=activity.description,
+                           related_resource=activity.related_resource,
+                           document=str(activity.document),
+                           error=str(activity.error))
 
     if u.role != 'klient':
         if form.validate_on_submit():
@@ -181,6 +186,7 @@ def activity_modify(project_id=None, task_id=None, activity_id=None):
             activity.description = form.description.data
             activity.related_resource = form.related_resource.data
             activity.document = doc
+            activity.error = err
 
             db.session.commit()
             flash('Aktywność utworzona', 'success')
@@ -196,7 +202,6 @@ def activity_modify(project_id=None, task_id=None, activity_id=None):
         abort(403)
 
 
-
 # Delete activity
 @app.route('/projects/<int:project_id>/<int:task_id>/<int:activity_id>/delete', methods=['GET', 'POST'])
 @login_required
@@ -209,7 +214,8 @@ def activity_delete(project_id=None, task_id=None, activity_id=None):
         abort(403)
     elif u.role == 'kierownik':
         project = Project.query.get_or_404(project_id)
-        check_ownership(u.id, [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
+        check_ownership(u.id,
+                        [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
 
     Activity.query.filter(Activity.id == activity_id).delete()
     db.session.commit()
@@ -300,6 +306,7 @@ def task_add(project_id):
     return render_template('admin/admin-task-add.html', u=u, current_view=current_view, project=project_id,
                            form=form)
 
+
 @app.route('/tasks/<int:project_id>', methods=['GET', 'POST'])
 @login_required
 def project_tasks(project_id):
@@ -326,10 +333,12 @@ def project_errors(project_id):
 @login_required
 def task_delete(project_id=None, task_id=None):
     project = Project.query.get_or_404(project_id)
-    check_ownership(int(current_user.get_id()), [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
+    check_ownership(int(current_user.get_id()),
+                    [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
     Task.query.filter(Task.id == task_id).delete()
     db.session.commit()
     return redirect(url_for('projects_view', project_id=project_id, active_task_id=None))
+
 
 # ------------------------------------------------------------------------------
 # Projects ---------------------------------------------------------------------
@@ -436,8 +445,8 @@ def project_add():
 @login_required
 def project_delete(project_id=None):
     project = Project.query.get_or_404(project_id)
-    check_ownership(int(current_user.get_id()), [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
-
+    check_ownership(int(current_user.get_id()),
+                    [worker.user_id for worker in project.workers if worker.project_role == 'kierownik projektu'])
 
     Project.query.filter(Project.id == project_id).delete()
     db.session.commit()
@@ -459,8 +468,7 @@ def employees():
         employeeList = User.query.all()
         return render_template('admin/admin-employee-list.html', employees=employeeList, u=u, current_view=current_view)
     else:
-        # TODO unauthantized
-        return 0
+        abort(403)
 
 
 # Invoice printing
